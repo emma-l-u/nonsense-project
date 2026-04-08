@@ -98,42 +98,42 @@ export const LAYER_DEFAULTS = {
   'heatmap':       false,
 }
 
-// ── Route calculation helpers ────────────────────────────────────────────────
-export function generateRoute(a, b, type) {
-  const pts = [a]
-  const dx = b.lat - a.lat
-  const dy = b.lng - a.lng
-  const steps = 8
-  for (let i = 1; i < steps; i++) {
-    const t = i / steps
-    let lat = a.lat + dx * t
-    let lng = a.lng + dy * t
-    if (type === 'fastest') {
-      lat += (Math.random() - 0.5) * 0.002
-      lng += (Math.random() - 0.5) * 0.002
-    } else if (type === 'safest') {
-      lat += (Math.random() - 0.5) * 0.004
-      lng += (Math.random() - 0.5) * 0.004 - 0.002
-    } else if (type === 'nicest') {
-      lat += Math.sin(t * Math.PI) * 0.003 + (Math.random() - 0.5) * 0.002
-      lng -= Math.abs(Math.sin(t * Math.PI)) * 0.004
-    } else if (type === 'bike') {
-      lat += (Math.random() - 0.5) * 0.003
-      lng += Math.cos(t * Math.PI) * 0.003
-    }
-    pts.push({ lat, lng })
-  }
-  pts.push(b)
-  return pts
+// ── Road segments to fetch from OSRM at startup ──────────────────────────────
+// Coordinates are [lng, lat] — OSRM order (opposite of Leaflet)
+export const ROAD_SEGMENTS = [
+  { from: [11.3070, 50.9740], to: [11.3294, 50.9797], color: '#dc2626', w: 5, label: 'B7 Erfurter Str',        profile: 'driving' },
+  { from: [11.3294, 50.9797], to: [11.3353, 50.9834], color: '#dc2626', w: 4, label: 'Schillerstr → Bahnhof',  profile: 'driving' },
+  { from: [11.3294, 50.9797], to: [11.3450, 50.9783], color: '#dc2626', w: 4, label: 'Berkaer Str',            profile: 'driving' },
+  { from: [11.3353, 50.9834], to: [11.3470, 50.9830], color: '#b91c1c', w: 5, label: 'Buchenwald Allee',       profile: 'driving' },
+  { from: [11.3100, 50.9720], to: [11.3450, 50.9760], color: '#b91c1c', w: 5, label: 'Southern bypass',        profile: 'driving' },
+  { from: [11.3294, 50.9797], to: [11.3100, 50.9810], color: '#dc2626', w: 3, label: 'Friedensstr',            profile: 'driving' },
+]
+
+// ── OSRM route fetching ───────────────────────────────────────────────────────
+const OSRM = 'https://router.project-osrm.org/route/v1'
+
+// Fetch a single road-following path between two [lng, lat] points
+export async function fetchOsrmPath(fromLngLat, toLngLat, profile = 'driving') {
+  const [lng1, lat1] = fromLngLat
+  const [lng2, lat2] = toLngLat
+  const url = `${OSRM}/${profile}/${lng1},${lat1};${lng2},${lat2}?overview=full&geometries=geojson`
+  const res = await fetch(url)
+  const data = await res.json()
+  if (data.code !== 'Ok' || !data.routes?.length) return null
+  // Convert OSRM's [lng, lat] pairs → Leaflet's [lat, lng]
+  return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng])
 }
 
-export function calcDist(pts) {
-  let d = 0
-  for (let i = 1; i < pts.length; i++) {
-    const a = pts[i - 1], b = pts[i]
-    const dlat = (b.lat - a.lat) * 111
-    const dlng = (b.lng - a.lng) * 71
-    d += Math.sqrt(dlat * dlat + dlng * dlng)
+// Fetch an A→B route and return distance (km), duration (min), and path
+export async function fetchOsrmRoute(a, b, profile = 'foot') {
+  const url = `${OSRM}/${profile}/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`
+  const res = await fetch(url)
+  const data = await res.json()
+  if (data.code !== 'Ok' || !data.routes?.length) return null
+  const route = data.routes[0]
+  return {
+    path: route.geometry.coordinates.map(([lng, lat]) => ({ lat, lng })),
+    dist: route.distance / 1000,       // metres → km
+    duration: route.duration / 60,     // seconds → minutes
   }
-  return d
 }

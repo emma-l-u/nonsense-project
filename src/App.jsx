@@ -30,6 +30,7 @@ export default function App() {
       <div className="relative flex-1 min-h-0">
         <MapView
           layerVisibility={state.layerVisibility}
+          fetchedRoads={state.fetchedRoads}
           ptA={state.ptA}
           ptB={state.ptB}
           route={state.route}

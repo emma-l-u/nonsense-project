@@ -9,6 +9,8 @@ import {
   WEIMAR, ROUTE_CONFIG,
 } from '../data/mapData'
 
+// mainRoads is used as a fallback while OSRM data is still loading
+
 // ── Icon helpers ─────────────────────────────────────────────────────────────
 function makeEmojiIcon(emoji, size = 22) {
   return L.divIcon({
@@ -80,9 +82,11 @@ function NoiseLayer({ data }) {
 
 // ── Main export ───────────────────────────────────────────────────────────────
 export default function MapView({
-  layerVisibility, ptA, ptB, route, routeType,
+  layerVisibility, fetchedRoads, ptA, ptB, route, routeType,
   liveOn, livePositions, onMapClick,
 }) {
+  // Use real OSRM-fetched roads once loaded; fall back to static data while loading
+  const activeRoads = fetchedRoads ?? mainRoads
   return (
     <MapContainer
       center={WEIMAR}
@@ -126,10 +130,10 @@ export default function MapView({
         layerVisibility[key] && <NoiseLayer key={key} data={noiseData[key]} />
       )}
 
-      {/* Main road arteries */}
+      {/* Main road arteries — real geometry from OSRM */}
       {layerVisibility['main-roads'] && (
         <LayerGroup>
-          {mainRoads.map((r, i) => (
+          {activeRoads.map((r, i) => (
             <Polyline key={i} positions={r.path}
               pathOptions={{ color: r.color, weight: r.w, opacity: 0.7 }}>
               <Popup><b>🚗 {r.label}</b><br />High traffic artery</Popup>

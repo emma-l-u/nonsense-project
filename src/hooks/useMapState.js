@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   carPaths, ROUTE_CONFIG, LAYER_DEFAULTS,
-  generateRoute, calcDist,
+  ROAD_SEGMENTS, fetchOsrmPath, fetchOsrmRoute,
 } from '../data/mapData'
 
 const NOISE_GROUP = ['traffic-noise', 'rail-noise', 'construction', 'hospitality']
@@ -14,6 +14,10 @@ export function useMapState() {
   // Layer visibility — true = visible on map
   const [layerVisibility, setLayerVisibility] = useState(LAYER_DEFAULTS)
 
+  // Real road geometries fetched from OSRM at startup
+  // null = still loading, [] = failed/empty, [...] = loaded
+  const [fetchedRoads, setFetchedRoads] = useState(null)
+
   // Click points (state drives rendering, refs avoid stale closures in callbacks)
   const [ptA, setPtA] = useState(null)
   const [ptB, setPtB] = useState(null)
@@ -21,7 +25,7 @@ export function useMapState() {
   const ptBRef = useRef(null)
   const clickCountRef = useRef(0)
 
-  // Refs so callbacks always see the latest mode/routeType without re-creating handlers
+  // Refs so callbacks always see the latest mode/routeType without re-creating them
   const routeTypeRef = useRef(routeType)
   const modeRef = useRef(mode)
   useEffect(() => { routeTypeRef.current = routeType }, [routeType])
@@ -40,6 +44,19 @@ export function useMapState() {
     'Click the map to set start (A) and destination (B) points'
   )
   const [timeDisplay, setTimeDisplay] = useState('')
+
+  // ── Fetch real road geometries from OSRM on startup ────────────────────────
+  useEffect(() => {
+    Promise.all(
+      ROAD_SEGMENTS.map(seg =>
+        fetchOsrmPath(seg.from, seg.to, seg.profile)
+          .then(path => path ? { ...seg, path } : null)
+          .catch(() => null)
+      )
+    ).then(results => {
+      setFetchedRoads(results.filter(Boolean))
+    })
+  }, [])
 
   // ── Clock ──────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -69,24 +86,38 @@ export function useMapState() {
     return () => clearInterval(id)
   }, [liveOn])
 
-  // ── Route calculation ──────────────────────────────────────────────────────
-  const doCalcRoute = useCallback((a, b) => {
+  // ── Route calculation via OSRM ─────────────────────────────────────────────
+  const doCalcRoute = useCallback(async (a, b) => {
     const type = routeTypeRef.current
     const currentMode = modeRef.current
-    const pts = generateRoute(a, b, type)
-    const dist = calcDist(pts)
-    const spd = currentMode === 'walk' ? 5 : 15
     const cfg = ROUTE_CONFIG[type]
-    const time = (dist / spd) * 60 * cfg.speedFactor
-    setRoute(pts)
-    setRouteInfo({
-      dist,
-      time,
-      noiseScore: cfg.noiseScore,
-      comfortScore: cfg.comfortScore,
-      label: cfg.label,
-    })
-    setStatus(`${cfg.label} calculated (${currentMode})`)
+
+    setStatus('Calculating route...')
+
+    // Walk uses foot profile; bike uses bike profile
+    // For safest/nicest we still use the same profile — difference is in colour
+    // and metadata shown to the user (noise score, comfort)
+    const profile = currentMode === 'bike' ? 'bike' : 'foot'
+
+    try {
+      const result = await fetchOsrmRoute(a, b, profile)
+      if (!result) {
+        setStatus('Could not find a route — try different points')
+        return
+      }
+      const time = result.duration * cfg.speedFactor
+      setRoute(result.path)
+      setRouteInfo({
+        dist: result.dist,
+        time,
+        noiseScore: cfg.noiseScore,
+        comfortScore: cfg.comfortScore,
+        label: cfg.label,
+      })
+      setStatus(`${cfg.label} calculated (${currentMode})`)
+    } catch {
+      setStatus('Network error — could not fetch route')
+    }
   }, [])
 
   // ── Map click: alternate A → B → A → B … ──────────────────────────────────
@@ -99,7 +130,7 @@ export function useMapState() {
     } else {
       ptBRef.current = latlng
       setPtB(latlng)
-      setStatus('Points set — calculating route...')
+      setStatus('Points set — fetching route...')
       doCalcRoute(ptARef.current, latlng)
     }
   }, [doCalcRoute])
@@ -156,6 +187,7 @@ export function useMapState() {
     routeType, setRouteType,
     layerVisibility, toggleLayer, toggleNoiseGroup,
     trafficActive, noiseActive,
+    fetchedRoads,
     ptA, ptB,
     route, routeInfo,
     liveOn, toggleLive, livePositions,
