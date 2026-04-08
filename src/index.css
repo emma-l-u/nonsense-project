@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dark theme for Leaflet popups */
+.leaflet-popup-content-wrapper {
+  background: #12122a;
+  border: 1px solid #444;
+  color: #eee;
+  border-radius: 8px;
+}
+.leaflet-popup-tip {
+  background: #12122a;
+}
+.leaflet-popup-content {
+  margin: 10px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Ensure map fills its container */
+.leaflet-container {
+  background: #1a1a2e;
+}

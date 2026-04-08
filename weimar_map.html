@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
+body{background:#1a1a2e;color:#eee;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+#header{padding:8px 12px;background:#12122a;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid #333;z-index:1000;position:relative}
+#header h1{font-size:14px;font-weight:600;color:#a78bfa;white-space:nowrap}
+.ctrl-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ctrl-label{font-size:11px;color:#888;white-space:nowrap}
+select,input[type=text]{background:#222;border:1px solid #444;color:#eee;padding:4px 7px;border-radius:5px;font-size:12px}
+button{background:#2d2d6b;border:1px solid #555;color:#ccc;padding:4px 10px;border-radius:5px;font-size:12px;cursor:pointer;transition:background 0.2s}
+button:hover{background:#4040a0}
+button.active{background:#6d28d9;color:#fff;border-color:#a78bfa}
+#map{flex:1;z-index:1}
+#panel{position:absolute;right:12px;top:70px;width:240px;background:#12122aee;border:1px solid #333;border-radius:8px;padding:12px;z-index:2000;font-size:12px;max-height:calc(100vh - 100px);overflow-y:auto}
+#panel h3{font-size:13px;color:#a78bfa;margin-bottom:8px}
+.layer-row{display:flex;align-items:center;gap:7px;margin:5px 0;cursor:pointer}
+.layer-row input{cursor:pointer}
+.layer-row span{font-size:12px;color:#ccc}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0}
+#route-panel{position:absolute;left:12px;top:70px;width:220px;background:#12122aee;border:1px solid #333;border-radius:8px;padding:12px;z-index:2000;font-size:12px}
+#route-panel h3{font-size:13px;color:#a78bfa;margin-bottom:8px}
+.route-btn{width:100%;margin:3px 0;text-align:left;padding:5px 8px;font-size:11px}
+.route-btn.active{background:#6d28d9}
+#info-bar{position:absolute;bottom:0;left:0;right:0;background:#12122aee;border-top:1px solid #333;padding:5px 12px;font-size:11px;color:#888;z-index:2000;display:flex;gap:16px;flex-wrap:wrap}
+#info-bar span{color:#a78bfa}
+.legend-item{display:flex;align-items:center;gap:5px;margin:3px 0}
+.legend-line{width:20px;height:3px;border-radius:2px}
+#sim-badge{position:absolute;top:70px;left:50%;transform:translateX(-50%);background:#1e1b4b;border:1px solid #6d28d9;border-radius:6px;padding:4px 10px;font-size:11px;color:#a78bfa;z-index:2000;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>🗺 Weimar Movement & Noise Map</h1>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Mode:</span>
+    <button id="btn-walk" class="active" onclick="setMode('walk')">🚶 Walk</button>
+    <button id="btn-bike" onclick="setMode('bike')">🚲 Bike</button>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Route type:</span>
+    <select id="route-type">
+      <option value="fastest">⚡ Fastest</option>
+      <option value="safest">🛡 Safest (low traffic)</option>
+      <option value="nicest">🌿 Nicest (quiet & green)</option>
+      <option value="bike">🚲 Best for biking</option>
+    </select>
+  </div>
+  <div class="ctrl-group">
+    <button onclick="toggleTraffic()" id="btn-traffic">🚗 Traffic flow</button>
+    <button onclick="toggleNoise()" id="btn-noise">🔊 Noise layer</button>
+    <button onclick="simulateLive()" id="btn-live">▶ Live sim</button>
+    <button onclick="clearRoute()">✕ Clear</button>
+  </div>
+</div>
+
+<div id="map"></div>
+
+<div id="route-panel">
+  <h3>Route planner</h3>
+  <div style="margin-bottom:6px">
+    <div style="color:#888;font-size:11px;margin-bottom:3px">Click map to set A → B</div>
+    <div id="point-a" style="color:#4ade80;font-size:11px">A: not set</div>
+    <div id="point-b" style="color:#f87171;font-size:11px">B: not set</div>
+  </div>
+  <button class="route-btn" onclick="calcRoute()">Calculate route ↗</button>
+  <div id="route-info" style="margin-top:8px;display:none">
+    <div style="border-top:1px solid #333;padding-top:8px">
+      <div id="route-dist" style="color:#a78bfa"></div>
+      <div id="route-time" style="color:#ccc;font-size:11px;margin-top:2px"></div>
+      <div id="route-score" style="font-size:11px;margin-top:3px"></div>
+    </div>
+  </div>
+  <div style="margin-top:10px;border-top:1px solid #333;padding-top:8px">
+    <div style="color:#888;font-size:11px;margin-bottom:5px">Legend</div>
+    <div class="legend-item"><div class="legend-line" style="background:#22c55e"></div><span style="font-size:11px">Fastest</span></div>
+    <div class="legend-item"><div class="legend-line" style="background:#3b82f6"></div><span style="font-size:11px">Safest</span></div>
+    <div class="legend-item"><div class="legend-line" style="background:#84cc16"></div><span style="font-size:11px">Nicest</span></div>
+    <div class="legend-item"><div class="legend-line" style="background:#f59e0b"></div><span style="font-size:11px">Best bike</span></div>
+  </div>
+</div>
+
+<div id="panel">
+  <h3>Noise sources</h3>
+  <div class="layer-row"><input type="checkbox" id="l-traffic" checked onchange="toggleLayer('traffic-noise')"><div class="dot" style="background:#ef4444"></div><span>Road traffic noise</span></div>
+  <div class="layer-row"><input type="checkbox" id="l-rail" checked onchange="toggleLayer('rail-noise')"><div class="dot" style="background:#f97316"></div><span>Train / rail noise</span></div>
+  <div class="layer-row"><input type="checkbox" id="l-construction" checked onchange="toggleLayer('construction')"><div class="dot" style="background:#eab308"></div><span>Construction sites</span></div>
+  <div class="layer-row"><input type="checkbox" id="l-school" checked onchange="toggleLayer('school')"><div class="dot" style="background:#06b6d4"></div><span>Schools / playgrounds</span></div>
+  <div class="layer-row"><input type="checkbox" id="l-hospitality" checked onchange="toggleLayer('hospitality')"><div class="dot" style="background:#ec4899"></div><span>Bars & nightlife</span></div>
+  <div class="layer-row"><input type="checkbox" id="l-market" checked onchange="toggleLayer('market')"><div class="dot" style="background:#8b5cf6"></div><span>Markets / events</span></div>
+  <div class="layer-row"><input type="checkbox" id="l-park" checked onchange="toggleLayer('park')"><div class="dot" style="background:#22c55e"></div><span>Quiet green zones</span></div>
+
+  <h3 style="margin-top:10px">Traffic layers</h3>
+  <div class="layer-row"><input type="checkbox" id="l-mainroads" checked onchange="toggleLayer('main-roads')"><div class="dot" style="background:#dc2626"></div><span>Main traffic arteries</span></div>
+  <div class="layer-row"><input type="checkbox" id="l-bikelanes" checked onchange="toggleLayer('bike-lanes')"><div class="dot" style="background:#f59e0b"></div><span>Bike lanes</span></div>
+  <div class="layer-row"><input type="checkbox" id="l-pedestrian" checked onchange="toggleLayer('pedestrian')"><div class="dot" style="background:#84cc16"></div><span>Pedestrian zones</span></div>
+  <div class="layer-row"><input type="checkbox" id="l-heatmap" onchange="toggleLayer('heatmap')"><div class="dot" style="background:#ef444466"></div><span>Traffic heatmap</span></div>
+</div>
+
+<div id="sim-badge" style="display:none">● LIVE — updating traffic conditions</div>
+
+<div id="info-bar">
+  <span id="status">Click the map to set start (A) and destination (B) points</span>
+  <span>Weimar, Thuringia · OSM data</span>
+  <span id="time-display"></span>
+</div>
+
+<script>
+const WEIMAR = [50.9797, 11.3294];
+let map, mode='walk', clickCount=0, ptA=null, ptB=null;
+let markerA=null, markerB=null, routeLayer=null, liveInterval=null;
+let layers={};
+let trafficOn=false, noiseOn=false, liveOn=false;
+
+map = L.map('map', {zoomControl:false}).setView(WEIMAR, 14);
+L.control.zoom({position:'bottomright'}).addTo(map);
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  attribution:'© OSM © CARTO',maxZoom:19
+}).addTo(map);
+
+function icon(emoji, color, size=22){
+  return L.divIcon({
+    html:`<div style="font-size:${size}px;line-height:1;filter:drop-shadow(0 1px 2px #000)">${emoji}</div>`,
+    className:'',iconAnchor:[size/2,size/2]
+  });
+}
+
+const noiseData = {
+  'traffic-noise':[
+    {ll:[50.979,11.329],label:'B7 / Erfurter Str (heavy traffic)',icon:'🔴',db:72},
+    {ll:[50.983,11.325],label:'Schillerstr traffic',icon:'🔴',db:68},
+    {ll:[50.976,11.333],label:'Carl-August-Allee',icon:'🔴',db:70},
+    {ll:[50.9745,11.340],label:'Ring road E',icon:'🔴',db:74},
+    {ll:[50.9830,11.347],label:'Buchenwald Allee (bypass)',icon:'🔴',db:75},
+    {ll:[50.972,11.322],label:'Erfurter Str S junction',icon:'🔴',db:71},
+  ],
+  'rail-noise':[
+    {ll:[50.9834,11.3353],label:'Weimar Hauptbahnhof trains',icon:'🟠',db:78},
+    {ll:[50.9840,11.3380],label:'Rail yard shunting',icon:'🟠',db:73},
+    {ll:[50.9820,11.3320],label:'Train approach corridor',icon:'🟠',db:65},
+  ],
+  'construction':[
+    {ll:[50.9765,11.3310],label:'Construction – Goetheplatz area',icon:'🟡',db:80},
+    {ll:[50.9810,11.3290],label:'Road works – Frauentorstr',icon:'🟡',db:78},
+    {ll:[50.9780,11.3380],label:'New residential build',icon:'🟡',db:76},
+  ],
+  'school':[
+    {ll:[50.9750,11.3275],label:'Gymnasium Am Horn',icon:'🔵',db:62},
+    {ll:[50.9810,11.3350],label:'Grundschule West',icon:'🔵',db:60},
+    {ll:[50.9790,11.3420],label:'Schiller Gymnasium',icon:'🔵',db:62},
+    {ll:[50.9770,11.3200],label:'Kindertagesstätte',icon:'🔵',db:58},
+  ],
+  'hospitality':[
+    {ll:[50.9795,11.3295],label:'Marktplatz bars & cafes',icon:'🟣',db:65},
+    {ll:[50.9788,11.3302],label:'Nightclub Schillerstr',icon:'🟣',db:70},
+    {ll:[50.9801,11.3285],label:'Restaurant cluster Alt-Weimar',icon:'🟣',db:60},
+  ],
+  'market':[
+    {ll:[50.9797,11.3294],label:'Wochenmarkt (Wed/Sat)',icon:'🔮',db:63},
+    {ll:[50.9760,11.3310],label:'Christkindlmarkt (seasonal)',icon:'🔮',db:65},
+  ],
+  'park':[
+    {ll:[50.9755,11.3340],label:'Park an der Ilm (quiet)',icon:'🟢',db:38},
+    {ll:[50.9720,11.3360],label:'Tiefurter Anlage',icon:'🟢',db:35},
+    {ll:[50.9850,11.3280],label:'Belvedereallee forest',icon:'🟢',db:32},
+    {ll:[50.9780,11.3260],label:'Goethe-Schiller park',icon:'🟢',db:40},
+    {ll:[50.9730,11.3200],label:'Südpark',icon:'🟢',db:36},
+  ]
+};
+
+const mainRoads = [
+  {path:[[50.9720,11.3100],[50.9760,11.3200],[50.9780,11.3280],[50.9797,11.3294]],color:'#dc2626',w:5,label:'B7 Erfurter Str'},
+  {path:[[50.9797,11.3294],[50.9820,11.3320],[50.9834,11.3353]],color:'#dc2626',w:4,label:'Schillerstr-Bahnhof'},
+  {path:[[50.9797,11.3294],[50.9790,11.3380],[50.9783,11.3450]],color:'#dc2626',w:4,label:'Berkaer Str'},
+  {path:[[50.9830,11.3470],[50.9830,11.3380],[50.9834,11.3353]],color:'#b91c1c',w:5,label:'Buchenwald Allee (ring)'},
+  {path:[[50.9720,11.3100],[50.9720,11.3220],[50.9740,11.3400],[50.9760,11.3450]],color:'#b91c1c',w:5,label:'Southern bypass'},
+  {path:[[50.9797,11.3294],[50.9800,11.3220],[50.9810,11.3100]],color:'#dc2626',w:3,label:'Friedensstr'},
+];
+
+const bikeLanes = [
+  {path:[[50.9797,11.3294],[50.9780,11.3310],[50.9760,11.3340],[50.9740,11.3360]],color:'#f59e0b',w:2,dash:'6,4'},
+  {path:[[50.9797,11.3294],[50.9810,11.3270],[50.9830,11.3250]],color:'#f59e0b',w:2,dash:'6,4'},
+  {path:[[50.9797,11.3294],[50.9800,11.3350],[50.9810,11.3400]],color:'#f59e0b',w:2,dash:'6,4'},
+  {path:[[50.9797,11.3294],[50.9770,11.3280],[50.9750,11.3270]],color:'#d97706',w:2,dash:'6,4'},
+];
+
+const pedestrianZones = [
+  {path:[[50.9797,11.3294],[50.9793,11.3282],[50.9789,11.3272]],color:'#84cc16',w:3},
+  {path:[[50.9797,11.3294],[50.9803,11.3298],[50.9808,11.3300]],color:'#84cc16',w:3},
+  {path:[[50.9797,11.3294],[50.9795,11.3305],[50.9792,11.3315]],color:'#84cc16',w:3},
+];
+
+function buildLayer(key){
+  const g = L.layerGroup();
+  if(key==='traffic-noise'||key==='rail-noise'||key==='construction'||key==='school'||key==='hospitality'||key==='market'||key==='park'){
+    (noiseData[key]||[]).forEach(p=>{
+      const m = L.marker(p.ll,{icon:icon(p.icon,null,20)}).addTo(g);
+      const col = p.db>70?'#ef4444':p.db>60?'#f97316':p.db>50?'#eab308':'#22c55e';
+      const circle = L.circle(p.ll,{radius:p.db*2.5,color:col,fillColor:col,fillOpacity:0.08,weight:1}).addTo(g);
+      m.bindPopup(`<b>${p.icon} ${p.label}</b><br><span style='color:${col}'>${p.db} dB(A) est.</span>`);
+    });
+  }
+  if(key==='main-roads'){
+    mainRoads.forEach(r=>{
+      L.polyline(r.path,{color:r.color,weight:r.w,opacity:0.7}).addTo(g)
+       .bindPopup(`<b>🚗 ${r.label}</b><br>High traffic artery`);
+    });
+  }
+  if(key==='bike-lanes'){
+    bikeLanes.forEach(r=>{
+      L.polyline(r.path,{color:r.color,weight:r.w,opacity:0.9,dashArray:r.dash||null}).addTo(g)
+       .bindPopup(`<b>🚲 Bike lane</b>`);
+    });
+  }
+  if(key==='pedestrian'){
+    pedestrianZones.forEach(r=>{
+      L.polyline(r.path,{color:r.color,weight:r.w,opacity:0.9}).addTo(g)
+       .bindPopup(`<b>🚶 Pedestrian zone</b>`);
+    });
+  }
+  if(key==='heatmap'){
+    const pts = [
+      [50.9797,11.3294,1.0],[50.9834,11.3353,0.9],[50.9720,11.3100,0.8],
+      [50.9830,11.3470,0.7],[50.9760,11.3450,0.6],[50.9820,11.3320,0.8],
+    ];
+    pts.forEach(([lat,lng,int])=>{
+      L.circle([lat,lng],{radius:300+int*200,color:'#ef4444',fillColor:'#ef4444',
+        fillOpacity:0.15*int,weight:0}).addTo(g);
+    });
+  }
+  return g;
+}
+
+const layerKeys=['traffic-noise','rail-noise','construction','school','hospitality','market','park','main-roads','bike-lanes','pedestrian','heatmap'];
+layerKeys.forEach(k=>{
+  layers[k]=buildLayer(k);
+  if(k!=='heatmap') layers[k].addTo(map);
+});
+
+function toggleLayer(key){
+  if(map.hasLayer(layers[key])) map.removeLayer(layers[key]);
+  else layers[key].addTo(map);
+}
+
+function toggleTraffic(){
+  trafficOn=!trafficOn;
+  document.getElementById('btn-traffic').classList.toggle('active',trafficOn);
+  ['main-roads'].forEach(k=>{
+    document.getElementById('l-mainroads').checked=trafficOn;
+    if(trafficOn) layers[k].addTo(map); else map.removeLayer(layers[k]);
+  });
+}
+function toggleNoise(){
+  noiseOn=!noiseOn;
+  document.getElementById('btn-noise').classList.toggle('active',noiseOn);
+  ['traffic-noise','rail-noise','construction','hospitality'].forEach(k=>{
+    if(noiseOn) layers[k].addTo(map); else map.removeLayer(layers[k]);
+  });
+}
+
+function setMode(m){
+  mode=m;
+  document.getElementById('btn-walk').classList.toggle('active',m==='walk');
+  document.getElementById('btn-bike').classList.toggle('active',m==='bike');
+  const sel = document.getElementById('route-type');
+  if(m==='bike') sel.value='bike';
+}
+
+const iconA = L.divIcon({html:'<div style="background:#22c55e;color:#fff;font-weight:bold;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid #fff">A</div>',className:'',iconAnchor:[11,11]});
+const iconB = L.divIcon({html:'<div style="background:#ef4444;color:#fff;font-weight:bold;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid #fff">B</div>',className:'',iconAnchor:[11,11]});
+
+map.on('click',function(e){
+  if(clickCount%2===0){
+    ptA=e.latlng;
+    if(markerA) markerA.remove();
+    markerA=L.marker(ptA,{icon:iconA}).addTo(map);
+    document.getElementById('point-a').textContent=`A: ${ptA.lat.toFixed(4)}, ${ptA.lng.toFixed(4)}`;
+    document.getElementById('status').textContent='Now click to set destination B';
+  } else {
+    ptB=e.latlng;
+    if(markerB) markerB.remove();
+    markerB=L.marker(ptB,{icon:iconB}).addTo(map);
+    document.getElementById('point-b').textContent=`B: ${ptB.lat.toFixed(4)}, ${ptB.lng.toFixed(4)}`;
+    document.getElementById('status').textContent='Points set — click "Calculate route"';
+    calcRoute();
+  }
+  clickCount++;
+});
+
+function calcRoute(){
+  if(!ptA||!ptB){document.getElementById('status').textContent='Set A and B first by clicking the map';return;}
+  if(routeLayer){routeLayer.remove();routeLayer=null;}
+
+  const type = document.getElementById('route-type').value;
+  const cfg = {
+    fastest:{color:'#22c55e',label:'Fastest route',speedFactor:1.0,noiseScore:'High',comfortScore:'Low'},
+    safest:{color:'#3b82f6',label:'Safest route (low traffic)',speedFactor:1.3,noiseScore:'Low',comfortScore:'High'},
+    nicest:{color:'#84cc16',label:'Nicest route (green & quiet)',speedFactor:1.5,noiseScore:'Very low',comfortScore:'Very high'},
+    bike:{color:'#f59e0b',label:'Best bike route (flat, lanes)',speedFactor:1.2,noiseScore:'Medium',comfortScore:'High'},
+  }[type];
+
+  const pts = generateRoute(ptA, ptB, type);
+  routeLayer = L.polyline(pts,{color:cfg.color,weight:4,opacity:0.9}).addTo(map);
+  routeLayer.bindPopup(`<b>${cfg.label}</b><br>Mode: ${mode==='walk'?'Walking':'Cycling'}`).openPopup();
+
+  const dist = calcDist(pts);
+  const spd = mode==='walk'?5:15;
+  const time = (dist/spd)*60*cfg.speedFactor;
+  document.getElementById('route-dist').textContent=`Distance: ~${dist.toFixed(1)} km`;
+  document.getElementById('route-time').textContent=`Estimated time: ~${Math.round(time)} min`;
+  document.getElementById('route-score').innerHTML=`Noise exposure: <span style="color:#a78bfa">${cfg.noiseScore}</span> | Comfort: <span style="color:#84cc16">${cfg.comfortScore}</span>`;
+  document.getElementById('route-info').style.display='block';
+  document.getElementById('status').textContent=`${cfg.label} calculated (${mode})`;
+  map.fitBounds(routeLayer.getBounds(),{padding:[40,40]});
+}
+
+function generateRoute(a, b, type){
+  const pts=[a];
+  const dx=b.lat-a.lat, dy=b.lng-a.lng;
+  const steps=8;
+  for(let i=1;i<steps;i++){
+    let t=i/steps;
+    let lat=a.lat+dx*t, lng=a.lng+dy*t;
+    if(type==='fastest'){
+      lat+=( Math.random()-0.5)*0.002;
+      lng+=( Math.random()-0.5)*0.002;
+    } else if(type==='safest'){
+      lat+=( Math.random()-0.5)*0.004;
+      lng+=( Math.random()-0.5)*0.004-0.002;
+    } else if(type==='nicest'){
+      lat+=Math.sin(t*Math.PI)*0.003+( Math.random()-0.5)*0.002;
+      lng-=Math.abs(Math.sin(t*Math.PI))*0.004;
+    } else if(type==='bike'){
+      lat+=( Math.random()-0.5)*0.003;
+      lng+=Math.cos(t*Math.PI)*0.003;
+    }
+    pts.push({lat,lng});
+  }
+  pts.push(b);
+  return pts;
+}
+
+function calcDist(pts){
+  let d=0;
+  for(let i=1;i<pts.length;i++){
+    const a=pts[i-1],b=pts[i];
+    const dlat=(b.lat-a.lat)*111, dlng=(b.lng-a.lng)*71;
+    d+=Math.sqrt(dlat*dlat+dlng*dlng);
+  }
+  return d;
+}
+
+function clearRoute(){
+  if(routeLayer){routeLayer.remove();routeLayer=null;}
+  if(markerA){markerA.remove();markerA=null;}
+  if(markerB){markerB.remove();markerB=null;}
+  ptA=ptB=null; clickCount=0;
+  document.getElementById('point-a').textContent='A: not set';
+  document.getElementById('point-b').textContent='B: not set';
+  document.getElementById('route-info').style.display='none';
+  document.getElementById('status').textContent='Click the map to set start (A) and destination (B) points';
+}
+
+let liveMarkers=[];
+function simulateLive(){
+  liveOn=!liveOn;
+  const btn=document.getElementById('btn-live');
+  const badge=document.getElementById('sim-badge');
+  btn.classList.toggle('active',liveOn);
+  badge.style.display=liveOn?'block':'none';
+  if(!liveOn){
+    clearInterval(liveInterval);
+    liveMarkers.forEach(m=>m.remove());
+    liveMarkers=[];
+    return;
+  }
+  const carPaths=[
+    [[50.9720,11.3100],[50.9760,11.3200],[50.9780,11.3280],[50.9797,11.3294],[50.9820,11.3320]],
+    [[50.9830,11.3470],[50.9830,11.3380],[50.9834,11.3353],[50.9820,11.3320],[50.9797,11.3294]],
+    [[50.9797,11.3294],[50.9790,11.3380],[50.9783,11.3450],[50.9760,11.3450]],
+  ];
+  let positions=carPaths.map(()=>0);
+  const carIcon=L.divIcon({html:'<div style="font-size:14px">🚗</div>',className:'',iconAnchor:[7,7]});
+  carPaths.forEach((path,i)=>{
+    const m=L.marker(path[0],{icon:carIcon}).addTo(map);
+    liveMarkers.push(m);
+  });
+  liveInterval=setInterval(()=>{
+    carPaths.forEach((path,i)=>{
+      positions[i]=(positions[i]+1)%path.length;
+      liveMarkers[i].setLatLng(path[positions[i]]);
+    });
+    updateTime();
+  },800);
+}
+
+function updateTime(){
+  const now=new Date();
+  const hr=now.getHours(),mn=now.getMinutes();
+  const rush=(hr>=7&&hr<9)||(hr>=16&&hr<19);
+  document.getElementById('time-display').textContent=
+    `${hr.toString().padStart(2,'0')}:${mn.toString().padStart(2,'0')} · ${rush?'⚠ Rush hour — high traffic':'Normal traffic'}`;
+}
+updateTime();
+setInterval(updateTime,30000);
+
+L.marker(WEIMAR,{icon:icon('📍',null,18)}).addTo(map)
+  .bindPopup('<b>Weimar city centre</b><br>Marktplatz');
+</script>
+</body>
+</html>
