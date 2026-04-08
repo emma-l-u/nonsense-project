@@ -11,9 +11,8 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen bg-[#0f0f1e] text-gray-200 overflow-hidden">
 
-      <ControlHeader />
-
       <div className="relative flex-1 min-h-0">
+        <ControlHeader />
         <MapView
           layerVisibility={s.layerVisibility}
           fetchedRoads={s.fetchedRoads}
@@ -48,7 +47,7 @@ export default function App() {
         <LayerPanel layerVisibility={s.layerVisibility} toggleLayer={s.toggleLayer} />
 
         {s.liveOn && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-[#1e1b4b] border border-[#6d28d9] rounded-full px-4 py-1 text-[11px] text-[#a78bfa] z-[2000] pointer-events-none">
+          <div className="absolute top-14 left-1/2 -translate-x-1/2 bg-[#1e1b4b] border border-[#6d28d9] rounded-full px-4 py-1 text-[11px] text-[#a78bfa] z-[2000] pointer-events-none">
             ● LIVE — traffic simulation
           </div>
         )}
