@@ -112,7 +112,7 @@ export function useMapState() {
     setStatus('Fetching route…')
     try {
       const profile = currentMode === 'bike' ? 'bike' : 'foot'
-      const result = await fetchOsrmRoute(a, b, profile)
+      const result = await fetchOsrmRoute(a, b, profile, type)
       if (!result) { setStatus('No route found — try different points'); return }
       setRoute(result.path)
       setRouteInfo({ dist: result.dist, time: result.duration * cfg.speedFactor, noiseScore: cfg.noiseScore, comfortScore: cfg.comfortScore, label: cfg.label })

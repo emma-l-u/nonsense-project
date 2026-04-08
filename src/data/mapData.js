@@ -89,21 +89,57 @@ export const ROUTE_CONFIG = {
   bike:    { color: '#f59e0b', label: 'Best bike route',              speedFactor: 1.2, noiseScore: 'Medium',   comfortScore: 'High'      },
 }
 
-// ── OSRM routing ──────────────────────────────────────────────────────────────
-const OSRM = 'https://router.project-osrm.org/route/v1'
+// ── OSRM routing — separate servers per transport mode ───────────────────────
+// routing.openstreetmap.de hosts reliable OSRM instances for car, bike & foot
+const OSRM_CAR  = 'https://routing.openstreetmap.de/routed-car/route/v1/driving'
+const OSRM_BIKE = 'https://routing.openstreetmap.de/routed-bike/route/v1/driving'
+const OSRM_FOOT = 'https://routing.openstreetmap.de/routed-foot/route/v1/driving'
 
-export async function fetchOsrmPath(fromLngLat, toLngLat, profile = 'driving') {
-  const [lng1, lat1] = fromLngLat, [lng2, lat2] = toLngLat
-  const res = await fetch(`${OSRM}/${profile}/${lng1},${lat1};${lng2},${lat2}?overview=full&geometries=geojson`)
+function osrmBase(profile) {
+  if (profile === 'bike' || profile === 'cycling') return OSRM_BIKE
+  if (profile === 'foot' || profile === 'walking') return OSRM_FOOT
+  return OSRM_CAR
+}
+
+async function osrmFetch(url) {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`OSRM ${res.status}`)
   const data = await res.json()
   if (data.code !== 'Ok' || !data.routes?.length) return null
+  return data
+}
+
+// Fetch a polyline path between two [lng, lat] points (for roads/bike lanes/cars)
+export async function fetchOsrmPath(fromLngLat, toLngLat, profile = 'driving') {
+  const [lng1, lat1] = fromLngLat, [lng2, lat2] = toLngLat
+  const base = osrmBase(profile)
+  const data = await osrmFetch(`${base}/${lng1},${lat1};${lng2},${lat2}?overview=full&geometries=geojson`)
+  if (!data) return null
   return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng])
 }
 
-export async function fetchOsrmRoute(a, b, profile = 'foot') {
-  const res = await fetch(`${OSRM}/${profile}/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`)
-  const data = await res.json()
-  if (data.code !== 'Ok' || !data.routes?.length) return null
+// Waypoints added per route type to produce genuinely different routes
+// (coordinates are lng,lat — OSRM order)
+const ROUTE_WAYPOINTS = {
+  nicest: '11.3330,50.9740',  // via Park an der Ilm
+  safest: '11.3285,50.9808',  // via quieter residential streets near Schillerplatz
+}
+
+// Fetch an A→B route for the route planner
+export async function fetchOsrmRoute(a, b, mode = 'foot', routeType = 'fastest') {
+  const base = osrmBase(mode)
+  const wp = (mode !== 'bike' && ROUTE_WAYPOINTS[routeType])
+    ? `${a.lng},${a.lat};${ROUTE_WAYPOINTS[routeType]};${b.lng},${b.lat}`
+    : `${a.lng},${a.lat};${b.lng},${b.lat}`
+
+  let data = await osrmFetch(`${base}/${wp}?overview=full&geometries=geojson`).catch(() => null)
+
+  // If waypoint route fails, fall back to direct route
+  if (!data && ROUTE_WAYPOINTS[routeType]) {
+    data = await osrmFetch(`${base}/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`).catch(() => null)
+  }
+  if (!data) return null
+
   const route = data.routes[0]
   return {
     path: route.geometry.coordinates.map(([lng, lat]) => ({ lat, lng })),
