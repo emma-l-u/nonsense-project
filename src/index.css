@@ -29,8 +29,8 @@
   max-height: none;
 }
 
-/* Red flag cursor when placing A/B points on the map */
+/* White flag cursor when placing A/B points on the map */
 .leaflet-container.cursor-flag,
 .leaflet-container.cursor-flag .leaflet-interactive {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='32' viewBox='0 0 24 32'%3E%3Cline x1='5' y1='2' x2='5' y2='31' stroke='%23dc2626' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpolygon points='5,2 23,9 5,16' fill='%23dc2626'/%3E%3C/svg%3E") 5 31, crosshair !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='32' viewBox='0 0 24 32'%3E%3Cline x1='5' y1='2' x2='5' y2='31' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpolygon points='5,2 23,9 5,16' fill='%23ffffff'/%3E%3C/svg%3E") 5 31, crosshair !important;
 }

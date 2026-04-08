@@ -1,4 +1,4 @@
-// ── Map centre ──────────────────────────────────────────────────────────────
+// ── Map centre ────────────────────────────────────────────────────────────────
 export const WEIMAR = [50.9797, 11.3294]
 
 // ── Noise source data  (market / events removed) ─────────────────────────────
@@ -41,42 +41,7 @@ export const noiseData = {
   ],
 }
 
-// ── Pedestrian zone polygons (lat/lng pairs) ─────────────────────────────────
-// Approximate inner-city pedestrian zone around Marktplatz / Schillerstraße
-export const pedestrianPolygons = [
-  [
-    [50.9803, 11.3275],
-    [50.9810, 11.3298],
-    [50.9803, 11.3320],
-    [50.9790, 11.3318],
-    [50.9786, 11.3295],
-    [50.9793, 11.3272],
-  ],
-]
-
-// ── Park / green zone polygons (lat/lng pairs) ───────────────────────────────
-export const parkPolygons = [
-  // Park an der Ilm (main park)
-  [
-    [50.9762, 11.3285],
-    [50.9760, 11.3358],
-    [50.9735, 11.3372],
-    [50.9706, 11.3348],
-    [50.9700, 11.3285],
-    [50.9720, 11.3250],
-    [50.9748, 11.3248],
-  ],
-  // Belvedereallee forest
-  [
-    [50.9848, 11.3258],
-    [50.9858, 11.3284],
-    [50.9848, 11.3302],
-    [50.9834, 11.3282],
-  ],
-]
-
-// ── Road segments fetched from OSRM at startup ───────────────────────────────
-// Format: from/to are [lng, lat] — OSRM order
+// ── Road segments fetched from OSRM ──────────────────────────────────────────
 export const ROAD_SEGMENTS = [
   { from: [11.3070, 50.9740], to: [11.3294, 50.9797], color: '#dc2626', w: 5, label: 'B7 Erfurter Str',       profile: 'driving' },
   { from: [11.3294, 50.9797], to: [11.3353, 50.9834], color: '#dc2626', w: 4, label: 'Schillerstr → Bahnhof', profile: 'driving' },
@@ -86,7 +51,7 @@ export const ROAD_SEGMENTS = [
   { from: [11.3294, 50.9797], to: [11.3100, 50.9810], color: '#dc2626', w: 3, label: 'Friedensstr',           profile: 'driving' },
 ]
 
-// ── Bike lane segments fetched from OSRM at startup ─────────────────────────
+// ── Bike lane segments fetched from OSRM ─────────────────────────────────────
 export const BIKE_SEGMENTS = [
   { from: [11.3070, 50.9740], to: [11.3294, 50.9797], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Erfurter Str'    },
   { from: [11.3294, 50.9797], to: [11.3360, 50.9720], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Park an der Ilm' },
@@ -94,15 +59,15 @@ export const BIKE_SEGMENTS = [
   { from: [11.3294, 50.9797], to: [11.3400, 50.9810], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Berkaer Str'     },
 ]
 
-// ── Live car routes fetched from OSRM at startup ─────────────────────────────
+// ── Live car routes ───────────────────────────────────────────────────────────
 export const CAR_COLORS = ['#60a5fa', '#fb923c', '#f87171']
 export const CAR_ROUTE_SEGMENTS = [
-  { from: [11.3070, 50.9740], to: [11.3353, 50.9834] }, // W → Bahnhof (via B7)
-  { from: [11.3294, 50.9797], to: [11.3470, 50.9830] }, // Marktplatz → NE bypass
-  { from: [11.3100, 50.9720], to: [11.3294, 50.9797] }, // S approach → Marktplatz
+  { from: [11.3070, 50.9740], to: [11.3353, 50.9834] },
+  { from: [11.3294, 50.9797], to: [11.3470, 50.9830] },
+  { from: [11.3100, 50.9720], to: [11.3294, 50.9797] },
 ]
 
-// ── Layer visibility defaults ─────────────────────────────────────────────────
+// ── Layer defaults ─────────────────────────────────────────────────────────────
 export const LAYER_DEFAULTS = {
   'traffic-noise': false,
   'rail-noise':    false,
@@ -110,7 +75,7 @@ export const LAYER_DEFAULTS = {
   'school':        false,
   'hospitality':   false,
   'park':          false,
-  'main-roads':    true,   // ← only this on by default
+  'main-roads':    true,
   'bike-lanes':    false,
   'pedestrian':    false,
   'heatmap':       false,
@@ -124,22 +89,19 @@ export const ROUTE_CONFIG = {
   bike:    { color: '#f59e0b', label: 'Best bike route',              speedFactor: 1.2, noiseScore: 'Medium',   comfortScore: 'High'      },
 }
 
-// ── OSRM helpers ──────────────────────────────────────────────────────────────
+// ── OSRM routing ──────────────────────────────────────────────────────────────
 const OSRM = 'https://router.project-osrm.org/route/v1'
 
 export async function fetchOsrmPath(fromLngLat, toLngLat, profile = 'driving') {
-  const [lng1, lat1] = fromLngLat
-  const [lng2, lat2] = toLngLat
-  const url = `${OSRM}/${profile}/${lng1},${lat1};${lng2},${lat2}?overview=full&geometries=geojson`
-  const res = await fetch(url)
+  const [lng1, lat1] = fromLngLat, [lng2, lat2] = toLngLat
+  const res = await fetch(`${OSRM}/${profile}/${lng1},${lat1};${lng2},${lat2}?overview=full&geometries=geojson`)
   const data = await res.json()
   if (data.code !== 'Ok' || !data.routes?.length) return null
   return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng])
 }
 
 export async function fetchOsrmRoute(a, b, profile = 'foot') {
-  const url = `${OSRM}/${profile}/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`
-  const res = await fetch(url)
+  const res = await fetch(`${OSRM}/${profile}/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`)
   const data = await res.json()
   if (data.code !== 'Ok' || !data.routes?.length) return null
   const route = data.routes[0]
@@ -152,9 +114,62 @@ export async function fetchOsrmRoute(a, b, profile = 'foot') {
 
 // ── Nominatim geocoding ────────────────────────────────────────────────────────
 export async function geocodeAddress(query) {
-  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`
-  const res = await fetch(url, { headers: { 'Accept-Language': 'en' } })
+  const res = await fetch(
+    `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`,
+    { headers: { 'Accept-Language': 'en' } }
+  )
   const data = await res.json()
   if (!data.length) return null
   return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), label: data[0].display_name }
+}
+
+// ── OpenStreetMap Overpass API — real park & pedestrian polygons ───────────────
+const OVERPASS = 'https://overpass-api.de/api/interpreter'
+const BBOX = '50.955,11.300,51.000,11.375' // Weimar area bounding box
+
+export async function fetchOsmParks() {
+  const q = `[out:json][timeout:30];(
+    way["leisure"="park"](${BBOX});
+    way["leisure"="garden"](${BBOX});
+    way["landuse"="forest"](${BBOX});
+    way["natural"="wood"](${BBOX});
+  );out geom;`
+  try {
+    const res = await fetch(`${OVERPASS}?data=${encodeURIComponent(q)}`)
+    const data = await res.json()
+    return data.elements
+      .filter(el =>
+        el.type === 'way' &&
+        el.geometry?.length > 2 &&
+        el.nodes?.[0] === el.nodes?.[el.nodes.length - 1] // must be a closed polygon
+      )
+      .map(el => ({
+        positions: el.geometry.map(p => [p.lat, p.lon]),
+        name: el.tags?.name || el.tags?.leisure || el.tags?.landuse || 'Green space',
+        kind: (el.tags?.landuse === 'forest' || el.tags?.natural === 'wood') ? 'forest' : 'park',
+      }))
+  } catch {
+    return []
+  }
+}
+
+export async function fetchOsmPedestrian() {
+  const q = `[out:json][timeout:30];(
+    way["highway"="pedestrian"](${BBOX});
+    way["place"="square"](${BBOX});
+    way["highway"="footway"]["area"="yes"](${BBOX});
+  );out geom;`
+  try {
+    const res = await fetch(`${OVERPASS}?data=${encodeURIComponent(q)}`)
+    const data = await res.json()
+    return data.elements
+      .filter(el => el.type === 'way' && el.geometry?.length > 1)
+      .map(el => ({
+        positions: el.geometry.map(p => [p.lat, p.lon]),
+        name: el.tags?.name || 'Pedestrian zone',
+        isClosed: el.nodes?.[0] === el.nodes?.[el.nodes.length - 1],
+      }))
+  } catch {
+    return []
+  }
 }
