@@ -159,12 +159,6 @@ export default function MapView({
       <MapInteraction onMapClick={onMapClick} isPlacing={isPlacing} />
       {route && <RouteFitter route={route} />}
 
-      {/* City centre pin */}
-      <Marker position={WEIMAR} icon={L.divIcon({
-        html: '<div style="font-size:18px;filter:drop-shadow(0 1px 3px #000)">📍</div>',
-        className: '', iconAnchor: [9, 18],
-      })}><Popup><b>Weimar city centre</b><br />Marktplatz</Popup></Marker>
-
       {/* Route A/B pins */}
       {ptA && <Marker position={[ptA.lat, ptA.lng]} icon={iconA}><Popup>Start A</Popup></Marker>}
       {ptB && <Marker position={[ptB.lat, ptB.lng]} icon={iconB}><Popup>Destination B</Popup></Marker>}
