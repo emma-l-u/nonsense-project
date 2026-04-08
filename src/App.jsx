@@ -18,13 +18,11 @@ export default function App() {
           layerVisibility={s.layerVisibility}
           fetchedRoads={s.fetchedRoads}
           fetchedBikeLanes={s.fetchedBikeLanes}
-          fetchedCarPaths={s.fetchedCarPaths}
           osmParks={s.osmParks}
           osmPedestrian={s.osmPedestrian}
           ptA={s.ptA} ptB={s.ptB}
           route={s.route} routeType={s.routeType}
-          liveOn={s.liveOn} livePositions={s.livePositions}
-          simHour={s.simHour}
+          liveOn={s.liveOn} simHour={s.simHour}
           onMapClick={s.handleMapClick}
           isPlacing={s.isPlacing}
         />

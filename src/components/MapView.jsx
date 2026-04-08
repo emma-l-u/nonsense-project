@@ -1,10 +1,10 @@
-import { useLayoutEffect, useEffect } from 'react'
+import { useLayoutEffect, useEffect, useRef, useState } from 'react'
 import {
   MapContainer, TileLayer, Marker, Circle, Polyline, Polygon,
   LayerGroup, Popup, ZoomControl, useMap, useMapEvents,
 } from 'react-leaflet'
 import L from 'leaflet'
-import { noiseData, WEIMAR, ROUTE_CONFIG, CAR_COLORS } from '../data/mapData'
+import { noiseData, WEIMAR, ROUTE_CONFIG } from '../data/mapData'
 
 // ── SVG hatch patterns ────────────────────────────────────────────────────────
 function SvgPatterns() {
@@ -76,33 +76,62 @@ function noiseColor(db) {
   return '#22c55e'
 }
 
-// ── Car icon with bearing ─────────────────────────────────────────────────────
-function getBearing([lat1, lng1], [lat2, lng2]) {
-  const r = Math.PI / 180
-  const φ1 = lat1 * r, φ2 = lat2 * r, Δλ = (lng2 - lng1) * r
-  const y = Math.sin(Δλ) * Math.cos(φ2)
-  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ)
-  return (Math.atan2(y, x) / r + 360) % 360
-}
+// ── Animated traffic flow lines ───────────────────────────────────────────────
+function TrafficFlow({ roads, simHour }) {
+  const [phase, setPhase] = useState(0)
+  const simHourRef = useRef(simHour)
+  useEffect(() => { simHourRef.current = simHour }, [simHour])
 
-function makeCarIcon(bearing, color) {
-  return L.divIcon({
-    html: `<div style="transform:rotate(${bearing}deg);width:18px;height:26px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6))">
-      <svg viewBox="0 0 18 26" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="3" width="16" height="20" rx="3" fill="${color}" stroke="white" stroke-width="0.8"/>
-        <rect x="3" y="5" width="12" height="6" rx="1" fill="rgba(186,230,253,0.9)"/>
-        <rect x="3" y="17" width="12" height="4" rx="1" fill="rgba(186,230,253,0.6)"/>
-        <rect x="2"  y="3" width="4" height="2" rx="1" fill="#fef08a"/>
-        <rect x="12" y="3" width="4" height="2" rx="1" fill="#fef08a"/>
-        <rect x="2"  y="21" width="4" height="2" rx="1" fill="#fca5a5"/>
-        <rect x="12" y="21" width="4" height="2" rx="1" fill="#fca5a5"/>
-        <rect x="0"  y="6" width="2" height="4" rx="1" fill="#1f2937"/>
-        <rect x="16" y="6" width="2" height="4" rx="1" fill="#1f2937"/>
-        <rect x="0"  y="16" width="2" height="4" rx="1" fill="#1f2937"/>
-        <rect x="16" y="16" width="2" height="4" rx="1" fill="#1f2937"/>
-      </svg>
-    </div>`,
-    className: '', iconSize: [18, 26], iconAnchor: [9, 13],
+  useEffect(() => {
+    const id = setInterval(() => {
+      const h = simHourRef.current % 24
+      const isRush  = (h >= 7 && h < 9) || (h >= 16 && h < 19)
+      const isNight = h >= 22 || h < 6
+      const speed = isRush ? 3 : isNight ? 0.6 : 1.4
+      setPhase(p => p + speed)
+    }, 55)
+    return () => clearInterval(id)
+  }, [])
+
+  if (!roads?.length) return null
+
+  const h = (simHour ?? 12) % 24
+  const isRush  = (h >= 7 && h < 9) || (h >= 16 && h < 19)
+  const isNight = h >= 22 || h < 6
+  const intensity = isNight ? 0.15 : isRush ? 1.0 : 0.45
+  const lineCount = isNight ? 1 : isRush ? 4 : 2
+
+  return roads.map((road, ri) => {
+    const path = road.path.map(([lat, lng], pi) => [
+      lat + Math.sin(phase * 0.04 + pi * 0.8 + ri * 1.1) * 0.00006 * intensity,
+      lng + Math.cos(phase * 0.035 + pi * 0.6 + ri * 0.9) * 0.00004 * intensity,
+    ])
+    return (
+      <LayerGroup key={ri}>
+        {/* Wide soft glow halo */}
+        <Polyline positions={path} pathOptions={{
+          color: '#ef4444', weight: 14 + lineCount * 2,
+          opacity: 0.03 * intensity * (lineCount + 1),
+          lineCap: 'round', lineJoin: 'round',
+        }} />
+        {/* Inner glow */}
+        <Polyline positions={path} pathOptions={{
+          color: '#f87171', weight: 6,
+          opacity: 0.08 * intensity, lineCap: 'round', lineJoin: 'round',
+        }} />
+        {/* Flowing dash lines */}
+        {Array.from({ length: lineCount }, (_, li) => (
+          <Polyline key={li} positions={path} pathOptions={{
+            color: li % 2 === 0 ? '#ef4444' : '#fca5a5',
+            weight: li === lineCount - 1 ? 1.5 : 2.5,
+            opacity: (0.55 + li * 0.1) * Math.min(intensity + 0.15, 1),
+            dashArray: `${10 + li * 5} ${5 + li * 3}`,
+            dashOffset: String(phase + li * 15),
+            lineCap: 'round',
+          }} />
+        ))}
+      </LayerGroup>
+    )
   })
 }
 
@@ -132,17 +161,10 @@ function NoiseLayer({ data }) {
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
-function visibleCarCount(hour) {
-  const h = hour % 24
-  if (h >= 22 || h < 6) return 1                                      // night: 1 car
-  if ((h >= 7 && h < 9) || (h >= 16 && h < 19)) return 3             // rush: all cars
-  return 2                                                              // normal: 2 cars
-}
-
 export default function MapView({
-  layerVisibility, fetchedRoads, fetchedBikeLanes, fetchedCarPaths,
+  layerVisibility, fetchedRoads, fetchedBikeLanes,
   osmParks, osmPedestrian,
-  ptA, ptB, route, routeType, liveOn, livePositions, simHour, onMapClick, isPlacing,
+  ptA, ptB, route, routeType, liveOn, simHour, onMapClick, isPlacing,
 }) {
   return (
     <MapContainer center={WEIMAR} zoom={14} zoomControl={false} className="h-full w-full">
@@ -238,18 +260,8 @@ export default function MapView({
         </LayerGroup>
       )}
 
-      {/* Live car simulation — count varies by time of day */}
-      {liveOn && fetchedCarPaths && (
-        <LayerGroup>
-          {fetchedCarPaths.slice(0, visibleCarCount(simHour ?? 12)).map((path, i) => {
-            if (!path) return null
-            const pos = Math.min(livePositions[i] ?? 0, path.length - 1)
-            const nextPos = Math.min(pos + 1, path.length - 1)
-            const bearing = pos < path.length - 1 ? getBearing(path[pos], path[nextPos]) : 0
-            return <Marker key={i} position={path[pos]} icon={makeCarIcon(bearing, CAR_COLORS[i])} />
-          })}
-        </LayerGroup>
-      )}
+      {/* Animated traffic flow — glowing lines scaled to time of day */}
+      {liveOn && <TrafficFlow roads={fetchedRoads} simHour={simHour} />}
     </MapContainer>
   )
 }

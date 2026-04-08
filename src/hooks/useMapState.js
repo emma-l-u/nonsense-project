@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
-  LAYER_DEFAULTS, ROUTE_CONFIG, CAR_ROUTE_SEGMENTS, CAR_COLORS,
+  LAYER_DEFAULTS, ROUTE_CONFIG,
   ROAD_SEGMENTS, BIKE_SEGMENTS,
   fetchOsrmPath, fetchOsrmRoute, geocodeAddress,
   fetchOsmParks, fetchOsmPedestrian,
@@ -37,10 +37,8 @@ export function useMapState() {
   const [route, setRoute] = useState(null)
   const [routeInfo, setRouteInfo] = useState(null)
 
-  // Live simulation
+  // Live simulation toggle
   const [liveOn, setLiveOn] = useState(false)
-  const [livePositions, setLivePositions] = useState(CAR_ROUTE_SEGMENTS.map(() => 0))
-  const liveDirectionsRef = useRef(CAR_ROUTE_SEGMENTS.map(() => 1))
 
   // Simulation time (0–24 float hours), starts at current real time
   const [simHour, _setSimHour] = useState(() => {
@@ -107,26 +105,6 @@ export function useMapState() {
     return () => clearInterval(id)
   }, [liveOn])
 
-  // ── Live car animation — speed depends on time of day ────────────────────
-  useEffect(() => {
-    if (!liveOn || !fetchedCarPaths) return
-    const id = setInterval(() => {
-      const h = simHourRef.current % 24
-      const isRush  = (h >= 7 && h < 9) || (h >= 16 && h < 19)
-      const isNight = h >= 22 || h < 6
-      // Rush: skip ~60% of ticks → slow crawl; Night: 2-step jumps → fast
-      if (isRush && Math.random() > 0.4) return
-      setLivePositions(prev => prev.map((pos, i) => {
-        const path = fetchedCarPaths[i]; if (!path) return pos
-        const step = isNight ? 2 : 1
-        const next = pos + liveDirectionsRef.current[i] * step
-        if (next >= path.length - 1) { liveDirectionsRef.current[i] = -1; return Math.max(0, path.length - 2) }
-        if (next < 0) { liveDirectionsRef.current[i] = 1; return 1 }
-        return next
-      }))
-    }, 100)
-    return () => clearInterval(id)
-  }, [liveOn, fetchedCarPaths])
 
   // ── Route calculation ─────────────────────────────────────────────────────
   const doCalcRoute = useCallback(async (a, b) => {
@@ -214,12 +192,7 @@ export function useMapState() {
       return { ...prev, ...Object.fromEntries(NOISE_GROUP.map(k => [k, !anyOn])) }
     }), [])
 
-  const toggleLive = useCallback(() => {
-    setLiveOn(prev => {
-      if (prev) { setLivePositions(CAR_ROUTE_SEGMENTS.map(() => 0)); liveDirectionsRef.current = CAR_ROUTE_SEGMENTS.map(() => 1) }
-      return !prev
-    })
-  }, [])
+  const toggleLive = useCallback(() => setLiveOn(prev => !prev), [])
 
   const noiseActive = NOISE_GROUP.some(k => layerVisibility[k])
   const isPlacing = !ptA || !ptB
@@ -233,7 +206,7 @@ export function useMapState() {
     osmParks, osmPedestrian,
     ptA, ptB,
     route, routeInfo,
-    liveOn, toggleLive, livePositions,
+    liveOn, toggleLive,
     simHour, setSimHour,
     searchA, setSearchA, searchingA, handleSearchA,
     searchB, setSearchB, searchingB, handleSearchB,
