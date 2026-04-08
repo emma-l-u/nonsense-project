@@ -11,7 +11,7 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen bg-[#0f0f1e] text-gray-200 overflow-hidden">
 
-      <ControlHeader onClear={s.handleClear} />
+      <ControlHeader />
 
       <div className="relative flex-1 min-h-0">
         <MapView
@@ -35,6 +35,7 @@ export default function App() {
           mode={s.mode} setMode={s.setMode}
           routeType={s.routeType} setRouteType={s.setRouteType}
           onCalcRoute={s.handleCalcRoute}
+          onClear={s.handleClear}
           searchA={s.searchA} setSearchA={s.setSearchA}
           searchingA={s.searchingA} onSearchA={s.handleSearchA}
           searchB={s.searchB} setSearchB={s.setSearchB}

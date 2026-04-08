@@ -34,7 +34,7 @@ function AddressRow({ label, color, value, onChange, onSearch, loading }) {
 export default function RoutePlanner({
   ptA, ptB, routeInfo,
   mode, setMode, routeType, setRouteType,
-  onCalcRoute,
+  onCalcRoute, onClear,
   searchA, setSearchA, searchingA, onSearchA,
   searchB, setSearchB, searchingB, onSearchB,
   noiseActive, toggleNoiseGroup,
@@ -68,9 +68,9 @@ export default function RoutePlanner({
           onSearch={onSearchB} loading={searchingB}
         />
 
-        {/* Coordinate hints */}
+        {/* Coordinate hints — only when a point is placed */}
         {(ptA || ptB) && (
-          <div className="text-[10px] text-gray-600 mb-2 space-y-0.5">
+          <div className="text-[10px] text-gray-600 space-y-0.5 mb-2">
             {ptA && <div><span className="text-green-500">A</span> {ptA.lat.toFixed(4)}, {ptA.lng.toFixed(4)}</div>}
             {ptB && <div><span className="text-red-400">B</span> {ptB.lat.toFixed(4)}, {ptB.lng.toFixed(4)}</div>}
           </div>
@@ -103,6 +103,16 @@ export default function RoutePlanner({
         >
           Calculate route ↗
         </button>
+
+        {/* Clear button — only visible when at least one point is placed */}
+        {(ptA || ptB) && (
+          <button
+            onClick={onClear}
+            className="w-full mt-1.5 py-1.5 text-[11px] rounded border border-[#3a3a5a] text-gray-500 hover:text-gray-300 hover:border-[#555] cursor-pointer transition-colors"
+          >
+            ✕ Clear route
+          </button>
+        )}
       </div>
 
       {/* ── Route result ── */}
