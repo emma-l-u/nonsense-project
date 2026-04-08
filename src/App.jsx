@@ -6,64 +6,53 @@ import LayerPanel from './components/LayerPanel'
 import InfoBar from './components/InfoBar'
 
 export default function App() {
-  const state = useMapState()
+  const s = useMapState()
 
   return (
     <div className="flex flex-col h-screen bg-[#1a1a2e] text-gray-200 overflow-hidden">
-      {/* Top control bar */}
       <ControlHeader
-        mode={state.mode}
-        setMode={state.setMode}
-        routeType={state.routeType}
-        setRouteType={state.setRouteType}
-        trafficActive={state.trafficActive}
-        noiseActive={state.noiseActive}
-        liveOn={state.liveOn}
-        layerVisibility={state.layerVisibility}
-        toggleLayer={state.toggleLayer}
-        toggleNoiseGroup={state.toggleNoiseGroup}
-        toggleLive={state.toggleLive}
-        onClear={state.handleClear}
+        mode={s.mode} setMode={s.setMode}
+        routeType={s.routeType} setRouteType={s.setRouteType}
+        trafficActive={s.trafficActive} noiseActive={s.noiseActive}
+        liveOn={s.liveOn} layerVisibility={s.layerVisibility}
+        toggleLayer={s.toggleLayer} toggleNoiseGroup={s.toggleNoiseGroup}
+        toggleLive={s.toggleLive} onClear={s.handleClear}
       />
 
-      {/* Map area — flex-1 + min-h-0 makes the map fill the remaining space */}
       <div className="relative flex-1 min-h-0">
         <MapView
-          layerVisibility={state.layerVisibility}
-          fetchedRoads={state.fetchedRoads}
-          ptA={state.ptA}
-          ptB={state.ptB}
-          route={state.route}
-          routeType={state.routeType}
-          liveOn={state.liveOn}
-          livePositions={state.livePositions}
-          onMapClick={state.handleMapClick}
+          layerVisibility={s.layerVisibility}
+          fetchedRoads={s.fetchedRoads}
+          fetchedBikeLanes={s.fetchedBikeLanes}
+          fetchedCarPaths={s.fetchedCarPaths}
+          ptA={s.ptA} ptB={s.ptB}
+          route={s.route} routeType={s.routeType}
+          liveOn={s.liveOn} livePositions={s.livePositions}
+          onMapClick={s.handleMapClick}
+          isPlacing={s.isPlacing}
         />
 
-        {/* Floating panels (positioned over the map) */}
         <RoutePlanner
-          ptA={state.ptA}
-          ptB={state.ptB}
-          routeInfo={state.routeInfo}
-          onCalcRoute={state.handleCalcRoute}
-          onClear={state.handleClear}
+          ptA={s.ptA} ptB={s.ptB}
+          routeInfo={s.routeInfo}
+          onCalcRoute={s.handleCalcRoute}
+          onClear={s.handleClear}
+          searchA={s.searchA} setSearchA={s.setSearchA}
+          searchingA={s.searchingA} onSearchA={s.handleSearchA}
+          searchB={s.searchB} setSearchB={s.setSearchB}
+          searchingB={s.searchingB} onSearchB={s.handleSearchB}
         />
 
-        <LayerPanel
-          layerVisibility={state.layerVisibility}
-          toggleLayer={state.toggleLayer}
-        />
+        <LayerPanel layerVisibility={s.layerVisibility} toggleLayer={s.toggleLayer} />
 
-        {/* Live simulation badge */}
-        {state.liveOn && (
+        {s.liveOn && (
           <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-[#1e1b4b] border border-[#6d28d9] rounded px-3 py-1 text-[11px] text-[#a78bfa] z-[2000] pointer-events-none">
-            ● LIVE — updating traffic conditions
+            ● LIVE — traffic simulation running
           </div>
         )}
       </div>
 
-      {/* Bottom status bar */}
-      <InfoBar status={state.status} timeDisplay={state.timeDisplay} />
+      <InfoBar status={s.status} timeDisplay={s.timeDisplay} />
     </div>
   )
 }
