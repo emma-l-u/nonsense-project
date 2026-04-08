@@ -22,10 +22,14 @@ export const noiseData = {
     { ll: [50.9780, 11.3380], label: 'New residential build',           icon: '🟡', db: 76 },
   ],
   'school': [
-    { ll: [50.9750, 11.3275], label: 'Gymnasium Am Horn',   icon: '🔵', db: 62 },
-    { ll: [50.9810, 11.3350], label: 'Grundschule West',    icon: '🔵', db: 60 },
-    { ll: [50.9790, 11.3420], label: 'Schiller Gymnasium',  icon: '🔵', db: 62 },
-    { ll: [50.9770, 11.3200], label: 'Kindertagesstätte',   icon: '🔵', db: 58 },
+    { ll: [50.9756, 11.3272], label: 'Goethegymnasium (Amalienstr.)',        icon: '🔵', db: 62 },
+    { ll: [50.9814, 11.3298], label: 'Wilhelm-Ernst-Gymnasium (Herderplatz)', icon: '🔵', db: 61 },
+    { ll: [50.9894, 11.3096], label: 'Humboldt-Gymnasium (Prager Str.)',      icon: '🔵', db: 62 },
+    { ll: [50.9734, 11.3433], label: 'Grundschule Louis Fürnberg',            icon: '🔵', db: 60 },
+    { ll: [50.9896, 11.3030], label: 'Grundschule Albert Schweitzer',         icon: '🔵', db: 59 },
+    { ll: [50.9730, 11.3210], label: 'Ev. Kindergarten Sophiengarten',        icon: '🔵', db: 57 },
+    { ll: [50.9730, 11.3364], label: 'Spielplatz Park an der Ilm',            icon: '🔵', db: 55 },
+    { ll: [50.9730, 11.3310], label: 'Spielplatz Weimarhallenpark',           icon: '🔵', db: 56 },
   ],
   'hospitality': [
     { ll: [50.9795, 11.3295], label: 'Marktplatz bars & cafes',       icon: '🟣', db: 65 },
@@ -78,7 +82,6 @@ export const LAYER_DEFAULTS = {
   'main-roads':    true,
   'bike-lanes':    false,
   'pedestrian':    false,
-  'heatmap':       false,
 }
 
 // ── Route configuration ───────────────────────────────────────────────────────

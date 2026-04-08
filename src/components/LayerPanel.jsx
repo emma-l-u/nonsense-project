@@ -1,17 +1,16 @@
 const NOISE_LAYERS = [
-  { key: 'traffic-noise', label: 'Road traffic noise',    color: '#ef4444' },
-  { key: 'rail-noise',    label: 'Train / rail noise',    color: '#f97316' },
-  { key: 'construction',  label: 'Construction sites',    color: '#eab308' },
-  { key: 'school',        label: 'Schools / playgrounds', color: '#06b6d4' },
-  { key: 'hospitality',   label: 'Bars & nightlife',      color: '#ec4899' },
+  { key: 'traffic-noise', label: 'car traffic',                    color: '#ef4444' },
+  { key: 'rail-noise',    label: 'train traffic',                  color: '#f97316' },
+  { key: 'construction',  label: 'construction',                   color: '#eab308' },
+  { key: 'school',        label: 'playgrounds & childcare',        color: '#06b6d4' },
+  { key: 'hospitality',   label: 'bars & nightlife',               color: '#ec4899' },
 ]
 
 const MAP_LAYERS = [
-  { key: 'main-roads',  label: 'Traffic arteries', color: '#dc2626' },
-  { key: 'bike-lanes',  label: 'Bike lanes',       color: '#f59e0b' },
-  { key: 'pedestrian',  label: 'Pedestrian zones', color: '#fde047' },
-  { key: 'park',        label: 'Green spaces',     color: '#22c55e' },
-  { key: 'heatmap',     label: 'Traffic heatmap',  color: '#ef4444' },
+  { key: 'main-roads',  label: 'traffic arteries', color: '#dc2626' },
+  { key: 'bike-lanes',  label: 'bike lanes',       color: '#f59e0b' },
+  { key: 'pedestrian',  label: 'pedestrian zones', color: '#fde047' },
+  { key: 'park',        label: 'green zones',      color: '#4ade80' },
 ]
 
 function LayerRow({ layerKey, label, color, checked, onToggle }) {

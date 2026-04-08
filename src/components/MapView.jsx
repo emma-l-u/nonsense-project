@@ -20,16 +20,6 @@ function SvgPatterns() {
           <rect width="8" height="8" fill="rgba(253,224,71,0.08)"/>
           <line x1="0" y1="0" x2="0" y2="8" stroke="#fde047" stroke-width="2.5" stroke-opacity="0.55"/>
         </pattern>
-        <pattern id="park-hatch" width="9" height="9"
-            patternUnits="userSpaceOnUse" patternTransform="rotate(135)">
-          <rect width="9" height="9" fill="rgba(74,222,128,0.1)"/>
-          <line x1="0" y1="0" x2="0" y2="9" stroke="#4ade80" stroke-width="2.5" stroke-opacity="0.55"/>
-        </pattern>
-        <pattern id="forest-hatch" width="9" height="9"
-            patternUnits="userSpaceOnUse" patternTransform="rotate(135)">
-          <rect width="9" height="9" fill="rgba(22,101,52,0.15)"/>
-          <line x1="0" y1="0" x2="0" y2="9" stroke="#15803d" stroke-width="2.5" stroke-opacity="0.65"/>
-        </pattern>
       `
       svg.insertBefore(defs, svg.firstChild)
     }
@@ -189,14 +179,14 @@ export default function MapView({
         </LayerGroup>
       )}
 
-      {/* OSM Park polygons — green hatch, no centre markers */}
+      {/* OSM Park polygons — solid light green fill */}
       {layerVisibility['park'] && osmParks.map((park, i) => (
         <Polygon key={i} positions={park.positions}
           pathOptions={{
-            fillColor: park.kind === 'forest' ? 'url(#forest-hatch)' : 'url(#park-hatch)',
-            fillOpacity: 1,
+            fillColor: park.kind === 'forest' ? '#166534' : '#4ade80',
+            fillOpacity: park.kind === 'forest' ? 0.18 : 0.22,
             color: park.kind === 'forest' ? '#15803d' : '#22c55e',
-            weight: 1.5, opacity: 0.55,
+            weight: 1.5, opacity: 0.6,
           }}>
           <Popup><b>🌳 {park.name}</b></Popup>
         </Polygon>
@@ -237,18 +227,6 @@ export default function MapView({
               pathOptions={{ color: r.color, weight: r.w, opacity: 0.9, dashArray: r.dash }}>
               <Popup><b>🚲 {r.label || 'Bike lane'}</b></Popup>
             </Polyline>
-          ))}
-        </LayerGroup>
-      )}
-
-      {/* Traffic heatmap */}
-      {layerVisibility['heatmap'] && (
-        <LayerGroup>
-          {[[50.9797,11.3294,1.0],[50.9834,11.3353,0.9],[50.9720,11.3100,0.8],
-            [50.9830,11.3470,0.7],[50.9760,11.3450,0.6],[50.9820,11.3320,0.8]]
-            .map(([lat,lng,int],i) => (
-            <Circle key={i} center={[lat,lng]} radius={300+int*200}
-              pathOptions={{ color:'#ef4444', fillColor:'#ef4444', fillOpacity:0.12*int, weight:0 }} />
           ))}
         </LayerGroup>
       )}
