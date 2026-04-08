@@ -117,7 +117,7 @@ export function useMapState() {
       setRoute(result.path)
       setRouteInfo({ dist: result.dist, time: result.duration * cfg.speedFactor, noiseScore: cfg.noiseScore, comfortScore: cfg.comfortScore, label: cfg.label })
       setStatus(`${cfg.label} — ${result.dist.toFixed(1)} km · ${Math.round(result.duration * cfg.speedFactor)} min`)
-    } catch { setStatus('Network error — could not fetch route') }
+    } catch (err) { console.error('Route error:', err); setStatus('Network error — could not fetch route') }
   }, [])
 
   // ── Map click ─────────────────────────────────────────────────────────────

@@ -89,24 +89,25 @@ export const ROUTE_CONFIG = {
   bike:    { color: '#f59e0b', label: 'Best bike route',              speedFactor: 1.2, noiseScore: 'Medium',   comfortScore: 'High'      },
 }
 
-// ── OSRM routing — separate servers per transport mode ───────────────────────
-// routing.openstreetmap.de hosts reliable OSRM instances for car, bike & foot
-const OSRM_CAR  = 'https://routing.openstreetmap.de/routed-car/route/v1/driving'
-const OSRM_BIKE = 'https://routing.openstreetmap.de/routed-bike/route/v1/driving'
-const OSRM_FOOT = 'https://routing.openstreetmap.de/routed-foot/route/v1/driving'
+// ── OSRM routing — public demo server (supports driving, foot, bike) ─────────
+const OSRM_BASE = 'https://router.project-osrm.org/route/v1'
 
 function osrmBase(profile) {
-  if (profile === 'bike' || profile === 'cycling') return OSRM_BIKE
-  if (profile === 'foot' || profile === 'walking') return OSRM_FOOT
-  return OSRM_CAR
+  if (profile === 'bike' || profile === 'cycling') return `${OSRM_BASE}/bike`
+  if (profile === 'foot' || profile === 'walking') return `${OSRM_BASE}/foot`
+  return `${OSRM_BASE}/driving`
 }
 
 async function osrmFetch(url) {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`OSRM ${res.status}`)
-  const data = await res.json()
-  if (data.code !== 'Ok' || !data.routes?.length) return null
-  return data
+  try {
+    const res = await fetch(url)
+    if (!res.ok) return null
+    const data = await res.json()
+    if (data.code !== 'Ok' || !data.routes?.length) return null
+    return data
+  } catch {
+    return null
+  }
 }
 
 // Fetch a polyline path between two [lng, lat] points (for roads/bike lanes/cars)
