@@ -4,6 +4,7 @@ import MapView from './components/MapView'
 import RoutePlanner from './components/RoutePlanner'
 import LayerPanel from './components/LayerPanel'
 import InfoBar from './components/InfoBar'
+import TimeSlider from './components/TimeSlider'
 
 export default function App() {
   const s = useMapState()
@@ -23,6 +24,7 @@ export default function App() {
           ptA={s.ptA} ptB={s.ptB}
           route={s.route} routeType={s.routeType}
           liveOn={s.liveOn} livePositions={s.livePositions}
+          simHour={s.simHour}
           onMapClick={s.handleMapClick}
           isPlacing={s.isPlacing}
         />
@@ -47,9 +49,12 @@ export default function App() {
         <LayerPanel layerVisibility={s.layerVisibility} toggleLayer={s.toggleLayer} />
 
         {s.liveOn && (
-          <div className="absolute top-14 left-1/2 -translate-x-1/2 bg-[#1e1b4b] border border-[#6d28d9] rounded-full px-4 py-1 text-[11px] text-[#a78bfa] z-[2000] pointer-events-none">
-            ● LIVE — traffic simulation
-          </div>
+          <>
+            <div className="absolute top-14 left-1/2 -translate-x-1/2 bg-[#1e1b4b] border border-[#6d28d9] rounded-full px-4 py-1 text-[11px] text-[#a78bfa] z-[2000] pointer-events-none">
+              ● LIVE — traffic simulation
+            </div>
+            <TimeSlider simHour={s.simHour} setSimHour={s.setSimHour} liveOn={s.liveOn} />
+          </>
         )}
       </div>
 

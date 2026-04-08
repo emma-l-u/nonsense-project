@@ -37,10 +37,17 @@ export function useMapState() {
   const [route, setRoute] = useState(null)
   const [routeInfo, setRouteInfo] = useState(null)
 
-  // Live simulation (only for bike/car mode)
+  // Live simulation
   const [liveOn, setLiveOn] = useState(false)
   const [livePositions, setLivePositions] = useState(CAR_ROUTE_SEGMENTS.map(() => 0))
   const liveDirectionsRef = useRef(CAR_ROUTE_SEGMENTS.map(() => 1))
+
+  // Simulation time (0–24 float hours), starts at current real time
+  const [simHour, _setSimHour] = useState(() => {
+    const n = new Date(); return n.getHours() + n.getMinutes() / 60
+  })
+  const simHourRef = useRef(simHour)
+  const setSimHour = useCallback((h) => { simHourRef.current = h; _setSimHour(h) }, [])
 
   // Address search
   const [searchA, setSearchA] = useState('')
@@ -89,18 +96,35 @@ export function useMapState() {
     tick(); const id = setInterval(tick, 30000); return () => clearInterval(id)
   }, [])
 
-  // ── Live simulation (bouncing cars) ──────────────────────────────────────
+  // ── Sim-time auto-advance: 10 sim-min per real second (full day ≈ 2.5 min) ──
+  useEffect(() => {
+    if (!liveOn) return
+    const id = setInterval(() => {
+      const next = (simHourRef.current + 10 / 60) % 24
+      simHourRef.current = next
+      _setSimHour(next)
+    }, 1000)
+    return () => clearInterval(id)
+  }, [liveOn])
+
+  // ── Live car animation — speed depends on time of day ────────────────────
   useEffect(() => {
     if (!liveOn || !fetchedCarPaths) return
     const id = setInterval(() => {
+      const h = simHourRef.current % 24
+      const isRush  = (h >= 7 && h < 9) || (h >= 16 && h < 19)
+      const isNight = h >= 22 || h < 6
+      // Rush: skip ~60% of ticks → slow crawl; Night: 2-step jumps → fast
+      if (isRush && Math.random() > 0.4) return
       setLivePositions(prev => prev.map((pos, i) => {
         const path = fetchedCarPaths[i]; if (!path) return pos
-        const next = pos + liveDirectionsRef.current[i]
-        if (next >= path.length) { liveDirectionsRef.current[i] = -1; return path.length - 2 }
+        const step = isNight ? 2 : 1
+        const next = pos + liveDirectionsRef.current[i] * step
+        if (next >= path.length - 1) { liveDirectionsRef.current[i] = -1; return Math.max(0, path.length - 2) }
         if (next < 0) { liveDirectionsRef.current[i] = 1; return 1 }
         return next
       }))
-    }, 120)
+    }, 100)
     return () => clearInterval(id)
   }, [liveOn, fetchedCarPaths])
 
@@ -210,6 +234,7 @@ export function useMapState() {
     ptA, ptB,
     route, routeInfo,
     liveOn, toggleLive, livePositions,
+    simHour, setSimHour,
     searchA, setSearchA, searchingA, handleSearchA,
     searchB, setSearchB, searchingB, handleSearchB,
     status, timeDisplay,

@@ -132,10 +132,17 @@ function NoiseLayer({ data }) {
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
+function visibleCarCount(hour) {
+  const h = hour % 24
+  if (h >= 22 || h < 6) return 1                                      // night: 1 car
+  if ((h >= 7 && h < 9) || (h >= 16 && h < 19)) return 3             // rush: all cars
+  return 2                                                              // normal: 2 cars
+}
+
 export default function MapView({
   layerVisibility, fetchedRoads, fetchedBikeLanes, fetchedCarPaths,
   osmParks, osmPedestrian,
-  ptA, ptB, route, routeType, liveOn, livePositions, onMapClick, isPlacing,
+  ptA, ptB, route, routeType, liveOn, livePositions, simHour, onMapClick, isPlacing,
 }) {
   return (
     <MapContainer center={WEIMAR} zoom={14} zoomControl={false} className="h-full w-full">
@@ -231,10 +238,10 @@ export default function MapView({
         </LayerGroup>
       )}
 
-      {/* Live car simulation */}
+      {/* Live car simulation — count varies by time of day */}
       {liveOn && fetchedCarPaths && (
         <LayerGroup>
-          {fetchedCarPaths.map((path, i) => {
+          {fetchedCarPaths.slice(0, visibleCarCount(simHour ?? 12)).map((path, i) => {
             if (!path) return null
             const pos = Math.min(livePositions[i] ?? 0, path.length - 1)
             const nextPos = Math.min(pos + 1, path.length - 1)
