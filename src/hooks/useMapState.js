@@ -57,10 +57,12 @@ export function useMapState() {
 
   // ── Fetch all geometry at startup ─────────────────────────────────────────
   useEffect(() => {
-    // OSRM roads
+    // OSRM roads — fall back to straight line if OSRM fails
     Promise.all(ROAD_SEGMENTS.map(seg =>
-      fetchOsrmPath(seg.from, seg.to, seg.profile).then(p => p ? { ...seg, path: p } : null).catch(() => null)
-    )).then(r => setFetchedRoads(r.filter(Boolean)))
+      fetchOsrmPath(seg.from, seg.to, seg.profile)
+        .then(path => ({ ...seg, path: path ?? [[seg.from[1], seg.from[0]], [seg.to[1], seg.to[0]]] }))
+        .catch(() => ({ ...seg, path: [[seg.from[1], seg.from[0]], [seg.to[1], seg.to[0]]] }))
+    )).then(r => setFetchedRoads(r))
 
     // OSRM bike lanes
     Promise.all(BIKE_SEGMENTS.map(seg =>
