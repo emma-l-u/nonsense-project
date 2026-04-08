@@ -16,7 +16,6 @@ export function useMapState() {
   // OSRM geometry
   const [fetchedRoads, setFetchedRoads] = useState(null)
   const [fetchedBikeLanes, setFetchedBikeLanes] = useState(null)
-  const [fetchedCarPaths, setFetchedCarPaths] = useState(null)
 
   // OSM polygon data
   const [osmParks, setOsmParks] = useState([])
@@ -67,14 +66,6 @@ export function useMapState() {
     Promise.all(BIKE_SEGMENTS.map(seg =>
       fetchOsrmPath(seg.from, seg.to, 'bike').then(p => p ? { ...seg, path: p } : null).catch(() => null)
     )).then(r => setFetchedBikeLanes(r.filter(Boolean)))
-
-    // OSRM car paths
-    Promise.all(CAR_ROUTE_SEGMENTS.map(seg =>
-      fetchOsrmPath(seg.from, seg.to, 'driving').catch(() => null)
-    )).then(paths => {
-      setFetchedCarPaths(paths)
-      setLivePositions(paths.map(() => 0))
-    })
 
     // OSM park polygons
     fetchOsmParks().then(setOsmParks)
@@ -202,7 +193,7 @@ export function useMapState() {
     routeType, setRouteType,
     layerVisibility, toggleLayer, toggleNoiseGroup,
     noiseActive,
-    fetchedRoads, fetchedBikeLanes, fetchedCarPaths,
+    fetchedRoads, fetchedBikeLanes,
     osmParks, osmPedestrian,
     ptA, ptB,
     route, routeInfo,
