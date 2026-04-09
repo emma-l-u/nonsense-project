@@ -202,8 +202,7 @@ export default function MapView({
           pathOptions={{
             fillColor: park.kind === 'forest' ? '#166534' : '#4ade80',
             fillOpacity: park.kind === 'forest' ? 0.22 : 0.25,
-            color: park.kind === 'forest' ? '#15803d' : '#22c55e',
-            weight: 1, opacity: 0.5,
+            weight: 0,
           }}>
           <Popup><b>🌳 {park.name}</b></Popup>
         </Polygon>
