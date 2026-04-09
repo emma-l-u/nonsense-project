@@ -169,11 +169,11 @@ export default function MapView({
   communityPins, pinMode, onRemovePin,
 }) {
   return (
-    <MapContainer center={WEIMAR} zoom={14} zoomControl={false} className="h-full w-full">
+    <MapContainer center={WEIMAR} zoom={14} zoomControl={false} style={{ height: '100%', width: '100%' }}>
       <TileLayer
-        attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png"
-        maxZoom={18}
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        maxZoom={19}
       />
       <ZoomControl position="bottomright" />
       <SvgPatterns />

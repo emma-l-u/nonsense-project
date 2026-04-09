@@ -37,7 +37,6 @@ export default function TimeSlider({ simHour, setSimHour, liveOn }) {
         backdropFilter: 'blur(10px)',
         width: 340,
       }}
-      style={{ width: 340 }}
     >
       {/* Gradient accent strip */}
       <div style={{ height: 4, background: 'linear-gradient(90deg, #7c3aed, #db2777, #0891b2)', marginBottom: 12 }}/>

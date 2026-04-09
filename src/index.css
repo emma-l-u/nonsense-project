@@ -35,6 +35,20 @@
   max-height: none;
 }
 
+/* Wiggle animation for the live badge */
+@keyframes wiggle {
+  0%   { transform: translateX(-50%) rotate(0deg); }
+  15%  { transform: translateX(-50%) rotate(-2deg) translateY(-1px); }
+  30%  { transform: translateX(-50%) rotate(2deg) translateY(1px); }
+  45%  { transform: translateX(-50%) rotate(-1.5deg) translateY(-1px); }
+  60%  { transform: translateX(-50%) rotate(1.5deg) translateY(0px); }
+  75%  { transform: translateX(-50%) rotate(-1deg); }
+  100% { transform: translateX(-50%) rotate(0deg); }
+}
+.live-badge {
+  animation: wiggle 2.4s ease-in-out infinite;
+}
+
 /* Dark flag cursor when placing A/B points on the map */
 .leaflet-container.cursor-flag,
 .leaflet-container.cursor-flag .leaflet-interactive {

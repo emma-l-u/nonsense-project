@@ -56,14 +56,15 @@ export default function App() {
           onCancelPin={s.handleCancelPin}
         />
 
+        <div className="live-badge absolute top-14 left-1/2 rounded-full px-4 py-1 text-[11px] font-semibold z-[2000] pointer-events-none"
+          style={s.liveOn
+            ? { background: 'rgba(180,180,180,0.55)', color: 'rgba(80,80,80,0.7)', boxShadow: 'none' }
+            : { background: 'linear-gradient(135deg, #7c3aed, #db2777)', color: 'white', boxShadow: '0 2px 12px rgba(124,58,237,0.4)' }
+          }>
+          ● LIVE — traffic simulation
+        </div>
         {s.liveOn && (
-          <>
-            <div className="absolute top-14 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-[11px] font-semibold text-white z-[2000] pointer-events-none"
-              style={{ background: 'linear-gradient(135deg, #7c3aed, #db2777)', boxShadow: '0 2px 12px rgba(124,58,237,0.4)' }}>
-              ● LIVE — traffic simulation
-            </div>
-            <TimeSlider simHour={s.simHour} setSimHour={s.setSimHour} liveOn={s.liveOn} />
-          </>
+          <TimeSlider simHour={s.simHour} setSimHour={s.setSimHour} liveOn={s.liveOn} />
         )}
       </div>
 
