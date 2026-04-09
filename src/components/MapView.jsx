@@ -108,22 +108,74 @@ function RouteFitter({ route }) {
   return null
 }
 
-// ── Map pin icons ─────────────────────────────────────────────────────────────
-function makePinIcon(letter, color) {
+// ── Map pin icons — stamp card style ─────────────────────────────────────────
+function makePinIcon(letter, bgColor) {
   return L.divIcon({
-    html: `<svg viewBox="0 0 28 40" xmlns="http://www.w3.org/2000/svg" width="28" height="40"
-        style="filter:drop-shadow(0 3px 6px rgba(0,0,0,0.6))">
-      <path d="M14 0C6.3 0 0 6.3 0 14c0 10 14 26 14 26S28 24 28 14C28 6.3 21.7 0 14 0z"
-            fill="${color}" stroke="white" stroke-width="1.5"/>
-      <circle cx="14" cy="13" r="7" fill="white"/>
-      <text x="14" y="17.5" text-anchor="middle" font-size="9" font-weight="800"
-            font-family="sans-serif" fill="${color}">${letter}</text>
-    </svg>`,
-    className: '', iconSize: [28, 40], iconAnchor: [14, 40], popupAnchor: [0, -40],
+    html: `<div style="
+      width:34px;height:34px;
+      background:${bgColor};
+      border:2.5px solid #1a1209;
+      border-radius:9px;
+      box-shadow:3px 3px 0 #1a1209;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Nunito',sans-serif;
+      font-weight:900;font-size:18px;
+      color:#1a1209;
+      line-height:1;
+    ">${letter}</div>`,
+    className: '', iconSize: [34, 34], iconAnchor: [17, 34], popupAnchor: [0, -38],
   })
 }
-const iconA = makePinIcon('A', '#16a34a')
-const iconB = makePinIcon('B', '#dc2626')
+const iconA = makePinIcon('A', '#4ade80')
+const iconB = makePinIcon('B', '#f87171')
+
+// ── Animated route — wiggle personality per character ─────────────────────────
+const ROUTE_ANIM = {
+  // Karl — slow, bouncy, careful kid energy
+  safest:  { amp: 0.00010, freq: 0.030, interval: 65,  weight: 4,   dash: '7 5'  },
+  // Erna — lazy, meandering, big slow curves with the dog
+  nicest:  { amp: 0.00020, freq: 0.012, interval: 95,  weight: 4.5, dash: null   },
+  // Beatrice — fast, precise, barely wiggles
+  fastest: { amp: 0.000022,freq: 0.065, interval: 16,  weight: 5,   dash: null   },
+  // Benedikt — energetic, dashed, flying on the bike
+  bike:    { amp: 0.00013, freq: 0.045, interval: 20,  weight: 4,   dash: '14 4' },
+}
+
+function AnimatedRoute({ route, routeType }) {
+  const [phase, setPhase] = useState(0)
+  const cfg = ROUTE_ANIM[routeType] ?? ROUTE_ANIM.fastest
+  const color = ROUTE_CONFIG[routeType]?.color ?? '#888'
+  const label = ROUTE_CONFIG[routeType]?.label ?? ''
+
+  useEffect(() => {
+    const id = setInterval(() => setPhase(p => p + 1), cfg.interval)
+    return () => clearInterval(id)
+  }, [cfg.interval])
+
+  if (!route?.length) return null
+
+  const path = route.map((p, i) => [
+    p.lat + Math.sin(phase * 0.06 + i * cfg.freq) * cfg.amp,
+    p.lng + Math.cos(phase * 0.05 + i * cfg.freq * 0.85) * cfg.amp * 0.75,
+  ])
+
+  return (
+    <LayerGroup>
+      <Polyline positions={path} pathOptions={{
+        color, weight: cfg.weight * 3, opacity: 0.22,
+        lineCap: 'round', lineJoin: 'round',
+      }} />
+      <Polyline positions={path} pathOptions={{
+        color, weight: cfg.weight, opacity: 0.92,
+        dashArray: cfg.dash ?? undefined,
+        dashOffset: cfg.dash ? String(phase * 2) : undefined,
+        lineCap: 'round', lineJoin: 'round',
+      }}>
+        <Popup><b>{label}</b></Popup>
+      </Polyline>
+    </LayerGroup>
+  )
+}
 
 // ── Noise colour scale ────────────────────────────────────────────────────────
 function noiseColor(db) {
@@ -243,13 +295,8 @@ export default function MapView({
       {ptA && <Marker position={[ptA.lat, ptA.lng]} icon={iconA}><Popup>Start A</Popup></Marker>}
       {ptB && <Marker position={[ptB.lat, ptB.lng]} icon={iconB}><Popup>Destination B</Popup></Marker>}
 
-      {/* Calculated route */}
-      {route && (
-        <Polyline positions={route.map(p => [p.lat, p.lng])}
-          pathOptions={{ color: ROUTE_CONFIG[routeType].color, weight: 5, opacity: 0.9 }}>
-          <Popup><b>{ROUTE_CONFIG[routeType].label}</b></Popup>
-        </Polyline>
-      )}
+      {/* Calculated route — animated per character vibe */}
+      {route && <AnimatedRoute route={route} routeType={routeType} />}
 
       {/* Noise layers */}
       {['traffic-noise','rail-noise','construction','school','hospitality'].map(key =>
