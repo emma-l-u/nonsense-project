@@ -54,15 +54,26 @@ const CloverIcon = () => (
 
 export default function ControlHeader() {
   return (
-    <header className="absolute top-4 left-1/2 -translate-x-1/2 z-[2000] pointer-events-none flex items-center gap-3">
+    <header className="absolute top-4 left-1/2 -translate-x-1/2 z-[2000] pointer-events-none flex items-center gap-3"
+      style={{
+        background: 'rgba(255,255,255,0.88)',
+        borderRadius: 999,
+        padding: '7px 20px',
+        boxShadow: '0 2px 20px rgba(124,58,237,0.15), 0 1px 4px rgba(0,0,0,0.06)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(124,58,237,0.12)',
+      }}>
       <WalkIcon />
       <DogIcon />
       <h1
-        className="text-xl font-semibold text-white tracking-widest mx-1"
+        className="text-xl font-black tracking-widest mx-1"
         style={{
           fontFamily: "'Urbanist', sans-serif",
           letterSpacing: '0.12em',
-          textShadow: '0 1px 8px rgba(0,0,0,0.7)',
+          background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 60%, #0891b2 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
         }}
       >
         Walkable Weimar

@@ -10,7 +10,7 @@ export default function App() {
   const s = useMapState()
 
   return (
-    <div className="flex flex-col h-screen text-gray-200 overflow-hidden" style={{ background: '#120d08' }}>
+    <div className="flex flex-col h-screen text-gray-700 overflow-hidden" style={{ background: '#f2efe9' }}>
 
       <div className="relative flex-1 min-h-0">
         <ControlHeader />
@@ -55,7 +55,8 @@ export default function App() {
 
         {s.liveOn && (
           <>
-            <div className="absolute top-14 left-1/2 -translate-x-1/2 bg-[#1e1b4b] border border-[#6d28d9] rounded-full px-4 py-1 text-[11px] text-[#a78bfa] z-[2000] pointer-events-none">
+            <div className="absolute top-14 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-[11px] font-semibold text-white z-[2000] pointer-events-none"
+              style={{ background: 'linear-gradient(135deg, #7c3aed, #db2777)', boxShadow: '0 2px 12px rgba(124,58,237,0.4)' }}>
               ● LIVE — traffic simulation
             </div>
             <TimeSlider simHour={s.simHour} setSimHour={s.setSimHour} liveOn={s.liveOn} />

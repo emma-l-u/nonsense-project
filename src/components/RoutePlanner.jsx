@@ -1,15 +1,22 @@
 import { useState } from 'react'
 import { CHARACTERS, CHARACTER_ORDER } from '../data/characters.jsx'
 
-// ── Warm colour tokens ─────────────────────────────────────────────────────────
+// ── Colour tokens ──────────────────────────────────────────────────────────────
 const P = {
-  bg:      '#1c1410',
-  bgDeep:  '#14100c',
-  border:  '#3d2a12',
-  input:   '#251808',
-  text:    '#f0e0c0',
-  muted:   '#8c7050',
-  accent:  '#d97706',
+  bg:      '#ffffff',
+  bgDeep:  '#f8f6ff',
+  border:  '#ede9f8',
+  input:   '#f8f6ff',
+  text:    '#1e1030',
+  muted:   '#8b7ea8',
+  accent:  '#7c3aed',
+}
+const GRAD = 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)'
+const GRAD_TEXT = {
+  background: GRAD,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
 }
 
 function AddressRow({ label, color, value, onChange, onSearch, loading }) {
@@ -43,20 +50,43 @@ function CharacterCard({ char, selected, onSelect }) {
   return (
     <button
       onClick={() => onSelect(char.id)}
-      className="flex flex-col items-center p-2 rounded-xl cursor-pointer transition-all text-center w-full"
+      className="flex flex-col items-center cursor-pointer transition-all text-center w-full overflow-hidden"
       style={{
-        background: selected ? char.cardBg : '#1a110a',
-        border: `2px solid ${selected ? char.color : P.border}`,
-        boxShadow: selected ? `0 0 12px ${char.color}44` : 'none',
+        background: selected ? char.cardBg : '#f5edd8',
+        border: `3px solid ${selected ? char.color : '#1a1209'}`,
+        borderRadius: 10,
+        boxShadow: selected ? `4px 4px 0px ${char.color}` : '3px 3px 0px #1a1209',
+        transform: selected ? 'translate(-1px,-1px)' : 'none',
       }}
     >
-      <div className="mb-1"><Avatar /></div>
-      <p className="text-[10px] font-bold leading-tight" style={{ color: selected ? char.color : P.text }}>
-        {char.name}
-      </p>
-      <p className="text-[9px] leading-tight mt-0.5" style={{ color: P.muted }}>
-        {char.tagline}
-      </p>
+      {/* Character illustration — fills top of card */}
+      <div style={{
+        background: selected ? char.cardBg : '#f5edd8',
+        width: '100%',
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        paddingTop: 6,
+        minHeight: 72,
+        overflow: 'hidden',
+      }}>
+        <Avatar />
+      </div>
+      {/* Name label — bold stripe at bottom */}
+      <div style={{
+        background: selected ? char.color : '#1a1209',
+        width: '100%',
+        padding: '4px 6px',
+      }}>
+        <p className="text-[10px] font-black leading-tight uppercase tracking-wide"
+          style={{ color: selected ? '#1a1209' : '#f5edd8' }}>
+          {char.name}
+        </p>
+        <p className="text-[8px] leading-tight mt-0.5"
+          style={{ color: selected ? '#1a120988' : '#f5edd870' }}>
+          {char.tagline}
+        </p>
+      </div>
     </button>
   )
 }
@@ -82,12 +112,20 @@ export default function RoutePlanner({
 
   return (
     <div
-      className="absolute top-3 left-3 w-62 z-[2000] overflow-hidden rounded-xl shadow-2xl"
-      style={{ background: `${P.bg}f8`, border: `1px solid ${P.border}`, width: 248 }}
+      className="absolute top-3 left-3 z-[2000] overflow-hidden"
+      style={{
+        background: '#ffffff',
+        border: '1px solid #ede9f8',
+        borderRadius: 16,
+        boxShadow: '0 4px 32px rgba(124,58,237,0.10), 0 1px 6px rgba(0,0,0,0.05)',
+        width: 252,
+      }}
     >
+      {/* ── Gradient accent strip at top ── */}
+      <div style={{ height: 4, background: GRAD }}/>
       {/* ── Route planning ── */}
       <div className="p-3" style={{ borderBottom: `1px solid ${P.border}` }}>
-        <h3 className="text-[11px] font-bold uppercase tracking-widest mb-2.5" style={{ color: P.accent }}>
+        <h3 className="text-[13px] font-black uppercase tracking-widest mb-2.5" style={GRAD_TEXT}>
           Plan your walk
         </h3>
 
@@ -111,8 +149,8 @@ export default function RoutePlanner({
 
         {/* Character selection — 2×2 grid */}
         <div className="mb-3">
-          <p className="text-[10px] mb-1.5" style={{ color: P.muted }}>Who's walking?</p>
-          <div className="grid grid-cols-2 gap-1.5">
+          <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: P.muted }}>Who's walking?</p>
+          <div className="grid grid-cols-2 gap-2">
             {CHARACTER_ORDER.map(id => (
               <CharacterCard
                 key={id}
@@ -126,8 +164,14 @@ export default function RoutePlanner({
 
         <button
           onClick={onCalcRoute}
-          className="w-full py-2 text-[12px] font-semibold rounded cursor-pointer transition-colors"
-          style={{ background: char.color + '22', border: `1px solid ${char.color}`, color: char.color }}
+          className="w-full py-2 text-[12px] font-bold rounded-lg cursor-pointer transition-all"
+          style={{
+            background: GRAD,
+            border: 'none',
+            color: 'white',
+            boxShadow: '0 2px 12px rgba(124,58,237,0.35)',
+            letterSpacing: '0.03em',
+          }}
         >
           Go with {char.name.split(' ')[0]} ↗
         </button>
@@ -145,12 +189,17 @@ export default function RoutePlanner({
 
       {/* ── Character voice route result ── */}
       {routeInfo && (
-        <div className="px-3 py-2.5" style={{ borderBottom: `1px solid ${P.border}`, background: char.cardBg + 'cc' }}>
-          <p className="text-[12px] font-medium leading-snug" style={{ color: char.color }}>
+        <div className="px-3 py-2.5" style={{
+          borderBottom: `1px solid ${P.border}`,
+          background: 'linear-gradient(135deg, rgba(124,58,237,0.06) 0%, rgba(219,39,119,0.06) 100%)',
+          borderLeft: `3px solid transparent`,
+          borderImage: `${GRAD} 1`,
+        }}>
+          <p className="text-[12px] font-medium leading-snug" style={{ color: P.text }}>
             {char.voice(routeInfo.dist.toFixed(1), Math.round(routeInfo.time))}
           </p>
           <p className="text-[10px] mt-1" style={{ color: P.muted }}>
-            Noise exposure: <span style={{ color: P.text }}>{routeInfo.noiseScore}</span>
+            Noise: <span style={{ color: P.text }}>{routeInfo.noiseScore}</span>
             {'  ·  '}Comfort: <span style={{ color: P.text }}>{routeInfo.comfortScore}</span>
           </p>
         </div>
@@ -158,15 +207,15 @@ export default function RoutePlanner({
 
       {/* ── Quick toggles ── */}
       <div className="p-3" style={{ borderBottom: `1px solid ${P.border}` }}>
-        <h3 className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: P.muted }}>
+        <h3 className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: P.accent }}>
           Quick toggles
         </h3>
         <button
           className={quickBtn(noiseActive)}
           style={{
-            background: noiseActive ? '#2a1a08' : P.bgDeep,
-            border: `1px solid ${noiseActive ? '#d97706' : P.border}`,
-            color: noiseActive ? '#d97706' : P.muted,
+            background: noiseActive ? '#fff8ec' : P.bgDeep,
+            border: `1px solid ${noiseActive ? '#c07000' : P.border}`,
+            color: noiseActive ? '#c07000' : P.muted,
             display: 'block', width: '100%', padding: '6px 12px',
             marginBottom: 6, borderRadius: 6, cursor: 'pointer',
           }}
@@ -176,9 +225,9 @@ export default function RoutePlanner({
         </button>
         <button
           style={{
-            background: liveOn ? '#1a2a10' : P.bgDeep,
-            border: `1px solid ${liveOn ? '#4ade80' : P.border}`,
-            color: liveOn ? '#4ade80' : P.muted,
+            background: liveOn ? '#f0fdf4' : P.bgDeep,
+            border: `1px solid ${liveOn ? '#22c55e' : P.border}`,
+            color: liveOn ? '#16a34a' : P.muted,
             display: 'block', width: '100%', padding: '6px 12px',
             borderRadius: 6, cursor: 'pointer', textAlign: 'left', fontSize: 11,
           }}
@@ -190,7 +239,7 @@ export default function RoutePlanner({
 
       {/* ── Community pins ── */}
       <div className="p-3">
-        <h3 className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: P.muted }}>
+        <h3 className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: P.accent }}>
           Community
         </h3>
 
@@ -213,7 +262,7 @@ export default function RoutePlanner({
                 onClick={() => { onAddPin(pinDesc); setPinDesc('') }}
                 disabled={!pinDesc.trim()}
                 className="flex-1 py-1.5 text-[11px] rounded cursor-pointer font-medium disabled:opacity-40"
-                style={{ background: '#2a3d15', border: '1px solid #4ade80', color: '#4ade80' }}
+                style={{ background: '#f0fdf4', border: '1px solid #22c55e', color: '#16a34a' }}
               >
                 Save memory
               </button>
@@ -232,9 +281,9 @@ export default function RoutePlanner({
               onClick={() => setPinMode('favourite')}
               className="w-full py-1.5 px-3 text-[11px] rounded cursor-pointer text-left"
               style={{
-                background: pinMode === 'favourite' ? '#2a1a25' : P.bgDeep,
-                border: `1px solid ${pinMode === 'favourite' ? '#f472b6' : P.border}`,
-                color: pinMode === 'favourite' ? '#f472b6' : P.muted,
+                background: pinMode === 'favourite' ? '#fdf2f8' : P.bgDeep,
+                border: `1px solid ${pinMode === 'favourite' ? '#ec4899' : P.border}`,
+                color: pinMode === 'favourite' ? '#be185d' : P.muted,
               }}
             >
               ❤️ Share a favourite spot
@@ -243,9 +292,9 @@ export default function RoutePlanner({
               onClick={() => setPinMode('problem')}
               className="w-full py-1.5 px-3 text-[11px] rounded cursor-pointer text-left"
               style={{
-                background: pinMode === 'problem' ? '#2a1a08' : P.bgDeep,
-                border: `1px solid ${pinMode === 'problem' ? '#fb923c' : P.border}`,
-                color: pinMode === 'problem' ? '#fb923c' : P.muted,
+                background: pinMode === 'problem' ? '#fff7ed' : P.bgDeep,
+                border: `1px solid ${pinMode === 'problem' ? '#f97316' : P.border}`,
+                color: pinMode === 'problem' ? '#c2410c' : P.muted,
               }}
             >
               ⚠️ Report a problem

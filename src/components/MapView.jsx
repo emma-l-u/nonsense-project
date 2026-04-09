@@ -17,8 +17,8 @@ function SvgPatterns() {
       defs.innerHTML = `
         <pattern id="ped-hatch" width="8" height="8"
             patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="8" height="8" fill="rgba(253,224,71,0.08)"/>
-          <line x1="0" y1="0" x2="0" y2="8" stroke="#fde047" stroke-width="2.5" stroke-opacity="0.55"/>
+          <rect width="8" height="8" fill="rgba(202,138,4,0.12)"/>
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#ca8a04" stroke-width="2.5" stroke-opacity="0.6"/>
         </pattern>
       `
       svg.insertBefore(defs, svg.firstChild)
@@ -171,8 +171,8 @@ export default function MapView({
   return (
     <MapContainer center={WEIMAR} zoom={14} zoomControl={false} className="h-full w-full">
       <TileLayer
-        attribution="© OSM © CARTO"
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         maxZoom={19}
       />
       <ZoomControl position="bottomright" />
@@ -201,9 +201,9 @@ export default function MapView({
         <Polygon key={i} positions={park.positions}
           pathOptions={{
             fillColor: park.kind === 'forest' ? '#166534' : '#4ade80',
-            fillOpacity: park.kind === 'forest' ? 0.12 : 0.14,
+            fillOpacity: park.kind === 'forest' ? 0.22 : 0.25,
             color: park.kind === 'forest' ? '#15803d' : '#22c55e',
-            weight: 1, opacity: 0.3,
+            weight: 1, opacity: 0.5,
           }}>
           <Popup><b>🌳 {park.name}</b></Popup>
         </Polygon>
@@ -213,12 +213,12 @@ export default function MapView({
       {osmPedestrian.map((zone, i) =>
         zone.isClosed ? (
           <Polygon key={i} positions={zone.positions}
-            pathOptions={{ fillColor: 'url(#ped-hatch)', fillOpacity: 1, color: '#fde047', weight: 1, opacity: 0.25 }}>
+            pathOptions={{ fillColor: 'url(#ped-hatch)', fillOpacity: 1, color: '#ca8a04', weight: 1, opacity: 0.5 }}>
             <Popup><b>🚶 {zone.name}</b></Popup>
           </Polygon>
         ) : (
           <Polyline key={i} positions={zone.positions}
-            pathOptions={{ color: '#fde047', weight: 2.5, opacity: 0.25, dashArray: '1 5', lineCap: 'round' }}>
+            pathOptions={{ color: '#ca8a04', weight: 2.5, opacity: 0.5, dashArray: '1 5', lineCap: 'round' }}>
             <Popup><b>🚶 {zone.name}</b></Popup>
           </Polyline>
         )
@@ -228,7 +228,7 @@ export default function MapView({
       <LayerGroup>
         {(fetchedRoads ?? []).map((r, i) => (
           <Polyline key={i} positions={r.path}
-            pathOptions={{ color: '#991b1b', weight: Math.max(r.w - 2, 2), opacity: 0.3 }}>
+            pathOptions={{ color: '#b91c1c', weight: Math.max(r.w - 2, 2), opacity: 0.18 }}>
             <Popup><b>🚗 {r.label}</b></Popup>
           </Polyline>
         ))}
@@ -238,7 +238,7 @@ export default function MapView({
       <LayerGroup>
         {(fetchedBikeLanes ?? []).map((r, i) => (
           <Polyline key={i} positions={r.path}
-            pathOptions={{ color: '#d97706', weight: 1.5, opacity: 0.3, dashArray: r.dash }}>
+            pathOptions={{ color: '#d97706', weight: 2, opacity: 0.25, dashArray: r.dash }}>
             <Popup><b>🚲 {r.label || 'Bike lane'}</b></Popup>
           </Polyline>
         ))}

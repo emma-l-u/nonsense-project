@@ -27,27 +27,37 @@ export default function TimeSlider({ simHour, setSimHour, liveOn }) {
 
   return (
     <div
-      className="absolute bottom-10 left-1/2 -translate-x-1/2 z-[2000]
-                 bg-[#12122a]/97 border border-[#2a2a4a] rounded-xl px-4 py-3 shadow-xl select-none"
+      className="absolute bottom-10 left-1/2 -translate-x-1/2 z-[2000] select-none overflow-hidden"
+      style={{
+        background: 'rgba(255,255,255,0.97)',
+        border: '1px solid #ede9f8',
+        borderRadius: 16,
+        padding: '0 0 12px 0',
+        boxShadow: '0 4px 32px rgba(124,58,237,0.12), 0 1px 6px rgba(0,0,0,0.05)',
+        backdropFilter: 'blur(10px)',
+        width: 340,
+      }}
       style={{ width: 340 }}
     >
+      {/* Gradient accent strip */}
+      <div style={{ height: 4, background: 'linear-gradient(90deg, #7c3aed, #db2777, #0891b2)', marginBottom: 12 }}/>
       {/* Top row */}
-      <div className="flex items-center justify-between mb-2.5">
-        <span className="text-[22px] font-bold text-white font-mono tracking-tight leading-none">
+      <div className="flex items-center justify-between mb-2.5 px-4">
+        <span className="text-[22px] font-bold text-gray-800 font-mono tracking-tight leading-none">
           {fmt(simHour)}
         </span>
         <span className="text-[11px] font-medium" style={{ color: status.color }}>
           {status.label}
         </span>
-        <span className="text-[10px] text-gray-500 w-16 text-right">
+        <span className="text-[10px] text-gray-400 w-16 text-right">
           {liveOn ? '⟳ running' : '⏸ paused'}
         </span>
       </div>
 
       {/* Slider */}
-      <div className="relative h-5 flex items-center mb-1">
+      <div className="relative h-5 flex items-center mb-1 px-4">
         {/* Base track */}
-        <div className="absolute w-full h-2 rounded-full bg-[#1a1a35]" />
+        <div className="absolute w-full h-2 rounded-full bg-gray-200" />
 
         {/* Rush hour colored zones */}
         {RUSH_ZONES.map((z, i) => (
@@ -61,8 +71,8 @@ export default function TimeSlider({ simHour, setSimHour, liveOn }) {
         ))}
 
         {/* Progress fill */}
-        <div className="absolute h-2 rounded-full opacity-50"
-          style={{ width: `${pct}%`, background: '#a78bfa' }} />
+        <div className="absolute h-2 rounded-full"
+          style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #7c3aed, #db2777)', opacity: 0.8 }} />
 
         {/* Transparent range input — handles all interaction */}
         <input
@@ -74,24 +84,24 @@ export default function TimeSlider({ simHour, setSimHour, liveOn }) {
 
         {/* Custom thumb */}
         <div
-          className="absolute w-4 h-4 rounded-full bg-white border-2 border-[#a78bfa] shadow-lg pointer-events-none z-20"
-          style={{ left: `calc(${pct}% - 8px)` }}
+          className="absolute w-4 h-4 rounded-full bg-white pointer-events-none z-20"
+          style={{ left: `calc(${pct}% - 8px)`, border: '2px solid #7c3aed', boxShadow: '0 0 0 3px rgba(124,58,237,0.15), 0 2px 6px rgba(0,0,0,0.1)' }}
         />
       </div>
 
       {/* Hour labels */}
-      <div className="flex justify-between text-[9px] text-gray-600 mt-0.5 px-0.5">
+      <div className="flex justify-between text-[9px] text-gray-400 mt-0.5 px-4">
         {['00:00', '06:00', '12:00', '18:00', '24:00'].map(h => (
           <span key={h}>{h}</span>
         ))}
       </div>
 
       {/* Legend */}
-      <div className="flex gap-4 mt-2 pt-2 border-t border-[#2a2a4a]">
+      <div className="flex gap-4 mt-2 pt-2 border-t border-gray-100 px-4">
         {RUSH_ZONES.map((z, i) => (
           <div key={i} className="flex items-center gap-1.5">
             <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: z.color }} />
-            <span className="text-[9px] text-gray-500">{z.label}</span>
+            <span className="text-[9px] text-gray-400">{z.label}</span>
           </div>
         ))}
       </div>

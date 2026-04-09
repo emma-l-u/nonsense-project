@@ -2,15 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dark theme for Leaflet popups */
+/* Light theme for Leaflet popups */
 .leaflet-popup-content-wrapper {
-  background: #12122a;
-  border: 1px solid #444;
-  color: #eee;
+  background: #ffffff;
+  border: 1px solid #d0ccc8;
+  color: #2a2420;
   border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
 .leaflet-popup-tip {
-  background: #12122a;
+  background: #ffffff;
 }
 .leaflet-popup-content {
   margin: 10px 14px;
@@ -20,7 +21,7 @@
 
 /* Ensure map fills its container */
 .leaflet-container {
-  background: #1a1a2e;
+  background: #f2efe9;
 }
 
 /* Tailwind's base reset breaks Leaflet tile images — undo it */
@@ -29,8 +30,8 @@
   max-height: none;
 }
 
-/* White flag cursor when placing A/B points on the map */
+/* Dark flag cursor when placing A/B points on the map */
 .leaflet-container.cursor-flag,
 .leaflet-container.cursor-flag .leaflet-interactive {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='32' viewBox='0 0 24 32'%3E%3Cline x1='5' y1='2' x2='5' y2='31' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpolygon points='5,2 23,9 5,16' fill='%23ffffff'/%3E%3C/svg%3E") 5 31, crosshair !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='32' viewBox='0 0 24 32'%3E%3Cline x1='5' y1='2' x2='5' y2='31' stroke='%232a2420' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpolygon points='5,2 23,9 5,16' fill='%232a2420'/%3E%3C/svg%3E") 5 31, crosshair !important;
 }

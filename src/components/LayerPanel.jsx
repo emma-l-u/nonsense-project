@@ -18,7 +18,7 @@ function LayerRow({ layerKey, label, color, checked, onToggle }) {
       <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color }} />
       <span
         className="text-[11px] transition-colors"
-        style={{ color: checked ? '#f0e0c0' : '#8c7050' }}
+        style={{ color: checked ? '#1e1030' : '#a09ab8' }}
       >
         {label}
       </span>
@@ -29,13 +29,24 @@ function LayerRow({ layerKey, label, color, checked, onToggle }) {
 export default function LayerPanel({ layerVisibility, toggleLayer }) {
   return (
     <div
-      className="absolute top-3 right-3 w-44 rounded-xl shadow-xl z-[2000] overflow-hidden"
-      style={{ background: '#1c1410f8', border: '1px solid #3d2a12' }}
+      className="absolute top-3 right-3 w-44 rounded-xl z-[2000] overflow-hidden"
+      style={{
+        background: 'rgba(255,255,255,0.95)',
+        border: '1px solid #ede9f8',
+        boxShadow: '0 4px 24px rgba(124,58,237,0.10), 0 1px 4px rgba(0,0,0,0.04)',
+        backdropFilter: 'blur(8px)',
+      }}
     >
+      <div style={{ height: 3, background: 'linear-gradient(90deg, #7c3aed, #db2777, #0891b2)' }}/>
       <div className="p-3">
         <h3
           className="text-[10px] font-bold uppercase tracking-widest mb-2"
-          style={{ color: '#8c7050' }}
+          style={{
+            background: 'linear-gradient(135deg, #7c3aed, #db2777)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
         >
           Noise sources
         </h3>
