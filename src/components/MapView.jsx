@@ -32,19 +32,12 @@ function SvgPatterns() {
 // ── Animated flag cursor ──────────────────────────────────────────────────────
 function FlagCursor({ active }) {
   const [pos, setPos] = useState({ x: -999, y: -999 })
-  const [lean, setLean] = useState(0)
-  const prevXRef = useRef(0)
-  const leanRef = useRef(0)
+  const phaseRef = useRef(0)
+  const [phase, setPhase] = useState(0)
 
   useEffect(() => {
     if (!active) return
-    const onMove = e => {
-      const dx = e.clientX - prevXRef.current
-      prevXRef.current = e.clientX
-      setPos({ x: e.clientX, y: e.clientY })
-      leanRef.current = Math.max(-40, Math.min(40, dx * 5))
-      setLean(leanRef.current)
-    }
+    const onMove = e => setPos({ x: e.clientX, y: e.clientY })
     window.addEventListener('mousemove', onMove)
     return () => window.removeEventListener('mousemove', onMove)
   }, [active])
@@ -52,16 +45,21 @@ function FlagCursor({ active }) {
   useEffect(() => {
     if (!active) return
     let frame
-    const decay = () => {
-      leanRef.current *= 0.80
-      setLean(leanRef.current)
-      frame = requestAnimationFrame(decay)
+    const animate = () => {
+      phaseRef.current += 0.09
+      setPhase(phaseRef.current)
+      frame = requestAnimationFrame(animate)
     }
-    frame = requestAnimationFrame(decay)
+    frame = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(frame)
   }, [active])
 
   if (!active) return null
+
+  // Wave the flag fabric via animated bezier control points
+  const w1 = Math.sin(phase) * 4
+  const w2 = Math.sin(phase + 0.9) * 2.5
+  const flagPath = `M 5 3 Q 16 ${6 + w1} 26 ${10 + w2} Q 16 ${15 + w1} 5 18 Z`
 
   return createPortal(
     <div style={{
@@ -70,24 +68,12 @@ function FlagCursor({ active }) {
       top: pos.y,
       pointerEvents: 'none',
       zIndex: 99999,
-      transform: `translate(-6px, -82px) rotate(${lean}deg)`,
-      transformOrigin: '6px 82px',
+      transform: 'translate(-5px, -62px)',
     }}>
-      <svg viewBox="0 0 44 82" width="52" height="98" fill="none">
-        {/* Pole shadow */}
-        <line x1="9" y1="6" x2="9" y2="76" stroke="rgba(0,0,0,0.18)" strokeWidth="5" strokeLinecap="round"/>
-        {/* Pole */}
-        <line x1="6" y1="6" x2="6" y2="76" stroke="#1a1209" strokeWidth="4" strokeLinecap="round"/>
-        {/* Flag */}
-        <path d="M6 6 L42 16 L6 28 Z" fill="#ef4444" stroke="#1a1209" strokeWidth="2"/>
-        {/* Flag stripe */}
-        <path d="M6 16 L42 16 L6 28 Z" fill="#dc2626" opacity="0.4"/>
-        {/* Star */}
-        <text x="22" y="22" fontSize="12" textAnchor="middle" fill="white" fontFamily="sans-serif">★</text>
-        {/* Ball top */}
-        <circle cx="6" cy="6" r="4.5" fill="#fbbf24" stroke="#1a1209" strokeWidth="2"/>
-        {/* Spike bottom */}
-        <path d="M2 75 L6 82 L10 75" fill="#1a1209"/>
+      <svg viewBox="0 0 32 64" width="32" height="64" fill="none">
+        <line x1="5" y1="2" x2="5" y2="59" stroke="#2a2420" strokeWidth="2.5" strokeLinecap="round"/>
+        <path d={flagPath} fill="#2a2420"/>
+        <path d="M2 58 L5 63 L8 58" fill="#2a2420"/>
       </svg>
     </div>,
     document.body
