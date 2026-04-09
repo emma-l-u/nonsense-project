@@ -68,12 +68,9 @@ export default function ControlHeader() {
       <h1
         className="text-xl font-black mx-1"
         style={{
-          fontFamily: "'Syne', sans-serif",
-          letterSpacing: '0.1em',
-          background: 'linear-gradient(135deg, #e8007e 0%, #7c3aed 50%, #0ea5e9 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
+          fontFamily: "'Nunito', sans-serif",
+          letterSpacing: '-0.01em',
+          color: '#1a1209',
         }}
       >
         Walkable Weimar

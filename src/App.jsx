@@ -5,6 +5,7 @@ import RoutePlanner from './components/RoutePlanner'
 import LayerPanel from './components/LayerPanel'
 import InfoBar from './components/InfoBar'
 import TimeSlider from './components/TimeSlider'
+import CommunityPanel from './components/CommunityPanel'
 
 export default function App() {
   const s = useMapState()
@@ -44,8 +45,12 @@ export default function App() {
           searchingB={s.searchingB} onSearchB={s.handleSearchB}
           noiseActive={s.noiseActive} toggleNoiseGroup={s.toggleNoiseGroup}
           liveOn={s.liveOn} toggleLive={s.toggleLive}
+        />
+
+        <CommunityPanel
           communityPins={s.communityPins}
-          pinMode={s.pinMode} setPinMode={s.setPinMode}
+          pinMode={s.pinMode}
+          setPinMode={s.setPinMode}
           pendingPin={s.pendingPin}
           onAddPin={s.handleAddPin}
           onCancelPin={s.handleCancelPin}
