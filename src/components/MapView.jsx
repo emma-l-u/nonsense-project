@@ -56,10 +56,16 @@ function FlagCursor({ active }) {
 
   if (!active) return null
 
-  // Wave the flag fabric via animated bezier control points
-  const w1 = Math.sin(phase) * 4
-  const w2 = Math.sin(phase + 0.9) * 2.5
-  const flagPath = `M 5 3 Q 16 ${6 + w1} 26 ${10 + w2} Q 16 ${15 + w1} 5 18 Z`
+  // Wave the flag fabric: top and bottom edges undulate via offset sine waves
+  const w1 = Math.sin(phase) * 5          // mid-flag bulge
+  const w2 = Math.sin(phase + 1.0) * 3.5  // free-edge offset
+  const flagPath = `
+    M 6 4
+    Q 22 ${4  + w1} 38 ${4  + w2}
+    L 38 ${28 + w2}
+    Q 22 ${28 + w1} 6 28
+    Z
+  `
 
   return createPortal(
     <div style={{
@@ -68,12 +74,11 @@ function FlagCursor({ active }) {
       top: pos.y,
       pointerEvents: 'none',
       zIndex: 99999,
-      transform: 'translate(-5px, -62px)',
+      transform: 'translate(-6px, -88px)',
     }}>
-      <svg viewBox="0 0 32 64" width="32" height="64" fill="none">
-        <line x1="5" y1="2" x2="5" y2="59" stroke="#2a2420" strokeWidth="2.5" strokeLinecap="round"/>
+      <svg viewBox="0 0 46 90" width="46" height="90" fill="none">
+        <line x1="6" y1="2" x2="6" y2="88" stroke="#2a2420" strokeWidth="3" strokeLinecap="round"/>
         <path d={flagPath} fill="#2a2420"/>
-        <path d="M2 58 L5 63 L8 58" fill="#2a2420"/>
       </svg>
     </div>,
     document.body
