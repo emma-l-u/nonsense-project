@@ -37,16 +37,19 @@
 
 /* Wiggle animation for the live badge */
 @keyframes wiggle {
-  0%   { transform: translateX(-50%) rotate(0deg); }
-  15%  { transform: translateX(-50%) rotate(-2deg) translateY(-1px); }
-  30%  { transform: translateX(-50%) rotate(2deg) translateY(1px); }
-  45%  { transform: translateX(-50%) rotate(-1.5deg) translateY(-1px); }
-  60%  { transform: translateX(-50%) rotate(1.5deg) translateY(0px); }
-  75%  { transform: translateX(-50%) rotate(-1deg); }
-  100% { transform: translateX(-50%) rotate(0deg); }
+  0%   { transform: translateX(-50%) rotate(0deg)    scale(1); }
+  10%  { transform: translateX(-50%) rotate(-8deg)   scale(1.08) translateY(-3px); }
+  20%  { transform: translateX(-50%) rotate(8deg)    scale(1.08) translateY(-3px); }
+  30%  { transform: translateX(-50%) rotate(-6deg)   scale(1.05) translateY(-2px); }
+  40%  { transform: translateX(-50%) rotate(6deg)    scale(1.05) translateY(-2px); }
+  50%  { transform: translateX(-50%) rotate(-3deg)   scale(1.02); }
+  60%  { transform: translateX(-50%) rotate(3deg)    scale(1.02); }
+  75%  { transform: translateX(-50%) rotate(-1deg)   scale(1); }
+  100% { transform: translateX(-50%) rotate(0deg)    scale(1); }
 }
 .live-badge {
-  animation: wiggle 2.4s ease-in-out infinite;
+  animation: wiggle 1.6s ease-in-out infinite;
+  transform-origin: center bottom;
 }
 
 /* Dark flag cursor when placing A/B points on the map */
