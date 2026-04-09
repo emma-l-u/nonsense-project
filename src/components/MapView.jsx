@@ -1,4 +1,5 @@
 import { useLayoutEffect, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import {
   MapContainer, TileLayer, Marker, Circle, Polyline, Polygon,
   LayerGroup, Popup, ZoomControl, useMap, useMapEvents,
@@ -28,15 +29,80 @@ function SvgPatterns() {
   return null
 }
 
+// ── Animated flag cursor ──────────────────────────────────────────────────────
+function FlagCursor({ active }) {
+  const [pos, setPos] = useState({ x: -999, y: -999 })
+  const [lean, setLean] = useState(0)
+  const prevXRef = useRef(0)
+  const leanRef = useRef(0)
+
+  useEffect(() => {
+    if (!active) return
+    const onMove = e => {
+      const dx = e.clientX - prevXRef.current
+      prevXRef.current = e.clientX
+      setPos({ x: e.clientX, y: e.clientY })
+      leanRef.current = Math.max(-40, Math.min(40, dx * 5))
+      setLean(leanRef.current)
+    }
+    window.addEventListener('mousemove', onMove)
+    return () => window.removeEventListener('mousemove', onMove)
+  }, [active])
+
+  useEffect(() => {
+    if (!active) return
+    let frame
+    const decay = () => {
+      leanRef.current *= 0.80
+      setLean(leanRef.current)
+      frame = requestAnimationFrame(decay)
+    }
+    frame = requestAnimationFrame(decay)
+    return () => cancelAnimationFrame(frame)
+  }, [active])
+
+  if (!active) return null
+
+  return createPortal(
+    <div style={{
+      position: 'fixed',
+      left: pos.x,
+      top: pos.y,
+      pointerEvents: 'none',
+      zIndex: 99999,
+      transform: `translate(-6px, -82px) rotate(${lean}deg)`,
+      transformOrigin: '6px 82px',
+    }}>
+      <svg viewBox="0 0 44 82" width="52" height="98" fill="none">
+        {/* Pole shadow */}
+        <line x1="9" y1="6" x2="9" y2="76" stroke="rgba(0,0,0,0.18)" strokeWidth="5" strokeLinecap="round"/>
+        {/* Pole */}
+        <line x1="6" y1="6" x2="6" y2="76" stroke="#1a1209" strokeWidth="4" strokeLinecap="round"/>
+        {/* Flag */}
+        <path d="M6 6 L42 16 L6 28 Z" fill="#ef4444" stroke="#1a1209" strokeWidth="2"/>
+        {/* Flag stripe */}
+        <path d="M6 16 L42 16 L6 28 Z" fill="#dc2626" opacity="0.4"/>
+        {/* Star */}
+        <text x="22" y="22" fontSize="12" textAnchor="middle" fill="white" fontFamily="sans-serif">★</text>
+        {/* Ball top */}
+        <circle cx="6" cy="6" r="4.5" fill="#fbbf24" stroke="#1a1209" strokeWidth="2"/>
+        {/* Spike bottom */}
+        <path d="M2 75 L6 82 L10 75" fill="#1a1209"/>
+      </svg>
+    </div>,
+    document.body
+  )
+}
+
 // ── Cursor & click handler ────────────────────────────────────────────────────
 function MapInteraction({ onMapClick, isPlacing, pinMode }) {
   const map = useMap()
   useMapEvents({ click: (e) => onMapClick(e.latlng) })
   useEffect(() => {
     const el = map.getContainer()
-    el.classList.toggle('cursor-flag', isPlacing && !pinMode)
-    el.style.cursor = pinMode ? 'crosshair' : ''
-    return () => { el.classList.remove('cursor-flag'); el.style.cursor = '' }
+    const useCustom = isPlacing && !pinMode
+    el.style.cursor = useCustom ? 'none' : (pinMode ? 'crosshair' : '')
+    return () => { el.style.cursor = '' }
   }, [map, isPlacing, pinMode])
   return null
 }
@@ -178,6 +244,7 @@ export default function MapView({
       <ZoomControl position="bottomright" />
       <SvgPatterns />
       <MapInteraction onMapClick={onMapClick} isPlacing={isPlacing} pinMode={pinMode} />
+      <FlagCursor active={isPlacing && !pinMode} />
       {route && <RouteFitter route={route} />}
 
       {/* Route A/B pins */}
