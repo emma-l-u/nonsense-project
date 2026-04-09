@@ -1,5 +1,13 @@
 import { CHARACTERS, CHARACTER_ORDER } from '../data/characters.jsx'
 
+const NOISE_LAYERS = [
+  { key: 'traffic-noise', label: 'car traffic',            color: '#dc2626' },
+  { key: 'rail-noise',    label: 'train traffic',           color: '#ea580c' },
+  { key: 'construction',  label: 'construction',            color: '#ca8a04' },
+  { key: 'school',        label: 'playgrounds & childcare', color: '#0284c7' },
+  { key: 'hospitality',   label: 'bars & nightlife',        color: '#db2777' },
+]
+
 const PANEL_BG = 'linear-gradient(150deg, #FFE566 0%, #FFACE4 100%)'
 const FONT     = "'Nunito', sans-serif"
 const TEXT     = '#1a1209'
@@ -75,6 +83,7 @@ export default function RoutePlanner({
   searchA, setSearchA, searchingA, onSearchA,
   searchB, setSearchB, searchingB, onSearchB,
   noiseActive, toggleNoiseGroup,
+  layerVisibility, toggleLayer,
   liveOn, toggleLive,
 }) {
   const char = CHARACTERS[selectedCharacter]
@@ -165,12 +174,37 @@ export default function RoutePlanner({
             background: noiseActive ? 'rgba(255,255,255,0.75)' : INPUT_BG,
             border: `1.5px solid ${noiseActive ? TEXT : BORDER}`,
             color: TEXT, display: 'block', width: '100%', padding: '7px 12px',
-            marginBottom: 6, borderRadius: 8, cursor: 'pointer', textAlign: 'left',
+            marginBottom: noiseActive ? 0 : 6, borderRadius: noiseActive ? '8px 8px 0 0' : 8,
+            cursor: 'pointer', textAlign: 'left',
             fontSize: 11, fontFamily: FONT, fontWeight: noiseActive ? 700 : 500,
           }}
         >
-          🔊 Noise overlay
+          🔊 Noise overlay {noiseActive ? '▴' : '▾'}
         </button>
+
+        {/* Noise layer list — expands below button when active */}
+        {noiseActive && (
+          <div style={{
+            background: 'rgba(255,255,255,0.75)',
+            border: `1.5px solid ${TEXT}`,
+            borderTop: 'none',
+            borderRadius: '0 0 8px 8px',
+            padding: '6px 12px 8px',
+            marginBottom: 6,
+          }}>
+            {NOISE_LAYERS.map(l => (
+              <label key={l.key} className="flex items-center gap-2 cursor-pointer py-0.5">
+                <input type="checkbox" checked={layerVisibility[l.key]}
+                  onChange={() => toggleLayer(l.key)}
+                  className="cursor-pointer" style={{ accentColor: l.color }}/>
+                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: l.color }}/>
+                <span style={{ fontSize: 10, fontFamily: FONT, fontWeight: 600, color: layerVisibility[l.key] ? TEXT : MUTED }}>
+                  {l.label}
+                </span>
+              </label>
+            ))}
+          </div>
+        )}
         <button
           onClick={toggleLive}
           style={{

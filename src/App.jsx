@@ -2,7 +2,6 @@ import { useMapState } from './hooks/useMapState'
 import ControlHeader from './components/ControlHeader'
 import MapView from './components/MapView'
 import RoutePlanner from './components/RoutePlanner'
-import LayerPanel from './components/LayerPanel'
 import InfoBar from './components/InfoBar'
 import TimeSlider from './components/TimeSlider'
 import CommunityPanel from './components/CommunityPanel'
@@ -44,6 +43,7 @@ export default function App() {
           searchB={s.searchB} setSearchB={s.setSearchB}
           searchingB={s.searchingB} onSearchB={s.handleSearchB}
           noiseActive={s.noiseActive} toggleNoiseGroup={s.toggleNoiseGroup}
+          layerVisibility={s.layerVisibility} toggleLayer={s.toggleLayer}
           liveOn={s.liveOn} toggleLive={s.toggleLive}
         />
 
@@ -55,8 +55,6 @@ export default function App() {
           onAddPin={s.handleAddPin}
           onCancelPin={s.handleCancelPin}
         />
-
-        <LayerPanel layerVisibility={s.layerVisibility} toggleLayer={s.toggleLayer} />
 
         {s.liveOn && (
           <>
