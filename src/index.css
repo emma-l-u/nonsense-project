@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Placeholder text inside gradient panels */
+.panel-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
 /* Light theme for Leaflet popups */
 .leaflet-popup-content-wrapper {
   background: #ffffff;

@@ -66,11 +66,11 @@ export default function ControlHeader() {
       <WalkIcon />
       <DogIcon />
       <h1
-        className="text-xl font-black tracking-widest mx-1"
+        className="text-xl font-black mx-1"
         style={{
-          fontFamily: "'Urbanist', sans-serif",
-          letterSpacing: '0.12em',
-          background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 60%, #0891b2 100%)',
+          fontFamily: "'Syne', sans-serif",
+          letterSpacing: '0.1em',
+          background: 'linear-gradient(135deg, #e8007e 0%, #7c3aed 50%, #0ea5e9 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
