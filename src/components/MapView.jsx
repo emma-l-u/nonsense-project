@@ -166,18 +166,24 @@ function TrafficFlow({ roads, simHour }) {
     ])
     return (
       <LayerGroup key={ri}>
-        {/* Soft glow halo — scales with intensity */}
+        {/* Outer glow halo */}
         <Polyline positions={path} pathOptions={{
-          color: '#ef4444', weight: 6 + lineCount * intensity * 2,
-          opacity: 0.15 * intensity,
+          color: '#ef4444', weight: 10 + lineCount * intensity * 2,
+          opacity: 0.18 * intensity,
           lineCap: 'round', lineJoin: 'round',
         }} />
-        {/* Flowing dash lines — thickness and count driven by intensity */}
+        {/* Inner glow */}
+        <Polyline positions={path} pathOptions={{
+          color: '#f87171', weight: 4 + intensity * 2,
+          opacity: 0.35 * intensity,
+          lineCap: 'round', lineJoin: 'round',
+        }} />
+        {/* Flowing dash lines */}
         {Array.from({ length: lineCount }, (_, li) => (
           <Polyline key={li} positions={path} pathOptions={{
             color: li % 2 === 0 ? '#ef4444' : '#f87171',
-            weight: 1.5 + intensity * 1.5,
-            opacity: 0.55 + intensity * 0.35,
+            weight: 1 + intensity * 0.8,
+            opacity: 0.7 + intensity * 0.25,
             dashArray: `${10 + li * 4} ${6 + li * 2}`,
             dashOffset: String(phase + li * 18),
             lineCap: 'round',
