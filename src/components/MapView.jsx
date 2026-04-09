@@ -74,9 +74,9 @@ function FlagCursor({ active }) {
       top: pos.y,
       pointerEvents: 'none',
       zIndex: 99999,
-      transform: 'translate(-6px, -88px)',
+      transform: 'translate(-5px, -70px)',
     }}>
-      <svg viewBox="0 0 46 90" width="46" height="90" fill="none">
+      <svg viewBox="0 0 46 90" width="36" height="72" fill="none">
         <line x1="6" y1="2" x2="6" y2="88" stroke="#2a2420" strokeWidth="3" strokeLinecap="round"/>
         <path d={flagPath} fill="#2a2420"/>
       </svg>
