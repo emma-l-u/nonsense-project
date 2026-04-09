@@ -161,29 +161,29 @@ function TrafficFlow({ roads, simHour }) {
 
   return roads.map((road, ri) => {
     const path = road.path.map(([lat, lng], pi) => [
-      lat + Math.sin(phase * 0.04 + pi * 0.8 + ri * 1.1) * 0.00006 * intensity,
-      lng + Math.cos(phase * 0.035 + pi * 0.6 + ri * 0.9) * 0.00004 * intensity,
+      lat + Math.sin(phase * 0.04 + pi * 0.8 + ri * 1.1) * 0.00016 * intensity,
+      lng + Math.cos(phase * 0.035 + pi * 0.6 + ri * 0.9) * 0.00012 * intensity,
     ])
     return (
       <LayerGroup key={ri}>
         {/* Wide soft glow halo */}
         <Polyline positions={path} pathOptions={{
-          color: '#ef4444', weight: 18 + lineCount * 2,
-          opacity: 0.12 * intensity,
+          color: '#ef4444', weight: 22 + lineCount * 3,
+          opacity: 0.28 * intensity,
           lineCap: 'round', lineJoin: 'round',
         }} />
         {/* Inner glow */}
         <Polyline positions={path} pathOptions={{
-          color: '#f87171', weight: 8,
-          opacity: 0.25 * intensity, lineCap: 'round', lineJoin: 'round',
+          color: '#f87171', weight: 10,
+          opacity: 0.55 * intensity, lineCap: 'round', lineJoin: 'round',
         }} />
         {/* Flowing dash lines */}
         {Array.from({ length: lineCount }, (_, li) => (
           <Polyline key={li} positions={path} pathOptions={{
             color: li % 2 === 0 ? '#ef4444' : '#fca5a5',
-            weight: 3,
-            opacity: 0.75 * intensity,
-            dashArray: `${12 + li * 6} ${6 + li * 3}`,
+            weight: 4,
+            opacity: 0.95 * intensity,
+            dashArray: `${14 + li * 6} ${5 + li * 2}`,
             dashOffset: String(phase + li * 18),
             lineCap: 'round',
           }} />
