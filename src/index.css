@@ -26,7 +26,7 @@
 
 /* Ensure map fills its container */
 .leaflet-container {
-  background: #f2efe9;
+  background: #ffffff;
 }
 
 /* Tailwind's base reset breaks Leaflet tile images — undo it */

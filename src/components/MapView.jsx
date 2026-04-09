@@ -171,9 +171,9 @@ export default function MapView({
   return (
     <MapContainer center={WEIMAR} zoom={14} zoomControl={false} className="h-full w-full">
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        maxZoom={19}
+        attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        url="https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png"
+        maxZoom={18}
       />
       <ZoomControl position="bottomright" />
       <SvgPatterns />

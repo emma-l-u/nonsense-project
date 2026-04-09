@@ -10,7 +10,7 @@ export default function App() {
   const s = useMapState()
 
   return (
-    <div className="flex flex-col h-screen text-gray-700 overflow-hidden" style={{ background: '#f2efe9' }}>
+    <div className="flex flex-col h-screen text-gray-700 overflow-hidden" style={{ background: '#ffffff' }}>
 
       <div className="relative flex-1 min-h-0">
         <ControlHeader />
