@@ -5,13 +5,34 @@ import {
   fetchOsrmPath, fetchOsrmRoute, geocodeAddress,
   fetchOsmParks, fetchOsmPedestrian,
 } from '../data/mapData'
+import { CHARACTERS } from '../data/characters.jsx'
 
 const NOISE_GROUP = ['traffic-noise', 'rail-noise', 'construction', 'hospitality']
 
 export function useMapState() {
+  // Character selection drives both mode + routeType
+  const [selectedCharacter, setSelectedCharacterState] = useState('beatrice')
   const [mode, setMode] = useState('walk')
   const [routeType, setRouteType] = useState('fastest')
   const [layerVisibility, setLayerVisibility] = useState(LAYER_DEFAULTS)
+
+  const setSelectedCharacter = useCallback((id) => {
+    const c = CHARACTERS[id]
+    setSelectedCharacterState(id)
+    setMode(c.mode)
+    modeRef.current = c.mode
+    setRouteType(c.routeType)
+    routeTypeRef.current = c.routeType
+  }, [])
+
+  // Community pins (localStorage-persisted)
+  const [communityPins, setCommunityPins] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ww_pins') ?? '[]') } catch { return [] }
+  })
+  const [pinMode, _setPinMode] = useState(null)  // null | 'favourite' | 'problem'
+  const pinModeRef = useRef(null)
+  const setPinMode = useCallback((m) => { pinModeRef.current = m; _setPinMode(m) }, [])
+  const [pendingPin, setPendingPin] = useState(null) // { lat, lng, type }
 
   // OSRM geometry
   const [fetchedRoads, setFetchedRoads] = useState(null)
@@ -115,8 +136,43 @@ export function useMapState() {
     } catch (err) { console.error('Route error:', err); setStatus('Network error — could not fetch route') }
   }, [])
 
+  // ── Community pin handlers ─────────────────────────────────────────────────
+  const handleAddPin = useCallback((description) => {
+    if (!pendingPin) return
+    const pin = { ...pendingPin, description, id: Date.now() }
+    setCommunityPins(prev => {
+      const next = [...prev, pin]
+      localStorage.setItem('ww_pins', JSON.stringify(next))
+      return next
+    })
+    setPendingPin(null)
+    setPinMode(null)
+    setStatus('Memory saved! ❤️')
+  }, [pendingPin, setPinMode])
+
+  const handleCancelPin = useCallback(() => {
+    setPendingPin(null)
+    setPinMode(null)
+  }, [setPinMode])
+
+  const handleRemovePin = useCallback((id) => {
+    setCommunityPins(prev => {
+      const next = prev.filter(p => p.id !== id)
+      localStorage.setItem('ww_pins', JSON.stringify(next))
+      return next
+    })
+  }, [])
+
   // ── Map click ─────────────────────────────────────────────────────────────
   const handleMapClick = useCallback((latlng) => {
+    // Pin placement mode takes priority
+    if (pinModeRef.current) {
+      setPendingPin({ lat: latlng.lat, lng: latlng.lng, type: pinModeRef.current })
+      pinModeRef.current = null
+      _setPinMode(null)
+      setStatus('Describe this spot in the panel →')
+      return
+    }
     const count = clickCountRef.current++
     if (count % 2 === 0) {
       ptARef.current = latlng; setPtA(latlng)
@@ -191,8 +247,8 @@ export function useMapState() {
   const isPlacing = !ptA || !ptB
 
   return {
-    mode, setMode,
-    routeType, setRouteType,
+    selectedCharacter, setSelectedCharacter,
+    mode, routeType,
     layerVisibility, toggleLayer, toggleNoiseGroup,
     noiseActive,
     fetchedRoads, fetchedBikeLanes,
@@ -201,6 +257,8 @@ export function useMapState() {
     route, routeInfo,
     liveOn, toggleLive,
     simHour, setSimHour,
+    communityPins, pinMode, setPinMode, pendingPin,
+    handleAddPin, handleCancelPin, handleRemovePin,
     searchA, setSearchA, searchingA, handleSearchA,
     searchB, setSearchB, searchingB, handleSearchB,
     status, timeDisplay,

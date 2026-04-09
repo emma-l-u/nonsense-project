@@ -10,10 +10,11 @@ export default function App() {
   const s = useMapState()
 
   return (
-    <div className="flex flex-col h-screen bg-[#0f0f1e] text-gray-200 overflow-hidden">
+    <div className="flex flex-col h-screen text-gray-200 overflow-hidden" style={{ background: '#120d08' }}>
 
       <div className="relative flex-1 min-h-0">
         <ControlHeader />
+
         <MapView
           layerVisibility={s.layerVisibility}
           fetchedRoads={s.fetchedRoads}
@@ -25,14 +26,16 @@ export default function App() {
           liveOn={s.liveOn} simHour={s.simHour}
           onMapClick={s.handleMapClick}
           isPlacing={s.isPlacing}
+          communityPins={s.communityPins}
+          pinMode={s.pinMode}
+          onRemovePin={s.handleRemovePin}
         />
 
-        {/* Unified left panel */}
         <RoutePlanner
           ptA={s.ptA} ptB={s.ptB}
           routeInfo={s.routeInfo}
-          mode={s.mode} setMode={s.setMode}
-          routeType={s.routeType} setRouteType={s.setRouteType}
+          selectedCharacter={s.selectedCharacter}
+          setSelectedCharacter={s.setSelectedCharacter}
           onCalcRoute={s.handleCalcRoute}
           onClear={s.handleClear}
           searchA={s.searchA} setSearchA={s.setSearchA}
@@ -41,9 +44,13 @@ export default function App() {
           searchingB={s.searchingB} onSearchB={s.handleSearchB}
           noiseActive={s.noiseActive} toggleNoiseGroup={s.toggleNoiseGroup}
           liveOn={s.liveOn} toggleLive={s.toggleLive}
+          communityPins={s.communityPins}
+          pinMode={s.pinMode} setPinMode={s.setPinMode}
+          pendingPin={s.pendingPin}
+          onAddPin={s.handleAddPin}
+          onCancelPin={s.handleCancelPin}
         />
 
-        {/* Layer detail panel */}
         <LayerPanel layerVisibility={s.layerVisibility} toggleLayer={s.toggleLayer} />
 
         {s.liveOn && (

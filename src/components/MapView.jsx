@@ -29,14 +29,15 @@ function SvgPatterns() {
 }
 
 // ── Cursor & click handler ────────────────────────────────────────────────────
-function MapInteraction({ onMapClick, isPlacing }) {
+function MapInteraction({ onMapClick, isPlacing, pinMode }) {
   const map = useMap()
   useMapEvents({ click: (e) => onMapClick(e.latlng) })
   useEffect(() => {
     const el = map.getContainer()
-    el.classList.toggle('cursor-flag', isPlacing)
-    return () => el.classList.remove('cursor-flag')
-  }, [map, isPlacing])
+    el.classList.toggle('cursor-flag', isPlacing && !pinMode)
+    el.style.cursor = pinMode ? 'crosshair' : ''
+    return () => { el.classList.remove('cursor-flag'); el.style.cursor = '' }
+  }, [map, isPlacing, pinMode])
   return null
 }
 
@@ -165,6 +166,7 @@ export default function MapView({
   layerVisibility, fetchedRoads, fetchedBikeLanes,
   osmParks, osmPedestrian,
   ptA, ptB, route, routeType, liveOn, simHour, onMapClick, isPlacing,
+  communityPins, pinMode, onRemovePin,
 }) {
   return (
     <MapContainer center={WEIMAR} zoom={14} zoomControl={false} className="h-full w-full">
@@ -175,7 +177,7 @@ export default function MapView({
       />
       <ZoomControl position="bottomright" />
       <SvgPatterns />
-      <MapInteraction onMapClick={onMapClick} isPlacing={isPlacing} />
+      <MapInteraction onMapClick={onMapClick} isPlacing={isPlacing} pinMode={pinMode} />
       {route && <RouteFitter route={route} />}
 
       {/* Route A/B pins */}
@@ -241,6 +243,22 @@ export default function MapView({
           </Polyline>
         ))}
       </LayerGroup>
+
+      {/* Community pins */}
+      {(communityPins ?? []).map(pin => (
+        <Marker key={pin.id} position={[pin.lat, pin.lng]} icon={L.divIcon({
+          html: `<div style="font-size:22px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6))">${pin.type === 'favourite' ? '❤️' : '⚠️'}</div>`,
+          className: '', iconAnchor: [11, 11],
+        })}>
+          <Popup>
+            <b>{pin.type === 'favourite' ? '❤️ Favourite spot' : '⚠️ Problem reported'}</b>
+            <br />{pin.description}
+            {onRemovePin && (
+              <><br /><button onClick={() => onRemovePin(pin.id)} style={{ marginTop: 4, fontSize: 10, cursor: 'pointer', color: '#999' }}>Remove</button></>
+            )}
+          </Popup>
+        </Marker>
+      ))}
 
       {/* Animated traffic flow — glowing lines scaled to time of day */}
       {liveOn && <TrafficFlow roads={fetchedRoads} simHour={simHour} />}
