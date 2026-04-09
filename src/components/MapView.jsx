@@ -194,71 +194,53 @@ export default function MapView({
       {['traffic-noise','rail-noise','construction','school','hospitality'].map(key =>
         layerVisibility[key] && <NoiseLayer key={key} data={noiseData[key]} />
       )}
-      {/* Park noise — markers only, no circles (parks shown as polygons) */}
-      {layerVisibility['park'] && (
-        <LayerGroup>
-          {noiseData.park.map((p, i) => (
-            <Marker key={i} position={p.ll} icon={L.divIcon({
-              html: `<div style="font-size:16px;filter:drop-shadow(0 1px 3px #000)">${p.icon}</div>`,
-              className: '', iconAnchor: [8, 8],
-            })}>
-              <Popup><b>{p.label}</b><br /><span style={{ color: '#22c55e' }}>{p.db} dB(A) — quiet zone</span></Popup>
-            </Marker>
-          ))}
-        </LayerGroup>
-      )}
-
-      {/* OSM Park polygons — solid light green fill */}
-      {layerVisibility['park'] && osmParks.map((park, i) => (
+      {/* Green zones — always on, soft ambient fill */}
+      {osmParks.map((park, i) => (
         <Polygon key={i} positions={park.positions}
           pathOptions={{
             fillColor: park.kind === 'forest' ? '#166534' : '#4ade80',
-            fillOpacity: park.kind === 'forest' ? 0.18 : 0.22,
+            fillOpacity: park.kind === 'forest' ? 0.12 : 0.14,
             color: park.kind === 'forest' ? '#15803d' : '#22c55e',
-            weight: 1.5, opacity: 0.6,
+            weight: 1, opacity: 0.3,
           }}>
           <Popup><b>🌳 {park.name}</b></Popup>
         </Polygon>
       ))}
 
-      {/* OSM Pedestrian zones — yellow hatch for areas, lines for streets */}
-      {layerVisibility['pedestrian'] && osmPedestrian.map((zone, i) =>
+      {/* Pedestrian zones — always on, subtle yellow wash */}
+      {osmPedestrian.map((zone, i) =>
         zone.isClosed ? (
           <Polygon key={i} positions={zone.positions}
-            pathOptions={{ fillColor: 'url(#ped-hatch)', fillOpacity: 1, color: '#fde047', weight: 1.5, opacity: 0.55 }}>
+            pathOptions={{ fillColor: 'url(#ped-hatch)', fillOpacity: 1, color: '#fde047', weight: 1, opacity: 0.25 }}>
             <Popup><b>🚶 {zone.name}</b></Popup>
           </Polygon>
         ) : (
           <Polyline key={i} positions={zone.positions}
-            pathOptions={{ color: '#fde047', weight: 4, opacity: 0.45, dashArray: '1 4', lineCap: 'round' }}>
+            pathOptions={{ color: '#fde047', weight: 2.5, opacity: 0.25, dashArray: '1 5', lineCap: 'round' }}>
             <Popup><b>🚶 {zone.name}</b></Popup>
           </Polyline>
         )
       )}
 
-      {/* Main roads */}
-      {layerVisibility['main-roads'] && (
-        <LayerGroup>
-          {(fetchedRoads ?? []).map((r, i) => (
-            <Polyline key={i} positions={r.path}
-              pathOptions={{ color: r.color, weight: r.w, opacity: 0.75 }}>
-              <Popup><b>🚗 {r.label}</b></Popup>
-            </Polyline>
-          ))}
-        </LayerGroup>
-      )}
+      {/* Main roads — always on, muted red tint */}
+      <LayerGroup>
+        {(fetchedRoads ?? []).map((r, i) => (
+          <Polyline key={i} positions={r.path}
+            pathOptions={{ color: '#991b1b', weight: Math.max(r.w - 2, 2), opacity: 0.3 }}>
+            <Popup><b>🚗 {r.label}</b></Popup>
+          </Polyline>
+        ))}
+      </LayerGroup>
 
-      {/* Bike lanes */}
-      {layerVisibility['bike-lanes'] && (
-        <LayerGroup>
-          {(fetchedBikeLanes ?? []).map((r, i) => (
-            <Polyline key={i} positions={r.path}
-              pathOptions={{ color: r.color, weight: r.w, opacity: 0.9, dashArray: r.dash }}>
-              <Popup><b>🚲 {r.label || 'Bike lane'}</b></Popup>
-            </Polyline>
-          ))}
-        </LayerGroup>
-      )}
+      {/* Bike lanes — always on, subtle amber dash */}
+      <LayerGroup>
+        {(fetchedBikeLanes ?? []).map((r, i) => (
+          <Polyline key={i} positions={r.path}
+            pathOptions={{ color: '#d97706', weight: 1.5, opacity: 0.3, dashArray: r.dash }}>
+            <Popup><b>🚲 {r.label || 'Bike lane'}</b></Popup>
+          </Polyline>
+        ))}
+      </LayerGroup>
 
       {/* Animated traffic flow — glowing lines scaled to time of day */}
       {liveOn && <TrafficFlow roads={fetchedRoads} simHour={simHour} />}

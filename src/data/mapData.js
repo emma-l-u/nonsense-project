@@ -78,10 +78,6 @@ export const LAYER_DEFAULTS = {
   'construction':  false,
   'school':        false,
   'hospitality':   false,
-  'park':          false,
-  'main-roads':    true,
-  'bike-lanes':    false,
-  'pedestrian':    false,
 }
 
 // ── Route configuration ───────────────────────────────────────────────────────

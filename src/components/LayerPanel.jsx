@@ -6,12 +6,6 @@ const NOISE_LAYERS = [
   { key: 'hospitality',   label: 'bars & nightlife',               color: '#ec4899' },
 ]
 
-const MAP_LAYERS = [
-  { key: 'main-roads',  label: 'traffic arteries', color: '#dc2626' },
-  { key: 'bike-lanes',  label: 'bike lanes',       color: '#f59e0b' },
-  { key: 'pedestrian',  label: 'pedestrian zones', color: '#fde047' },
-  { key: 'park',        label: 'green zones',      color: '#4ade80' },
-]
 
 function LayerRow({ layerKey, label, color, checked, onToggle }) {
   return (
@@ -35,13 +29,6 @@ export default function LayerPanel({ layerVisibility, toggleLayer }) {
         ))}
       </div>
 
-      <div className="p-3">
-        <h3 className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">Map layers</h3>
-        {MAP_LAYERS.map(l => (
-          <LayerRow key={l.key} layerKey={l.key} label={l.label} color={l.color}
-            checked={layerVisibility[l.key]} onToggle={toggleLayer} />
-        ))}
-      </div>
 
     </div>
   )
