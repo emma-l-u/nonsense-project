@@ -318,7 +318,7 @@ export default function MapView({
       ))}
 
       {/* Animated traffic flow — glowing lines scaled to time of day */}
-      {liveOn && <TrafficFlow roads={fetchedRoads} simHour={simHour} />}
+      <TrafficFlow roads={fetchedRoads} simHour={liveOn ? simHour : null} />
     </MapContainer>
   )
 }
