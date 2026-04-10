@@ -131,44 +131,119 @@ const iconB = makePinIcon('B', '#f87171')
 
 // ── Animated route — wiggle personality per character ─────────────────────────
 const ROUTE_ANIM = {
-  // Karl — slow, bouncy, careful kid energy
-  safest:  { amp: 0.00010, freq: 0.030, interval: 65,  weight: 4,   dash: '7 5'  },
-  // Erna — lazy, meandering, big slow curves with the dog
-  nicest:  { amp: 0.00020, freq: 0.012, interval: 95,  weight: 4.5, dash: null   },
-  // Beatrice — fast, precise, barely wiggles
-  fastest: { amp: 0.000022,freq: 0.065, interval: 16,  weight: 5,   dash: null   },
-  // Benedikt — energetic, dashed, flying on the bike
-  bike:    { amp: 0.00013, freq: 0.045, interval: 20,  weight: 4,   dash: '14 4' },
+  // Karl — loose, wide meanders: low freq = very long wavelength, moderate amp, slow
+  safest: {
+    style: 'meander',
+    amp: 0.00016, freq: 0.006, interval: 100,
+    weight: 4, dash: '14 8',
+  },
+  // Erna — slow dog stroll: tiny waves, long gaps (= pauses), actual phase pauses
+  nicest: {
+    style: 'stroll',
+    amp: 0.000045, freq: 0.018, interval: 150,
+    weight: 4, dash: '7 26',
+    pauseEvery: 5, pauseFor: 9,  // move 5 ticks then freeze 9 ticks
+  },
+  // Beatrice — fast & hectic: high freq erratic waves, two offset lines
+  fastest: {
+    style: 'hectic',
+    amp: 0.00024, freq: 0.072, interval: 16,
+    weight: 3.5, dash: '7 5',
+  },
+  // Benedikt — fast straight dots: almost no wiggle, flowing round dots
+  bike: {
+    style: 'dots',
+    amp: 0.000007, freq: 0.05, interval: 11,
+    weight: 5.5, dash: '1 12',
+  },
 }
 
 function AnimatedRoute({ route, routeType }) {
   const [phase, setPhase] = useState(0)
+  const tickRef = useRef(0)
   const cfg = ROUTE_ANIM[routeType] ?? ROUTE_ANIM.fastest
   const color = ROUTE_CONFIG[routeType]?.color ?? '#888'
   const label = ROUTE_CONFIG[routeType]?.label ?? ''
 
   useEffect(() => {
-    const id = setInterval(() => setPhase(p => p + 1), cfg.interval)
+    tickRef.current = 0
+    const cycle = cfg.pauseEvery != null ? cfg.pauseEvery + cfg.pauseFor : null
+    const id = setInterval(() => {
+      tickRef.current++
+      // For stroll mode: freeze phase during "stop" portion of each cycle
+      if (cycle && tickRef.current % cycle >= cfg.pauseEvery) return
+      setPhase(p => p + 1)
+    }, cfg.interval)
     return () => clearInterval(id)
-  }, [cfg.interval])
+  }, [cfg.interval, cfg.pauseEvery, cfg.pauseFor])
 
   if (!route?.length) return null
 
-  const path = route.map((p, i) => [
-    p.lat + Math.sin(phase * 0.06 + i * cfg.freq) * cfg.amp,
-    p.lng + Math.cos(phase * 0.05 + i * cfg.freq * 0.85) * cfg.amp * 0.75,
+  const makePath = (phOff = 0, ampMult = 1) => route.map((p, i) => [
+    p.lat + Math.sin(phase * 0.06 + i * cfg.freq + phOff) * cfg.amp * ampMult,
+    p.lng + Math.cos(phase * 0.05 + i * cfg.freq * 0.85 + phOff) * cfg.amp * 0.75 * ampMult,
   ])
 
+  const path = makePath()
+
+  // Benedikt — fast flowing dots, almost perfectly straight
+  if (cfg.style === 'dots') {
+    return (
+      <LayerGroup>
+        <Polyline positions={path} pathOptions={{
+          color, weight: cfg.weight * 2.2, opacity: 0.15,
+          lineCap: 'round', lineJoin: 'round',
+        }} />
+        <Polyline positions={path} pathOptions={{
+          color, weight: cfg.weight, opacity: 0.95,
+          dashArray: cfg.dash,
+          dashOffset: String(-phase * 5),   // negative = flows toward destination
+          lineCap: 'round', lineJoin: 'round',
+        }}>
+          <Popup><b>{label}</b></Popup>
+        </Polyline>
+      </LayerGroup>
+    )
+  }
+
+  // Beatrice — hectic: two offset frantic lines at slightly different phases
+  if (cfg.style === 'hectic') {
+    const path2 = makePath(2.1, 0.65)
+    return (
+      <LayerGroup>
+        <Polyline positions={path} pathOptions={{
+          color, weight: cfg.weight * 3.5, opacity: 0.17,
+          lineCap: 'round', lineJoin: 'round',
+        }} />
+        <Polyline positions={path} pathOptions={{
+          color, weight: cfg.weight, opacity: 0.88,
+          dashArray: cfg.dash,
+          dashOffset: String(phase * 4),
+          lineCap: 'round', lineJoin: 'round',
+        }}>
+          <Popup><b>{label}</b></Popup>
+        </Polyline>
+        <Polyline positions={path2} pathOptions={{
+          color, weight: cfg.weight - 1.5, opacity: 0.45,
+          dashArray: '4 11',
+          dashOffset: String(-phase * 3 + 14),
+          lineCap: 'round', lineJoin: 'round',
+        }} />
+      </LayerGroup>
+    )
+  }
+
+  // Karl (meander) & Erna (stroll) — same structure, different rhythm
   return (
     <LayerGroup>
       <Polyline positions={path} pathOptions={{
-        color, weight: cfg.weight * 3, opacity: 0.22,
+        color, weight: cfg.weight * 3, opacity: 0.2,
         lineCap: 'round', lineJoin: 'round',
       }} />
       <Polyline positions={path} pathOptions={{
-        color, weight: cfg.weight, opacity: 0.92,
-        dashArray: cfg.dash ?? undefined,
-        dashOffset: cfg.dash ? String(phase * 2) : undefined,
+        color, weight: cfg.weight, opacity: 0.9,
+        dashArray: cfg.dash,
+        dashOffset: String(phase * (cfg.style === 'stroll' ? 0.7 : 1.8)),
         lineCap: 'round', lineJoin: 'round',
       }}>
         <Popup><b>{label}</b></Popup>
