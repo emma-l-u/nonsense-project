@@ -58,7 +58,7 @@ function CharacterCard({ char, selected, onSelect }) {
       <div style={{
         background: selected ? char.cardBg : '#fffdf5',
         width: '100%', display: 'flex', alignItems: 'flex-end',
-        justifyContent: 'center', paddingTop: 6, minHeight: 76, overflow: 'hidden',
+        justifyContent: 'center', paddingTop: 6, minHeight: 130, overflow: 'hidden',
       }}>
         <Avatar />
       </div>
@@ -96,7 +96,7 @@ export default function RoutePlanner({
         border: `2px solid ${TEXT}`,
         borderRadius: 18,
         boxShadow: '6px 6px 0px rgba(26,18,9,0.18)',
-        width: 256,
+        width: 296,
       }}
     >
       {/* ── Route planning ── */}
