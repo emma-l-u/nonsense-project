@@ -37,6 +37,8 @@ export default function App() {
           communityPins={s.communityPins}
           pinMode={s.pinMode}
           onRemovePin={s.handleRemovePin}
+          showWandel={s.showWandel}
+          wandelCats={s.wandelCats}
         />
 
         <RoutePlanner
@@ -53,6 +55,8 @@ export default function App() {
           noiseActive={s.noiseActive} toggleNoiseGroup={s.toggleNoiseGroup}
           layerVisibility={s.layerVisibility} toggleLayer={s.toggleLayer}
           liveOn={s.liveOn} toggleLive={s.toggleLive}
+          showWandel={s.showWandel} toggleWandel={s.toggleWandel}
+          wandelCats={s.wandelCats} toggleWandelCat={s.toggleWandelCat}
         />
 
         <CommunityPanel

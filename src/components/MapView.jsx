@@ -6,6 +6,7 @@ import {
 } from 'react-leaflet'
 import L from 'leaflet'
 import { noiseData, WEIMAR, ROUTE_CONFIG } from '../data/mapData'
+import { WANDEL_CATS, WANDEL_POIS } from '../data/wandelkarten'
 
 // ── SVG hatch patterns ────────────────────────────────────────────────────────
 function SvgPatterns() {
@@ -252,6 +253,47 @@ function AnimatedRoute({ route, routeType }) {
   )
 }
 
+// ── Wandelkarten everyday-places layer ───────────────────────────────────────
+const WANDEL_ICON_CACHE = {}
+function getWandelIcon(cat) {
+  if (WANDEL_ICON_CACHE[cat]) return WANDEL_ICON_CACHE[cat]
+  const { color, emoji } = WANDEL_CATS[cat]
+  WANDEL_ICON_CACHE[cat] = L.divIcon({
+    html: `<div style="
+      width:30px;height:30px;
+      background:${color};
+      border:2.5px solid #1a1209;
+      border-radius:50%;
+      box-shadow:2px 2px 0 #1a1209;
+      display:flex;align-items:center;justify-content:center;
+      font-size:14px;line-height:1;
+    ">${emoji}</div>`,
+    className: '', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -34],
+  })
+  return WANDEL_ICON_CACHE[cat]
+}
+
+function WandelkartenLayer({ wandelCats }) {
+  const visible = WANDEL_POIS.filter(p => wandelCats[p.cat])
+  return (
+    <LayerGroup>
+      {visible.map(p => (
+        <Marker key={p.id} position={[p.lat, p.lng]} icon={getWandelIcon(p.cat)}>
+          <Popup>
+            <div style={{ fontFamily: "'Nunito',sans-serif", fontSize: 12, minWidth: 160 }}>
+              <b style={{ fontSize: 13 }}>{WANDEL_CATS[p.cat].emoji} {p.name}</b>
+              <br/><span style={{ color: '#555' }}>{p.addr}</span>
+              <br/><span style={{ color: '#333', marginTop: 3, display:'block' }}>{p.info}</span>
+              {p.hours   && <div style={{ marginTop: 4, color: '#444' }}>🕐 {p.hours}</div>}
+              {p.contact && <div style={{ marginTop: 2, color: '#444' }}>✉ {p.contact}</div>}
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </LayerGroup>
+  )
+}
+
 // ── Noise colour scale ────────────────────────────────────────────────────────
 function noiseColor(db) {
   if (db >= 75) return '#7f1d1d'
@@ -352,6 +394,7 @@ export default function MapView({
   osmParks, osmPedestrian,
   ptA, ptB, route, routeType, liveOn, simHour, onMapClick, isPlacing,
   communityPins, pinMode, onRemovePin,
+  showWandel, wandelCats,
 }) {
   return (
     <MapContainer center={WEIMAR} zoom={14} zoomControl={false} style={{ height: '100%', width: '100%' }}>
@@ -439,6 +482,9 @@ export default function MapView({
           </Popup>
         </Marker>
       ))}
+
+      {/* Wandelkarten everyday places */}
+      {showWandel && <WandelkartenLayer wandelCats={wandelCats} />}
 
       {/* Animated traffic flow — glowing lines scaled to time of day */}
       <TrafficFlow roads={fetchedRoads} simHour={liveOn ? simHour : null} />

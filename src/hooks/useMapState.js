@@ -243,6 +243,13 @@ export function useMapState() {
 
   const toggleLive = useCallback(() => setLiveOn(prev => !prev), [])
 
+  // Wandelkarten places layer
+  const [showWandel, setShowWandel] = useState(false)
+  const [wandelCats, setWandelCats] = useState({ food: true, community: true, repair: true, culture: true })
+  const toggleWandel = useCallback(() => setShowWandel(prev => !prev), [])
+  const toggleWandelCat = useCallback((cat) =>
+    setWandelCats(prev => ({ ...prev, [cat]: !prev[cat] })), [])
+
   const noiseActive = NOISE_GROUP.some(k => layerVisibility[k])
   const isPlacing = !ptA || !ptB
 
@@ -264,5 +271,6 @@ export function useMapState() {
     status, timeDisplay,
     isPlacing,
     handleMapClick, handleCalcRoute, handleClear,
+    showWandel, toggleWandel, wandelCats, toggleWandelCat,
   }
 }
