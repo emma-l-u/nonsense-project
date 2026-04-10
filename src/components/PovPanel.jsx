@@ -15,7 +15,7 @@ const AVATAR_SVG = {
 }
 
 // Natural SVG heights — used to scale to a consistent display size
-const CHAR_NATURAL_H = { karl: 148, erna: 142, beatrice: 148, benedikt: 114 }
+const CHAR_NATURAL_H = { karl: 160, erna: 154, beatrice: 160, benedikt: 120 }
 const TARGET_H = 60 // px display height
 
 function makeIcon(charId, flipX) {
