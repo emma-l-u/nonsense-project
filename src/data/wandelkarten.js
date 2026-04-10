@@ -1,10 +1,10 @@
 // Data sourced from weimar.wandelkarten.de — sustainable & community places in Weimar
 
 export const WANDEL_CATS = {
-  food:      { label: 'Food & Market',     emoji: '🛒', color: '#16a34a' },
+  food:      { label: 'Food & Market',     emoji: '😋', color: '#16a34a' },
   community: { label: 'Community & Free',  emoji: '🤝', color: '#7c3aed' },
   repair:    { label: 'Repair & Services', emoji: '🔧', color: '#d97706' },
-  culture:   { label: 'Library & Books',   emoji: '📚', color: '#0284c7' },
+  culture:   { label: 'Library & Books',   emoji: '',   color: '#0284c7' },
 }
 
 // Filtered to valid Weimar coordinates only (lng roughly 11.27–11.42)
