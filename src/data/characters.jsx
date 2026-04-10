@@ -1,452 +1,857 @@
+// ── Color palette ─────────────────────────────────────────────────────────────
 const OUTLINE = '#1a1209'
-const SKIN    = '#E8C09A'   // warm dusty skin
-const COBALT  = '#2D4AB5'   // cobalt blue
-const DPINK   = '#C87268'   // dusty pink
-const ORANGE  = '#E06020'   // editorial orange
-const CREAM   = '#F5EDDC'   // warm cream
-const GOLD    = '#C9A227'   // golden yellow
-const GREY    = '#9B9086'   // warm grey
+const SK      = '#E8B888'   // base skin
+const SK2     = '#C8905A'   // skin shadow
+const SK3     = '#F5CFA8'   // skin highlight
+const HD      = '#2A1E12'   // dark hair
+const HG      = '#B4ACA4'   // grey hair
+const CB      = '#2D4AB5'   // cobalt blue
+const DP      = '#C87268'   // dusty pink
+const OR      = '#E06020'   // orange
+const CR      = '#F5EDDC'   // cream
+const GO      = '#C9A227'   // gold
+const DKBL   = '#1A2D6E'   // dark navy
 
 // ── Karl ──────────────────────────────────────────────────────────────────────
+// 8-year-old boy walking right, right arm raised with ice cream
 export function KarlAvatar() {
   return (
-    <svg viewBox="0 0 112 160" width="112" height="160" fill="none">
+    <svg viewBox="0 0 108 174" width="108" height="174" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-      {/* Backpack — organic shape behind body */}
-      <path d="M8 52 Q6 48 10 47 L28 47 Q32 47 32 51 L32 82 Q32 87 28 88 L10 88 Q6 88 5 83 Z"
-            fill={GOLD} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
-      <path d="M10 47 Q19 41 28 47" stroke={OUTLINE} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <path d="M11 67 Q20 65 30 67" stroke={OUTLINE} strokeWidth="2" fill="none" strokeLinecap="round"/>
-      <circle cx="19" cy="76" r="4" fill="#A07A10" stroke={OUTLINE} strokeWidth="2"/>
+      {/* === BACKPACK (behind body) === */}
+      <path d="M8 55 C5 52 5 48 9 47 L24 47 C28 47 29 49 29 52 L28 85 C28 88 26 90 23 90 L10 90 C7 90 6 87 7 84 Z"
+            fill={GO} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Backpack strap arc */}
+      <path d="M10 47 C14 42 20 42 24 47" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      {/* Backpack pocket */}
+      <path d="M10 67 C16 65 22 65 28 67 L28 80 C22 82 16 82 10 80 Z"
+            fill="#B08010" stroke={OUTLINE} strokeWidth="1" strokeLinejoin="round"/>
+      {/* Backpack zipper line */}
+      <path d="M11 67 C19 65 26 67" stroke={OUTLINE} strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Back arm — swings behind */}
-      <path d="M22 66 Q8 76 5 92"  stroke={OUTLINE} strokeWidth="12" strokeLinecap="round"/>
-      <path d="M22 66 Q8 76 5 92"  stroke={COBALT}  strokeWidth="8"  strokeLinecap="round"/>
-      {/* Left hand — open palm, fingers point slightly back/down */}
-      {/* Palm */}
-      <path d="M1 90 Q-3 88 -3 82 Q-2 76 2 77 Q1 71 4 70 Q8 69 9 75 Q9 69 13 68 Q17 68 17 74
-               Q17 68 21 69 Q25 70 23 76 Q27 75 27 81 Q27 88 21 92 Q13 96 5 94 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
+      {/* === BACK ARM (swings behind, left arm) === */}
+      <path d="M25 72 C14 78 8 88 6 96"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M25 72 C14 78 8 88 6 96"
+            stroke={CB} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      {/* Left hand silhouette — fingers visible */}
+      <path d="M3 94 C0 92 0 86 2 84 C0 80 3 77 6 79
+               C5 75 8 73 11 76 C11 72 14 71 16 74
+               C19 70 22 71 21 76 C24 75 25 78 23 82
+               C25 85 24 91 20 94 C14 97 5 96 3 94 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Knuckle bumps */}
+      <path d="M5 82 C8 80 11 80" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <path d="M12 78 C15 76 18 77" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Back leg — thigh → knee → calf → shoe */}
-      <path d="M30 90 Q19 106 20 120" stroke={OUTLINE} strokeWidth="14" strokeLinecap="round"/>
-      <path d="M30 90 Q19 106 20 120" stroke={COBALT}  strokeWidth="10" strokeLinecap="round"/>
-      <path d="M12 118 Q14 110 20 110 Q28 110 30 118 Q30 126 22 128 Q14 126 12 118 Z"
-            fill={COBALT} stroke={OUTLINE} strokeWidth="3" strokeLinejoin="round"/>
-      <path d="M20 126 Q17 138 21 148" stroke={OUTLINE} strokeWidth="11" strokeLinecap="round"/>
-      <path d="M20 126 Q17 138 21 148" stroke={COBALT}  strokeWidth="7"  strokeLinecap="round"/>
-      <ellipse cx="21" cy="148" rx="7" ry="5.5" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M8 149 Q6 157 18 157 Q32 157 36 153 Q36 149 27 149 Z" fill={OUTLINE}/>
+      {/* === BACK LEG === */}
+      {/* Thigh — wider at top, tapers to knee */}
+      <path d="M28 97 C22 108 20 118 22 126"
+            stroke={OUTLINE} strokeWidth="10" strokeLinecap="round" fill="none"/>
+      <path d="M28 97 C22 108 20 118 22 126"
+            stroke={DKBL} strokeWidth="7" strokeLinecap="round" fill="none"/>
+      {/* Knee protrusion */}
+      <ellipse cx="22" cy="126" rx="6" ry="5" fill={DKBL} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Calf — narrower */}
+      <path d="M22 130 C20 140 22 150 24 156"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M22 130 C20 140 22 150 24 156"
+            stroke={DKBL} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      {/* Ankle */}
+      <ellipse cx="24" cy="156" rx="5" ry="4" fill={SK} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Back shoe — white sneaker shape */}
+      <path d="M12 158 C10 164 12 168 20 168 C30 168 34 164 33 160 C33 157 28 156 24 157 Z"
+            fill={CR} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Sole stripe */}
+      <path d="M12 165 C20 167 30 166 33 163" stroke={CB} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      {/* Laces */}
+      <path d="M16 162 C20 161 25 161" stroke={OUTLINE} strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Body — organic cobalt shape */}
-      <path d="M20 56 Q18 52 24 51 L74 51 Q80 52 79 57 L76 90 Q76 96 70 96 L24 96 Q18 96 18 90 Z"
-            fill={COBALT} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
-      {/* Cream horizontal stripes — slightly curved to follow form */}
-      <path d="M18 64 Q48 62 79 64" stroke={CREAM} strokeWidth="4" fill="none" strokeLinecap="round"/>
-      <path d="M18 73 Q48 71 79 73" stroke={CREAM} strokeWidth="4" fill="none" strokeLinecap="round"/>
-      <path d="M18 82 Q48 80 79 82" stroke={CREAM} strokeWidth="4" fill="none" strokeLinecap="round"/>
+      {/* === BODY — striped T-shirt === */}
+      <path d="M22 58 C20 54 24 52 30 52 L70 52 C76 52 78 55 77 59 L75 95 C75 99 71 101 67 100 L28 100 C23 100 21 97 22 94 Z"
+            fill={CB} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Cream horizontal stripes — slightly curved */}
+      <path d="M22 62 C44 60 76 62" stroke={CR} strokeWidth="3" fill="none" strokeLinecap="round"/>
+      <path d="M22 70 C44 68 76 70" stroke={CR} strokeWidth="3" fill="none" strokeLinecap="round"/>
+      <path d="M22 78 C44 76 75 78" stroke={CR} strokeWidth="3" fill="none" strokeLinecap="round"/>
+      <path d="M22 86 C44 84 75 86" stroke={CR} strokeWidth="3" fill="none" strokeLinecap="round"/>
+      {/* Shirt fold/shadow line */}
+      <path d="M46 52 C47 70 46 88 46 100" stroke="#2038A0" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.5"/>
 
-      {/* Front leg */}
-      <path d="M56 90 Q68 108 66 122" stroke={OUTLINE} strokeWidth="14" strokeLinecap="round"/>
-      <path d="M56 90 Q68 108 66 122" stroke={COBALT}  strokeWidth="10" strokeLinecap="round"/>
-      <path d="M58 120 Q60 112 66 112 Q74 112 76 120 Q76 128 68 130 Q60 128 58 120 Z"
-            fill={COBALT} stroke={OUTLINE} strokeWidth="3" strokeLinejoin="round"/>
-      <path d="M66 128 Q70 140 66 150" stroke={OUTLINE} strokeWidth="11" strokeLinecap="round"/>
-      <path d="M66 128 Q70 140 66 150" stroke={COBALT}  strokeWidth="7"  strokeLinecap="round"/>
-      <ellipse cx="66" cy="150" rx="7" ry="5.5" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M54 151 Q52 159 64 159 Q80 159 84 155 Q84 151 74 151 Z" fill={OUTLINE}/>
+      {/* === FRONT LEG === */}
+      <path d="M58 97 C64 108 64 119 62 127"
+            stroke={OUTLINE} strokeWidth="10" strokeLinecap="round" fill="none"/>
+      <path d="M58 97 C64 108 64 119 62 127"
+            stroke={DKBL} strokeWidth="7" strokeLinecap="round" fill="none"/>
+      {/* Knee */}
+      <ellipse cx="62" cy="127" rx="6" ry="5" fill={DKBL} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Calf */}
+      <path d="M62 131 C62 141 60 151 58 157"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M62 131 C62 141 60 151 58 157"
+            stroke={DKBL} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      {/* Ankle */}
+      <ellipse cx="58" cy="157" rx="5" ry="4" fill={SK} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Front shoe */}
+      <path d="M46 159 C44 165 46 170 54 170 C64 170 70 166 70 162 C70 159 65 158 58 158 Z"
+            fill={CR} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M46 166 C54 169 64 168 70 165" stroke={CB} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <path d="M50 163 C56 162 62 162" stroke={OUTLINE} strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Neck */}
-      <path d="M48 47 Q50 52 54 52 L64 52 Q68 52 70 47 Z" fill={SKIN}/>
+      {/* === NECK === */}
+      <path d="M44 52 C44 56 48 58 52 58 L56 58 C60 58 64 56 64 52 Z" fill={SK}/>
+      <path d="M46 52 C46 56 50 58 54 58" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Head — profile right, expressive */}
-      <path d="M34 26 Q34 4 56 4 Q78 4 78 26 Q78 46 56 46 Q34 46 34 26 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
-      {/* Hair — brushy dark shape */}
-      <path d="M34 18 Q36 5 54 5 Q70 5 78 16 Q72 4 56 5 Q40 6 34 18 Z" fill={OUTLINE}/>
-      <path d="M34 16 Q38 8 50 8 Q36 12 34 20 Z" fill={OUTLINE}/>
-      {/* Ear — profile */}
-      <path d="M35 28 Q28 24 29 34 Q30 42 37 40 Q40 37 38 28 Z" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      {/* Big expressive eye */}
-      <circle cx="65" cy="20" r="8.5" fill={OUTLINE}/>
-      <circle cx="67" cy="18"  r="3.5" fill="white"/>
-      <circle cx="67" cy="18"  r="1.5" fill={OUTLINE}/>
-      {/* Eyebrow — confident arc */}
-      <path d="M57 11 Q64 7 73 11" stroke={OUTLINE} strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-      {/* Nose bump */}
-      <path d="M76 27 Q83 31 77 36" stroke={OUTLINE} strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* Big grin */}
-      <path d="M67 40 Q75 44 70 47" stroke={OUTLINE} strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* Rosy cheek — editorial spot */}
-      <ellipse cx="71" cy="35" rx="6" ry="4" fill={DPINK} opacity="0.55"/>
+      {/* === HEAD — profile facing right === */}
+      {/* Main head path: back of skull → crown → forehead → brow → nose bridge → tip → philtrum → upper lip → chin → jaw → back */}
+      <path d="M36 8 C36 5 40 3 48 3 C58 3 66 5 70 12
+               C73 17 74 22 72 27 C73 28 75 30 76 33
+               C77 36 76 40 74 43 C73 46 70 49 66 50
+               C68 51 69 54 66 56 C62 58 58 58 56 57
+               C54 56 52 55 52 53 C48 53 44 52 42 50
+               C38 47 36 44 36 40 C34 36 34 30 36 24
+               C36 18 36 12 36 8 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round"/>
+      {/* Face shadow — right side/temple */}
+      <path d="M66 8 C70 14 73 22 72 30 C74 26 74 18 70 12 Z" fill={SK2} opacity="0.5"/>
+      {/* Under-chin shadow */}
+      <path d="M52 53 C54 56 60 57 66 56 C62 58 56 58 52 53 Z" fill={SK2} opacity="0.6"/>
+      {/* Forehead highlight */}
+      <path d="M52 6 C58 5 64 7 68 12 C66 8 60 5 54 5 Z" fill={SK3} opacity="0.8"/>
+      {/* Cheek highlight */}
+      <ellipse cx="67" cy="38" rx="4" ry="3" fill={SK3} opacity="0.6"/>
 
-      {/* Front arm — raised, holding ice cream */}
-      <path d="M72 66 Q86 54 90 38" stroke={OUTLINE} strokeWidth="12" strokeLinecap="round"/>
-      <path d="M72 66 Q86 54 90 38" stroke={COBALT}  strokeWidth="8"  strokeLinecap="round"/>
-      {/* Right hand — gripping ice cream, fingers wrap upward */}
-      <path d="M84 37 Q80 35 79 29 Q79 22 83 21 Q84 21 84 26
-               Q84 19 88 18 Q93 18 93 25 Q93 18 97 19 Q102 20 101 27
-               Q102 21 106 23 Q109 26 107 32
-               Q109 35 107 40 Q103 46 96 46 Q88 46 84 37 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
+      {/* Hair — dark messy, layered shapes */}
+      {/* Base hair mass */}
+      <path d="M36 22 C36 12 40 5 48 3 C58 2 67 5 72 12
+               C69 8 62 5 54 5 C44 5 38 10 36 22 Z"
+            fill={HD} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Messy tuft at crown */}
+      <path d="M44 4 C46 0 50 -1 54 1 C50 1 47 3 46 5 Z" fill={HD}/>
+      <path d="M52 3 C55 0 60 1 63 4 C60 3 56 3 54 5 Z" fill={HD}/>
+      {/* Hair highlight */}
+      <path d="M42 8 C46 5 52 4 58 6 C52 5 46 7 44 10 Z" fill="#4A3820" opacity="0.6"/>
+
+      {/* === EAR === */}
+      <path d="M36 26 C33 24 31 26 30 30 C29 34 31 38 34 39 C36 39 38 37 37 33 C38 30 38 27 36 26 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Inner ear detail */}
+      <path d="M34 28 C32 30 32 35 34 37" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+
+      {/* === EYE — almond shaped, realistic === */}
+      {/* Eye white — almond path */}
+      <path d="M62 24 C64 21 68 21 71 23 C69 26 65 26 62 24 Z"
+            fill="white" stroke={OUTLINE} strokeWidth="1"/>
+      {/* Iris */}
+      <circle cx="67" cy="23" r="3" fill="#4A6B8A"/>
+      {/* Pupil */}
+      <circle cx="67" cy="23" r="1.8" fill={OUTLINE}/>
+      {/* Catchlight */}
+      <circle cx="68.5" cy="21.5" r="0.8" fill="white"/>
+      {/* Upper eyelid crease */}
+      <path d="M62 24 C65 21 69 21 72 23" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      {/* Lower lash line */}
+      <path d="M62 24 C65 26 69 26 72 24" stroke={OUTLINE} strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.6"/>
+      {/* Eyebrow — child, slightly arched */}
+      <path d="M61 20 C64 17 69 17 73 19" stroke={HD} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+
+      {/* === NOSE — profile line + tip + nostril shadow === */}
+      {/* Nose bridge and tip */}
+      <path d="M72 28 C74 30 76 32 76 35 C76 37 75 39 73 40" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      {/* Nostril shadow */}
+      <path d="M73 38 C74 40 72 42 70 41" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      {/* Nose tip highlight */}
+      <ellipse cx="75" cy="34" rx="1.5" ry="2" fill={SK3} opacity="0.7"/>
+
+      {/* === LIPS === */}
+      {/* Upper lip */}
+      <path d="M65 46 C67 44 70 44 72 45 C71 46 69 47 67 47 Z" fill={DP} stroke={OUTLINE} strokeWidth="1"/>
+      {/* Lower lip */}
+      <path d="M65 47 C67 48 71 48 73 47 C72 49 69 50 66 49 Z" fill={DP} stroke={OUTLINE} strokeWidth="0.8"/>
+      {/* Smile line */}
+      <path d="M65 47 C67 48 71 47" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+
+      {/* Rosy cheek flush */}
+      <ellipse cx="70" cy="38" rx="5" ry="4" fill={DP} opacity="0.3"/>
+
+      {/* === FRONT ARM — raised, holding ice cream === */}
+      <path d="M68 72 C78 60 84 46 84 36"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M68 72 C78 60 84 46 84 36"
+            stroke={CB} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      {/* Right hand gripping cone */}
+      <path d="M80 35 C78 32 78 26 80 23 C82 20 85 21 85 25
+               C85 21 88 19 91 21 C93 23 92 27 91 30
+               C93 26 96 26 98 29 C99 32 97 36 94 37
+               C96 38 97 42 95 44 C92 46 86 45 82 42
+               C79 40 79 37 80 35 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
       {/* Knuckle lines */}
-      <path d="M85 32 Q88 30 91 31" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-      <path d="M92 30 Q95 28 98 30" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <path d="M84 30 C86 28 89 29" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <path d="M89 28 C91 26 94 27" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Ice cream */}
-      <path d="M86 38 L92 60 L98 38 Z" fill="#7A4E2E" stroke={OUTLINE} strokeWidth="2.5"/>
-      <line x1="87.5" y1="46" x2="96.5" y2="46" stroke="#5A3010" strokeWidth="1.5"/>
-      <line x1="88.5" y1="52" x2="95.5" y2="52" stroke="#5A3010" strokeWidth="1.5"/>
-      <circle cx="92" cy="24" r="15" fill={DPINK} stroke={OUTLINE} strokeWidth="2.5"/>
-      <circle cx="92" cy="10" r="5.5" fill="#A03030" stroke={OUTLINE} strokeWidth="2"/>
+      {/* === ICE CREAM === */}
+      {/* Cone */}
+      <path d="M83 42 C84 42 94 42 94 42 L89 64 Z"
+            fill="#8B5E3C" stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Cone texture lines */}
+      <line x1="85" y1="48" x2="92" y2="48" stroke="#6A3E1C" strokeWidth="1" strokeLinecap="round"/>
+      <line x1="86" y1="54" x2="92" y2="54" stroke="#6A3E1C" strokeWidth="1" strokeLinecap="round"/>
+      <line x1="87" y1="60" x2="91" y2="60" stroke="#6A3E1C" strokeWidth="1" strokeLinecap="round"/>
+      {/* Scoop */}
+      <circle cx="88" cy="32" r="13" fill={DP} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Scoop highlight */}
+      <ellipse cx="83" cy="26" rx="5" ry="4" fill="#E0A098" opacity="0.7" transform="rotate(-20 83 26)"/>
+      {/* Cherry on top */}
+      <circle cx="88" cy="19" r="4.5" fill="#C02020" stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Cherry highlight */}
+      <circle cx="86" cy="17" r="1.5" fill="#E04040" opacity="0.8"/>
       {/* Sprinkles */}
-      <line x1="87" y1="20" x2="90" y2="17" stroke={CREAM} strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="93" y1="18" x2="96" y2="21" stroke={GOLD}  strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="90" y1="28" x2="94" y2="26" stroke={CREAM} strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="82" y1="26" x2="85" y2="23" stroke={CR} strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="90" y1="24" x2="93" y2="27" stroke={GO} strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="84" y1="34" x2="88" y2="32" stroke="#5BCFE0" strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="92" y1="30" x2="94" y2="34" stroke={CR} strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Drip */}
+      <path d="M96 36 C97 40 97 44 96 46" stroke={DP} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
     </svg>
   )
 }
 
 // ── Erna ──────────────────────────────────────────────────────────────────────
+// Elderly woman, 70s, walking right, slight forward lean, cane left, leash right
 export function ErnaAvatar() {
   return (
-    <svg viewBox="0 0 158 154" width="158" height="154" fill="none">
+    <svg viewBox="0 0 158 168" width="158" height="168" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-      {/* Head — profile right */}
-      <path d="M12 26 Q12 5 32 5 Q52 5 52 26 Q52 45 32 45 Q12 45 12 26 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
-      {/* Hair bun — warm grey, editorial shape */}
-      <path d="M12 20 Q14 4 30 4 Q42 4 50 14 Q42 2 28 4 Q16 6 12 20 Z" fill={GREY}/>
-      <path d="M12 18 Q16 6 30 6 Q22 10 16 20 Z" fill={GREY}/>
-      <ellipse cx="26" cy="8" rx="14" ry="9" fill={GREY} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M16 12 Q26 4 38 12 Q32 6 26 7 Q20 8 16 12 Z" fill="#7A7470"/>
-      {/* Ear */}
-      <path d="M13 28 Q6 24 7 34 Q8 42 15 40 Q18 37 16 28 Z" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      {/* Earring */}
-      <circle cx="13" cy="42" r="4" fill={GOLD} stroke={OUTLINE} strokeWidth="2"/>
-      {/* Eye — profile */}
-      <circle cx="41" cy="21" r="6.5" fill={OUTLINE}/>
-      <circle cx="42.5" cy="19.5" r="2.5" fill="white"/>
-      {/* Round glasses */}
-      <circle cx="41" cy="24" r="9" stroke={OUTLINE} strokeWidth="2.5" fill="rgba(180,220,255,0.22)"/>
-      <path d="M32.5" cy="23" x2="26" y2="24" stroke={OUTLINE} strokeWidth="2"/>
-      <line x1="32.5" y1="23" x2="25" y2="24" stroke={OUTLINE} strokeWidth="2"/>
-      {/* Eyebrow */}
-      <path d="M34 14 Q39 11 46 14" stroke={OUTLINE} strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* Nose */}
-      <path d="M50 29 Q57 33 51 38" stroke={OUTLINE} strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* Smile */}
-      <path d="M44 42 Q50 45 46 47" stroke={OUTLINE} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      {/* === HEAD — elderly profile facing right === */}
+      {/* Main head shape — softer jaw, slightly stooped angle */}
+      <path d="M18 14 C18 8 22 5 30 4 C38 3 46 6 50 12
+               C53 17 54 22 52 27 C53 29 55 31 55 34
+               C56 37 54 41 52 44 C50 47 47 50 44 51
+               C46 52 47 55 44 57 C40 59 36 59 34 57
+               C32 56 30 54 30 52 C26 52 22 50 20 47
+               C17 44 16 40 17 35 C16 30 16 24 18 18 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round"/>
+      {/* Jowl softness / age line */}
+      <path d="M30 48 C32 50 36 52 40 51" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.7"/>
+      {/* Temple shadow */}
+      <path d="M46 8 C50 14 52 22 50 30 C52 24 52 14 48 10 Z" fill={SK2} opacity="0.4"/>
+      {/* Under-chin shadow */}
+      <path d="M34 57 C37 59 42 58 44 57 C40 59 36 59 34 57 Z" fill={SK2} opacity="0.5"/>
+      {/* Highlight on cheekbone */}
+      <ellipse cx="47" cy="35" rx="4" ry="3" fill={SK3} opacity="0.6"/>
 
-      {/* Neck */}
-      <path d="M26 43 Q28 49 32 49 L42 49 Q46 49 48 43 Z" fill={SKIN}/>
+      {/* === GREY HAIR BUN === */}
+      {/* Back hair mass */}
+      <path d="M18 22 C18 10 22 5 30 4 C22 6 20 12 20 22 Z" fill={HG}/>
+      {/* Top hair over skull */}
+      <path d="M20 16 C22 8 28 4 36 4 C44 4 50 8 52 14
+               C46 8 38 5 30 6 C24 7 20 12 20 16 Z"
+            fill={HG} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Hair highlight */}
+      <path d="M24 8 C30 5 38 4 44 7 C38 5 30 5 26 10 Z" fill="white" opacity="0.25"/>
+      {/* Bun — layered ellipses behind head */}
+      <ellipse cx="22" cy="8" rx="10" ry="7" fill={HG} stroke={OUTLINE} strokeWidth="1.5"/>
+      <ellipse cx="20" cy="6" rx="7" ry="5" fill="#C8C4BC"/>
+      {/* Bun detail lines */}
+      <path d="M13 6 C17 3 23 3 27 6" stroke="#9A9690" strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <path d="M14 9 C18 6 24 6 28 9" stroke="#9A9690" strokeWidth="1" fill="none" strokeLinecap="round"/>
+      {/* Bun hairpin */}
+      <line x1="18" y1="4" x2="22" y2="12" stroke={OUTLINE} strokeWidth="1" strokeLinecap="round"/>
 
-      {/* Body — dusty pink coat, organic shape */}
-      <path d="M10 53 Q8 49 14 48 L52 48 Q58 49 57 54 L55 88 Q55 94 49 94 L14 94 Q8 94 8 88 Z"
-            fill={DPINK} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
-      {/* Collar V */}
-      <path d="M34 50 L30 58 M34 50 L38 58" stroke={CREAM} strokeWidth="2.5" strokeLinecap="round"/>
-      {/* Diamond/argyle pattern */}
+      {/* === EAR === */}
+      <path d="M18 28 C15 26 13 28 13 33 C12 37 14 41 17 41 C19 41 21 39 20 35 C21 32 21 29 18 28 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M16 30 C14 32 14 37 16 39" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+
+      {/* Gold drop earring */}
+      <line x1="16" y1="41" x2="15" y2="47" stroke={GO} strokeWidth="1.5" strokeLinecap="round"/>
+      <ellipse cx="15" cy="50" rx="3" ry="4" fill={GO} stroke={OUTLINE} strokeWidth="1"/>
+
+      {/* === EYE — almond, elderly, deep set === */}
+      <path d="M40 24 C42 21 46 20 49 22 C47 25 43 26 40 24 Z"
+            fill="white" stroke={OUTLINE} strokeWidth="1"/>
+      <circle cx="45" cy="23" r="2.8" fill="#5A7080"/>
+      <circle cx="45" cy="23" r="1.6" fill={OUTLINE}/>
+      <circle cx="46" cy="21.5" r="0.7" fill="white"/>
+      {/* Upper eyelid — heavier for age */}
+      <path d="M40 24 C43 21 47 21 50 23" stroke={OUTLINE} strokeWidth="1.8" fill="none" strokeLinecap="round"/>
+      {/* Lower lash / eye bag */}
+      <path d="M40 25 C43 27 47 27 50 25" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      {/* Crow's foot */}
+      <path d="M39 25 C37 26 36 28" stroke={SK2} strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+      <path d="M39 23 C37 23 35 24" stroke={SK2} strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+      {/* Eyebrow — thin, slightly greyed */}
+      <path d="M38 19 C41 17 46 17 50 19" stroke={HG} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+
+      {/* === ROUND GLASSES === */}
+      <circle cx="45" cy="25" r="9" stroke={OUTLINE} strokeWidth="1.5" fill="rgba(200,230,255,0.18)"/>
+      {/* Glasses bridge to temple */}
+      <line x1="36" y1="25" x2="28" y2="26" stroke={OUTLINE} strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Frame detail */}
+      <circle cx="45" cy="25" r="9" stroke={GO} strokeWidth="0.5" fill="none" opacity="0.4"/>
+
+      {/* === NOSE === */}
+      <path d="M53 30 C55 32 56 35 55 38" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      {/* Nostril shadow */}
+      <path d="M54 36 C55 38 53 40 51 39" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      {/* Nasolabial fold (age) */}
+      <path d="M51 38 C50 42 50 46 51 48" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.7"/>
+
+      {/* === LIPS === */}
+      <path d="M44 47 C46 45 49 45 51 47 C50 48 47 48 44 47 Z" fill={DP} stroke={OUTLINE} strokeWidth="1" opacity="0.9"/>
+      <path d="M44 48 C46 49 50 49 52 47 C51 49 48 51 45 50 Z" fill={DP} stroke={OUTLINE} strokeWidth="0.8" opacity="0.9"/>
+      {/* Corner mouth lines */}
+      <path d="M44 47 C43 48 43 49" stroke={SK2} strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+
+      {/* === NECK === */}
+      <path d="M28 56 C28 60 32 62 36 62 L42 62 C46 62 50 60 50 56 Z" fill={SK}/>
+      {/* Neck shadow */}
+      <path d="M30 56 C30 60 34 62 38 62" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+
+      {/* === BODY — long dusty pink coat, slight forward lean === */}
+      {/* Coat main shape — stooped posture (slightly angled) */}
+      <path d="M14 68 C12 64 16 62 22 62 L50 62 C56 62 58 65 57 70
+               L55 120 C55 126 51 128 46 128 L20 128 C14 128 12 124 13 118 Z"
+            fill={DP} stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round"/>
+      {/* Coat collar */}
+      <path d="M34 64 C31 68 30 72 M34 64 C37 68 38 72" stroke={CR} strokeWidth="2" strokeLinecap="round"/>
+      {/* Coat lapel */}
+      <path d="M30 64 C28 70 28 76" stroke={OUTLINE} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      {/* Coat button line */}
+      <path d="M34 74 C34 90 34 106 34 120" stroke={OUTLINE} strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.4"/>
+      <circle cx="34" cy="80" r="1.5" fill={OUTLINE} opacity="0.5"/>
+      <circle cx="34" cy="90" r="1.5" fill={OUTLINE} opacity="0.5"/>
+      <circle cx="34" cy="100" r="1.5" fill={OUTLINE} opacity="0.5"/>
+      {/* Coat fold/highlight */}
+      <path d="M46 64 C47 82 47 100 46 120" stroke="#E090A0" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.5"/>
+      {/* Argyle diamond pattern — gold */}
       {[
-        [18, 62], [30, 58], [42, 62],
-        [14, 72], [26, 68], [38, 68], [50, 72],
-        [18, 80], [30, 76], [42, 80],
-        [22, 88], [34, 86], [46, 88],
+        [20, 80], [32, 74], [44, 80],
+        [16, 94], [28, 88], [40, 88], [52, 94],
+        [20, 108], [32, 102], [44, 108],
+        [24, 120], [36, 116], [48, 120],
       ].map(([x, y], i) => (
         <path key={i}
-          d={`M${x} ${y-6} L${x+5} ${y} L${x} ${y+6} L${x-5} ${y} Z`}
-          fill="none" stroke={GOLD} strokeWidth="1.5"/>
+          d={`M${x} ${y - 5} L${x + 5} ${y} L${x} ${y + 5} L${x - 5} ${y} Z`}
+          fill="none" stroke={GO} strokeWidth="1"/>
       ))}
 
-      {/* Left arm — cane side */}
-      <path d="M11 62 Q2 68 4 82"  stroke={OUTLINE} strokeWidth="11" strokeLinecap="round"/>
-      <path d="M11 62 Q2 68 4 82"  stroke={DPINK}   strokeWidth="7"  strokeLinecap="round"/>
-      {/* Left hand — gripping cane */}
-      <path d="M0 80 Q-4 78 -4 72 Q-3 66 0 67 Q-1 61 2 60 Q6 59 7 65
-               Q7 59 11 58 Q15 58 15 64 Q15 58 19 59 Q23 60 21 66
-               Q25 65 25 71 Q25 78 19 82 Q11 86 3 84 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
+      {/* === LEFT ARM — cane side === */}
+      <path d="M13 78 C6 86 4 98 4 110"
+            stroke={OUTLINE} strokeWidth="9" strokeLinecap="round" fill="none"/>
+      <path d="M13 78 C6 86 4 98 4 110"
+            stroke={DP} strokeWidth="6.5" strokeLinecap="round" fill="none"/>
+      {/* Left hand gripping cane */}
+      <path d="M1 108 C-2 106 -2 100 0 97 C-2 93 1 90 4 92
+               C3 88 6 86 9 89 C9 85 12 84 14 87
+               C17 84 20 85 19 89 C22 88 23 92 21 95
+               C23 98 22 105 18 108 C12 112 3 111 1 108 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
       {/* Cane */}
-      <line x1="4" y1="82" x2="5" y2="128" stroke="#6B4E2A" strokeWidth="4.5" strokeLinecap="round"/>
-      <path d="M2 128 Q5 136 11 130" stroke="#6B4E2A" strokeWidth="4" fill="none" strokeLinecap="round"/>
+      <line x1="4" y1="110" x2="6" y2="150" stroke="#8B5E3C" strokeWidth="4" strokeLinecap="round"/>
+      {/* Cane handle curve */}
+      <path d="M4 150 C5 156 8 160 12 157" stroke="#8B5E3C" strokeWidth="4" fill="none" strokeLinecap="round"/>
+      {/* Cane rubber tip */}
+      <ellipse cx="6" cy="150" rx="3" ry="3" fill="#4A3020" stroke={OUTLINE} strokeWidth="1"/>
 
-      {/* Right arm — leash */}
-      <path d="M54 62 Q66 68 68 82"  stroke={OUTLINE} strokeWidth="11" strokeLinecap="round"/>
-      <path d="M54 62 Q66 68 68 82"  stroke={DPINK}   strokeWidth="7"  strokeLinecap="round"/>
+      {/* === RIGHT ARM — leash side === */}
+      <path d="M56 78 C64 86 66 98 66 110"
+            stroke={OUTLINE} strokeWidth="9" strokeLinecap="round" fill="none"/>
+      <path d="M56 78 C64 86 66 98 66 110"
+            stroke={DP} strokeWidth="6.5" strokeLinecap="round" fill="none"/>
       {/* Right hand */}
-      <path d="M64 80 Q60 78 60 72 Q61 66 64 67 Q63 61 66 60 Q70 59 71 65
-               Q71 59 75 58 Q79 58 79 64 Q79 58 83 59 Q87 60 85 66
-               Q89 65 89 71 Q89 78 83 82 Q75 86 67 84 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
-      {/* Leash — dashed to dog */}
-      <path d="M68 82 C78 76 95 74 110 78" stroke={OUTLINE} strokeWidth="2" strokeDasharray="3 5" fill="none" strokeLinecap="round"/>
+      <path d="M63 108 C60 106 60 100 62 97 C60 93 63 90 66 92
+               C65 88 68 86 71 89 C71 85 74 84 76 87
+               C79 84 82 85 81 89 C84 88 85 92 83 95
+               C85 98 84 105 80 108 C74 112 65 111 63 108 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Leash — slight curve to dog */}
+      <path d="M66 110 C80 106 96 104 112 108" stroke={OUTLINE} strokeWidth="1.5" strokeDasharray="4 4" fill="none" strokeLinecap="round"/>
 
-      {/* Back leg */}
-      <path d="M17 90 Q10 106 12 120" stroke={OUTLINE} strokeWidth="13" strokeLinecap="round"/>
-      <path d="M17 90 Q10 106 12 120" stroke={DPINK}   strokeWidth="9"  strokeLinecap="round"/>
-      <path d="M5 118 Q7 111 12 110 Q19 110 21 118 Q21 125 14 127 Q7 125 5 118 Z"
-            fill={DPINK} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
-      <path d="M12 125 Q10 135 12 143" stroke={OUTLINE} strokeWidth="10" strokeLinecap="round"/>
-      <path d="M12 125 Q10 135 12 143" stroke={DPINK}   strokeWidth="6"  strokeLinecap="round"/>
-      <ellipse cx="12" cy="143" rx="6" ry="5" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M0 144 Q-2 151 10 151 Q22 151 26 147 Q26 144 18 144 Z" fill={OUTLINE}/>
+      {/* === LEGS below coat hem === */}
+      {/* Back leg — slow stride */}
+      <path d="M20 126 C16 134 16 142 18 150"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M20 126 C16 134 16 142 18 150"
+            stroke="#8090A0" strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      {/* Ankle */}
+      <ellipse cx="18" cy="150" rx="4.5" ry="3.5" fill={SK} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Back shoe — low heel, rounded toe */}
+      <path d="M8 152 C7 157 9 161 16 161 C24 161 28 158 28 154 C28 151 24 150 18 151 Z"
+            fill={OUTLINE} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M28 156 C26 159 22 160 16 160" stroke="#444" strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Front leg */}
-      <path d="M36 90 Q44 106 42 120" stroke={OUTLINE} strokeWidth="13" strokeLinecap="round"/>
-      <path d="M36 90 Q44 106 42 120" stroke={DPINK}   strokeWidth="9"  strokeLinecap="round"/>
-      <path d="M34 118 Q36 111 42 110 Q49 110 51 118 Q51 125 44 127 Q37 125 34 118 Z"
-            fill={DPINK} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
-      <path d="M42 125 Q46 135 42 143" stroke={OUTLINE} strokeWidth="10" strokeLinecap="round"/>
-      <path d="M42 125 Q46 135 42 143" stroke={DPINK}   strokeWidth="6"  strokeLinecap="round"/>
-      <ellipse cx="42" cy="143" rx="6" ry="5" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M31 144 Q29 151 41 151 Q55 151 59 147 Q59 144 49 144 Z" fill={OUTLINE}/>
+      {/* Front leg — just slightly ahead */}
+      <path d="M38 126 C40 134 40 142 38 150"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M38 126 C40 134 40 142 38 150"
+            stroke="#8090A0" strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      <ellipse cx="38" cy="150" rx="4.5" ry="3.5" fill={SK} stroke={OUTLINE} strokeWidth="1.5"/>
+      <path d="M28 152 C27 157 29 161 36 161 C44 161 50 158 50 154 C50 151 46 150 38 151 Z"
+            fill={OUTLINE} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M50 156 C48 159 44 160 36 160" stroke="#444" strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Pomeranian — editorial illustration style */}
-      <circle cx="120" cy="82" r="13" fill={CREAM} stroke={OUTLINE} strokeWidth="2.5"/>
-      <circle cx="110" cy="74" r="9"  fill={CREAM} stroke={OUTLINE} strokeWidth="2"/>
-      <circle cx="118" cy="69" r="8"  fill={GOLD}  stroke={OUTLINE} strokeWidth="2.5"/>
-      <circle cx="126" cy="68" r="9"  fill={GOLD}  stroke={OUTLINE} strokeWidth="2.5"/>
-      {/* Ears */}
-      <path d="M124 61 Q128 54 133 62" fill={GOLD} stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round"/>
-      {/* Face */}
-      <circle cx="130" cy="67" r="3"   fill={OUTLINE}/>
-      <circle cx="132" cy="72" r="2"   fill="#555"/>
-      <path d="M129 76 Q132 80 134 76"  fill={DPINK} stroke="none"/>
+      {/* === POMERANIAN DOG === */}
+      {/* Body — fluffy layered shapes */}
+      {/* Back body puff */}
+      <path d="M106 106 C100 98 98 90 102 84 C106 78 114 76 120 80 C126 84 128 92 124 100 Z"
+            fill={CR} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Main body puff */}
+      <ellipse cx="120" cy="94" rx="14" ry="11" fill={GO} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Chest/mane puff */}
+      <ellipse cx="108" cy="90" rx="10" ry="8" fill={CR} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Head */}
+      <ellipse cx="116" cy="80" rx="11" ry="9" fill={GO} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Ears — pointed */}
+      <path d="M110 74 C110 68 114 66 116 70 C114 68 111 70 110 74 Z" fill={GO} stroke={OUTLINE} strokeWidth="1.5"/>
+      <path d="M120 72 C121 66 125 66 126 70 C124 68 121 70 120 72 Z" fill={GO} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Inner ear */}
+      <path d="M112 73 C112 70 114 69 115 71" stroke={DP} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <path d="M121 71 C121 68 123 68 124 70" stroke={DP} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      {/* Snout */}
+      <ellipse cx="126" cy="85" rx="7" ry="5" fill={CR} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Nose */}
+      <ellipse cx="130" cy="83" rx="2" ry="1.5" fill={OUTLINE}/>
+      {/* Eye */}
+      <circle cx="120" cy="79" r="2.5" fill={OUTLINE}/>
+      <circle cx="120.8" cy="78.2" r="0.8" fill="white"/>
+      {/* Second eye (slight profile) */}
+      <circle cx="126" cy="80" r="1.8" fill={OUTLINE}/>
+      <circle cx="126.6" cy="79.4" r="0.6" fill="white"/>
+      {/* Tongue */}
+      <path d="M128 87 C128 90 130 92 129 90 C131 92 133 90 132 87 Z" fill={DP} stroke={OUTLINE} strokeWidth="1"/>
       {/* Collar */}
-      <path d="M118 72 Q124 75 130 72" stroke={ORANGE} strokeWidth="3" strokeLinecap="round"/>
-      {/* Dog legs — organic strokes */}
-      <path d="M110 92 Q108 102 110 112" stroke={OUTLINE} strokeWidth="6" strokeLinecap="round"/>
-      <path d="M110 92 Q108 102 110 112" stroke={GOLD}    strokeWidth="4" strokeLinecap="round"/>
-      <path d="M120 93 Q120 103 120 113" stroke={OUTLINE} strokeWidth="6" strokeLinecap="round"/>
-      <path d="M120 93 Q120 103 120 113" stroke={GOLD}    strokeWidth="4" strokeLinecap="round"/>
-      <path d="M130 92 Q132 102 130 112" stroke={OUTLINE} strokeWidth="6" strokeLinecap="round"/>
-      <path d="M130 92 Q132 102 130 112" stroke={GOLD}    strokeWidth="4" strokeLinecap="round"/>
+      <path d="M112 88 C118 92 126 90 130 86" stroke="#E02020" strokeWidth="3" strokeLinecap="round" fill="none"/>
+      {/* Collar tag */}
+      <circle cx="121" cy="92" r="2" fill={GO} stroke={OUTLINE} strokeWidth="1"/>
+      {/* Fluffy body texture lines */}
+      <path d="M110 88 C112 84 116 84 118 88" stroke={CR} strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.7"/>
+      <path d="M118 92 C120 88 124 88 126 92" stroke={CR} strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.7"/>
+      {/* Tail — curled up */}
+      <path d="M108 96 C100 90 98 82 104 78 C102 86 104 94 108 96 Z"
+            fill={GO} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Legs — 3 short legs */}
+      <path d="M108 106 C106 112 108 118 110 120" stroke={OUTLINE} strokeWidth="5" strokeLinecap="round" fill="none"/>
+      <path d="M108 106 C106 112 108 118 110 120" stroke={GO} strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+      <path d="M118 108 C118 114 118 120 118 122" stroke={OUTLINE} strokeWidth="5" strokeLinecap="round" fill="none"/>
+      <path d="M118 108 C118 114 118 120 118 122" stroke={GO} strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+      <path d="M128 106 C130 112 128 118 126 120" stroke={OUTLINE} strokeWidth="5" strokeLinecap="round" fill="none"/>
+      <path d="M128 106 C130 112 128 118 126 120" stroke={GO} strokeWidth="3.5" strokeLinecap="round" fill="none"/>
       {/* Paws */}
-      <ellipse cx="110" cy="114" rx="6" ry="4" fill={CREAM} stroke={OUTLINE} strokeWidth="1.8"/>
-      <ellipse cx="120" cy="115" rx="6" ry="4" fill={CREAM} stroke={OUTLINE} strokeWidth="1.8"/>
-      <ellipse cx="130" cy="114" rx="6" ry="4" fill={CREAM} stroke={OUTLINE} strokeWidth="1.8"/>
+      <ellipse cx="110" cy="121" rx="5" ry="3" fill={CR} stroke={OUTLINE} strokeWidth="1.2"/>
+      <ellipse cx="118" cy="123" rx="5" ry="3" fill={CR} stroke={OUTLINE} strokeWidth="1.2"/>
+      <ellipse cx="126" cy="121" rx="5" ry="3" fill={CR} stroke={OUTLINE} strokeWidth="1.2"/>
     </svg>
   )
 }
 
 // ── Beatrice ──────────────────────────────────────────────────────────────────
+// Professional woman, late 30s, fast walk right, phone to ear, handbag
 export function BeatriceAvatar() {
   return (
-    <svg viewBox="0 0 112 160" width="112" height="160" fill="none">
+    <svg viewBox="0 0 108 174" width="108" height="174" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-      {/* Back arm — raised, holds phone to ear */}
-      <path d="M19 64 Q10 54 12 38" stroke={OUTLINE} strokeWidth="12" strokeLinecap="round"/>
-      <path d="M19 64 Q10 54 12 38" stroke={ORANGE}  strokeWidth="8"  strokeLinecap="round"/>
-      {/* Left hand — gripping phone */}
-      <path d="M8 36 Q4 34 4 28 Q5 22 8 22 Q8 16 12 15 Q16 15 16 21
-               Q16 15 20 15 Q24 15 24 22 Q24 15 28 16 Q32 18 30 24
-               Q33 23 33 29 Q33 36 27 40 Q20 44 11 42 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
-      {/* Phone */}
-      <path d="M3 14 Q3 10 6 10 L15 10 Q18 10 18 14 L18 28 Q18 32 15 32 L6 32 Q3 32 3 28 Z"
-            fill={OUTLINE} stroke={OUTLINE} strokeWidth="1.5"/>
-      <rect x="4" y="13" width="13" height="14" rx="1.5" fill="#1e3a5f"/>
-      <circle cx="10.5" cy="29.5" r="1.8" fill="#334155"/>
+      {/* === BACK ARM — raised, phone to ear (left arm) === */}
+      <path d="M22 66 C14 56 12 44 14 34"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M22 66 C14 56 12 44 14 34"
+            stroke={OR} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      {/* Left hand holding phone */}
+      <path d="M10 32 C8 30 8 24 10 21 C12 18 15 19 15 23
+               C15 19 18 17 21 19 C23 21 22 25 21 28
+               C23 24 26 24 28 27 C29 30 27 34 24 35
+               C26 36 27 40 25 42 C22 44 16 43 12 40
+               C10 38 10 35 10 32 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Phone — flat rectangle */}
+      <path d="M6 14 C6 10 9 9 12 9 L20 9 C23 9 24 11 24 14
+               L24 30 C24 33 22 34 19 34 L11 34 C8 34 6 33 6 30 Z"
+            fill={OUTLINE} stroke={OUTLINE} strokeWidth="1"/>
+      <rect x="7" y="13" width="16" height="15" rx="1" fill="#1e3a5f"/>
+      <circle cx="15" cy="31" r="1.5" fill="#334155"/>
 
-      {/* Head — profile right */}
-      <path d="M16 26 Q16 5 38 5 Q60 5 60 26 Q60 47 38 47 Q16 47 16 26 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
-      {/* Hair updo — editorial bold shape */}
-      <path d="M16 18 Q20 3 38 4 Q52 4 60 16 Q52 3 38 5 Q24 6 16 18 Z" fill={OUTLINE}/>
-      <path d="M32 6 Q38 0 46 5 Q40 2 36 5 Z" fill={OUTLINE}/>
-      <ellipse cx="37" cy="7" rx="10" ry="6" fill={OUTLINE}/>
-      {/* Ear */}
-      <path d="M17 28 Q10 24 11 34 Q12 42 19 40 Q22 37 20 28 Z" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      {/* Earring — gold drop */}
-      <line x1="17" y1="34" x2="17" y2="41" stroke={GOLD} strokeWidth="2"/>
-      <circle cx="17" cy="43" r="4" fill={GOLD} stroke={OUTLINE} strokeWidth="1.5"/>
-      {/* Eye */}
-      <circle cx="49" cy="21" r="8" fill={OUTLINE}/>
-      <circle cx="51" cy="19" r="3.5" fill="white"/>
-      <circle cx="51" cy="19" r="1.5" fill={OUTLINE}/>
-      {/* Eyebrow */}
-      <path d="M41 12 Q49 8 57 12" stroke={OUTLINE} strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-      {/* Nose */}
-      <path d="M58 27 Q65 32 59 37" stroke={OUTLINE} strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* Lips — bold editorial */}
-      <path d="M51 42 Q58 46 54 48" stroke={DPINK} strokeWidth="4" fill="none" strokeLinecap="round"/>
+      {/* === HEAD — profile facing right, confident angular === */}
+      <path d="M20 10 C20 5 24 3 32 3 C42 3 50 6 54 12
+               C57 17 58 22 56 27 C57 29 59 32 59 35
+               C60 38 58 42 56 46 C54 49 51 52 48 53
+               C50 54 51 57 48 59 C44 61 40 61 38 59
+               C36 58 34 56 34 54 C30 54 26 52 24 49
+               C21 46 20 42 21 37 C20 32 20 18 20 10 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round"/>
+      {/* Temple/cheekbone shadow */}
+      <path d="M50 8 C54 14 56 22 54 30 C56 24 56 14 52 10 Z" fill={SK2} opacity="0.45"/>
+      {/* Cheekbone highlight */}
+      <ellipse cx="51" cy="36" rx="4" ry="3" fill={SK3} opacity="0.6"/>
+      {/* Jawline definition */}
+      <path d="M34 54 C38 56 44 57 48 55" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.6"/>
+      {/* Forehead highlight */}
+      <ellipse cx="40" cy="8" rx="6" ry="3" fill={SK3} opacity="0.5"/>
 
-      {/* Neck */}
-      <path d="M30 45 Q32 51 38 51 L48 51 Q52 51 54 45 Z" fill={SKIN}/>
+      {/* === DARK UPDO BUN === */}
+      {/* Hair sweeping back from face */}
+      <path d="M20 20 C20 10 24 4 32 3 C24 5 22 12 22 20 Z" fill={HD}/>
+      {/* Top hair */}
+      <path d="M22 14 C24 6 30 3 38 3 C46 3 52 7 54 13
+               C48 8 40 5 32 5 C26 6 22 10 22 14 Z"
+            fill={HD} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Bun shape — tight, compact above head */}
+      <path d="M26 4 C28 0 34 -2 40 0 C46 2 50 6 48 10
+               C46 6 40 3 34 3 C30 3 28 5 26 4 Z"
+            fill={HD} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      <ellipse cx="36" cy="4" rx="10" ry="5" fill={HD} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Bun highlight */}
+      <path d="M28 2 C32 0 38 0 42 3 C38 1 32 1 30 4 Z" fill="#4A3820" opacity="0.6"/>
+      {/* Hair pin */}
+      <line x1="34" y1="0" x2="38" y2="8" stroke={GO} strokeWidth="1" strokeLinecap="round"/>
 
-      {/* Body — orange blazer, organic shape */}
-      <path d="M14 55 Q12 51 18 50 L72 50 Q78 51 77 56 L75 90 Q75 96 69 96 L18 96 Q12 96 12 90 Z"
-            fill={ORANGE} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
+      {/* === EAR === */}
+      <path d="M20 30 C17 28 15 30 15 35 C14 39 16 43 19 43 C21 43 23 41 22 37 C23 34 23 31 20 30 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M18 32 C16 34 16 39 18 41" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+
+      {/* Gold drop earring */}
+      <line x1="18" y1="43" x2="16" y2="50" stroke={GO} strokeWidth="1.5" strokeLinecap="round"/>
+      <ellipse cx="16" cy="53" rx="3" ry="4" fill={GO} stroke={OUTLINE} strokeWidth="1"/>
+      {/* Earring detail */}
+      <line x1="14" y1="50" x2="18" y2="56" stroke={GO} strokeWidth="0.8" strokeLinecap="round" opacity="0.6"/>
+
+      {/* === EYE — almond, bold === */}
+      <path d="M44 25 C46 22 50 21 53 23 C51 26 47 27 44 25 Z"
+            fill="white" stroke={OUTLINE} strokeWidth="1"/>
+      <circle cx="49" cy="24" r="3" fill="#3A4A5A"/>
+      <circle cx="49" cy="24" r="1.7" fill={OUTLINE}/>
+      <circle cx="50.5" cy="22.5" r="0.8" fill="white"/>
+      {/* Strong upper eyelid */}
+      <path d="M44 25 C47 21 51 21 54 23" stroke={OUTLINE} strokeWidth="2" fill="none" strokeLinecap="round"/>
+      {/* Lower lash */}
+      <path d="M44 26 C47 28 51 27 54 25" stroke={OUTLINE} strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.5"/>
+      {/* Bold eyebrow */}
+      <path d="M42 21 C46 18 51 18 55 20" stroke={HD} strokeWidth="2" fill="none" strokeLinecap="round"/>
+
+      {/* === NOSE === */}
+      <path d="M56 30 C58 32 59 35 59 38" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <path d="M58 37 C59 39 57 41 55 40" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <ellipse cx="58" cy="35" rx="1.5" ry="2" fill={SK3} opacity="0.6"/>
+
+      {/* === LIPS — bold, defined === */}
+      <path d="M48 51 C51 48 55 48 57 50 C55 51 52 52 49 51 Z" fill={DP} stroke={OUTLINE} strokeWidth="1"/>
+      <path d="M48 51 C51 53 55 53 58 51 C57 54 53 55 50 54 Z" fill="#B85858" stroke={OUTLINE} strokeWidth="0.8"/>
+      <path d="M48 51 C52 52 56 51" stroke={OUTLINE} strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+
+      {/* === NECK === */}
+      <path d="M32 58 C32 62 36 64 40 64 L46 64 C50 64 54 62 54 58 Z" fill={SK}/>
+      <path d="M34 58 C34 62 38 64 42 64" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+
+      {/* === BODY — orange blazer with cream vertical stripes === */}
+      <path d="M22 70 C20 66 24 64 30 64 L72 64 C78 64 80 67 79 72
+               L77 102 C77 107 73 110 68 109 L28 109 C22 109 20 106 22 102 Z"
+            fill={OR} stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round"/>
+      {/* Blazer lapel */}
+      <path d="M40 66 C36 72 34 78 M40 66 C44 72 46 78" stroke={CR} strokeWidth="2" strokeLinecap="round"/>
+      <path d="M36 66 C34 74 34 82" stroke={OUTLINE} strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.6"/>
       {/* Cream vertical stripes */}
-      <path d="M24 50 Q23 73 22 96" stroke={CREAM} strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-      <path d="M36 50 Q35 73 34 96" stroke={CREAM} strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-      <path d="M48 50 Q47 73 46 96" stroke={CREAM} strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-      <path d="M60 50 Q59 73 58 96" stroke={CREAM} strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-      {/* Pocket square */}
-      <path d="M60 56 Q64 54 70 57 L68 64 Q64 67 60 64 Z" fill={CREAM} stroke={OUTLINE} strokeWidth="1.5"/>
+      <path d="M30 66 C29 80 28 95 28 109" stroke={CR} strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.7"/>
+      <path d="M42 66 C41 80 40 95 40 109" stroke={CR} strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.7"/>
+      <path d="M54 66 C53 80 52 95 52 109" stroke={CR} strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.7"/>
+      <path d="M66 66 C65 80 64 95 64 109" stroke={CR} strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.7"/>
+      {/* Blazer pocket */}
+      <path d="M64 72 C68 71 74 73 72 80 L67 79 Q63 78 64 72 Z" fill={CR} stroke={OUTLINE} strokeWidth="1"/>
+      {/* Blazer fold shadow */}
+      <path d="M50 66 C51 80 51 95 50 109" stroke="#B04010" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.3"/>
 
-      {/* Front arm — carries bags */}
-      <path d="M72 66 Q84 72 86 86"  stroke={OUTLINE} strokeWidth="12" strokeLinecap="round"/>
-      <path d="M72 66 Q84 72 86 86"  stroke={ORANGE}  strokeWidth="8"  strokeLinecap="round"/>
-      {/* Right hand — carrying bags */}
-      <path d="M82 84 Q78 82 78 76 Q79 70 82 71 Q81 65 84 64 Q88 63 89 69
-               Q89 63 93 62 Q97 62 97 68 Q97 62 101 63 Q105 65 103 71
-               Q107 70 107 76 Q107 83 101 87 Q93 91 85 89 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
+      {/* === FRONT ARM — carries handbag (right arm forward) === */}
+      <path d="M74 78 C82 84 86 96 86 106"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M74 78 C82 84 86 96 86 106"
+            stroke={OR} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      {/* Right hand */}
+      <path d="M82 104 C80 102 80 96 82 93 C80 89 83 86 86 88
+               C85 84 88 82 91 85 C91 81 94 80 96 83
+               C99 80 102 81 101 85 C104 84 105 88 103 91
+               C105 94 104 101 100 104 C94 108 84 107 82 104 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Knuckle detail */}
+      <path d="M86 96 C88 94 91 95" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <path d="M92 94 C94 92 97 93" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Handbag — gold */}
-      <path d="M82 92 Q80 88 86 87 L106 87 Q112 88 112 94 L112 108 Q112 114 106 115 L86 115 Q80 115 80 108 Z"
-            fill={GOLD} stroke={OUTLINE} strokeWidth="3"/>
-      <path d="M85 87 Q94 79 103 87" stroke={OUTLINE} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <path d="M84 99 Q94 97 108 99" stroke="#A07A10" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      {/* Shopping bag */}
-      <path d="M80 112 Q78 110 82 109 L108 109 Q112 110 112 114 L112 130 Q112 134 108 135 L82 135 Q78 135 78 130 Z"
-            fill={CREAM} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M85 109 L84 101 M103 109 L104 101" stroke={OUTLINE} strokeWidth="2.5" strokeLinecap="round"/>
-      <path d="M78 124 L112 124" stroke={ORANGE} strokeWidth="5"/>
+      {/* === HANDBAG === */}
+      <path d="M80 108 C78 104 84 103 108 103 C112 104 112 108 112 114
+               L112 130 C112 136 108 137 104 137 L86 137 C82 137 80 134 80 128 Z"
+            fill={DKBL} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Bag strap loops */}
+      <path d="M88 103 C87 97 93 95 99 97 C105 95 111 97 110 103"
+            stroke={OUTLINE} strokeWidth="2" fill="none" strokeLinecap="round"/>
+      {/* Bag detail */}
+      <path d="M80 118 L112 118" stroke="#0A1840" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M94 118 C94 112 98 112 98 118" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <circle cx="96" cy="118" r="2" fill={GO} stroke={OUTLINE} strokeWidth="1"/>
+      {/* Bag highlight */}
+      <path d="M82 106 C84 104 88 104 90 107 C88 104 84 104 82 106 Z" fill="white" opacity="0.15"/>
 
-      {/* Back leg — big stride */}
-      <path d="M21 92 Q10 110 12 126" stroke={OUTLINE} strokeWidth="13" strokeLinecap="round"/>
-      <path d="M21 92 Q10 110 12 126" stroke={OUTLINE} strokeWidth="9"  strokeLinecap="round"/>
-      <path d="M4 124 Q6 116 12 116 Q20 116 22 124 Q22 132 14 134 Q6 132 4 124 Z"
-            fill={OUTLINE} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M12 132 Q8 143 12 152" stroke={OUTLINE} strokeWidth="10" strokeLinecap="round"/>
-      <ellipse cx="12" cy="152" rx="6.5" ry="5" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M0 153 Q-2 160 10 160 Q24 160 28 156 Q28 153 18 153 Z" fill={OUTLINE}/>
+      {/* === BACK LEG — trails behind (left leg) === */}
+      <path d="M28 107 C18 118 14 130 16 142"
+            stroke={OUTLINE} strokeWidth="10" strokeLinecap="round" fill="none"/>
+      <path d="M28 107 C18 118 14 130 16 142"
+            stroke={DKBL} strokeWidth="7" strokeLinecap="round" fill="none"/>
+      {/* Knee */}
+      <ellipse cx="16" cy="142" rx="6" ry="5" fill={DKBL} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Calf */}
+      <path d="M16 146 C15 154 16 160 18 164"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M16 146 C15 154 16 160 18 164"
+            stroke={DKBL} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      <ellipse cx="18" cy="164" rx="5" ry="4" fill={SK} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Back heel lifted — pumps/heels */}
+      <path d="M8 166 C6 170 8 173 14 173 C22 173 28 170 28 166 C28 163 24 162 18 163 Z"
+            fill={OUTLINE} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Heel detail */}
+      <rect x="6" y="170" width="4" height="6" rx="1" fill={OUTLINE}/>
+      <path d="M10 173 C16 174 24 173 28 170" stroke="#444" strokeWidth="1" fill="none" strokeLinecap="round"/>
 
-      {/* Front leg — longer stride forward */}
-      <path d="M50 92 Q62 110 60 126" stroke={OUTLINE} strokeWidth="13" strokeLinecap="round"/>
-      <path d="M50 92 Q62 110 60 126" stroke={OUTLINE} strokeWidth="9"  strokeLinecap="round"/>
-      <path d="M52 124 Q54 116 60 116 Q68 116 70 124 Q70 132 62 134 Q54 132 52 124 Z"
-            fill={OUTLINE} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M60 132 Q64 143 60 152" stroke={OUTLINE} strokeWidth="10" strokeLinecap="round"/>
-      <ellipse cx="60" cy="152" rx="6.5" ry="5" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M49 153 Q47 160 59 160 Q73 160 77 156 Q77 153 67 153 Z" fill={OUTLINE}/>
+      {/* === FRONT LEG — long stride forward (right leg) === */}
+      <path d="M58 107 C68 118 70 130 68 142"
+            stroke={OUTLINE} strokeWidth="10" strokeLinecap="round" fill="none"/>
+      <path d="M58 107 C68 118 70 130 68 142"
+            stroke={DKBL} strokeWidth="7" strokeLinecap="round" fill="none"/>
+      <ellipse cx="68" cy="142" rx="6" ry="5" fill={DKBL} stroke={OUTLINE} strokeWidth="1.5"/>
+      <path d="M68 146 C70 154 68 162 66 166"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M68 146 C70 154 68 162 66 166"
+            stroke={DKBL} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      <ellipse cx="66" cy="166" rx="5" ry="4" fill={SK} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Front shoe — flat on ground, confident step */}
+      <path d="M54 168 C52 172 54 174 60 174 C70 174 76 171 76 167 C76 164 72 163 66 164 Z"
+            fill={OUTLINE} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Heel */}
+      <rect x="52" y="170" width="4" height="6" rx="1" fill={OUTLINE}/>
+      <path d="M56 174 C62 174 70 173 76 170" stroke="#444" strokeWidth="1" fill="none" strokeLinecap="round"/>
     </svg>
   )
 }
 
 // ── Benedikt ──────────────────────────────────────────────────────────────────
+// Man, late 40s, fixie bike, leaning forward, orange helmet, moustache, cigarette
 export function BenediktAvatar() {
   return (
-    <svg viewBox="0 0 158 120" width="158" height="120" fill="none">
+    <svg viewBox="0 0 158 120" width="158" height="120" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-      {/* Head — profile right */}
-      <path d="M16 26 Q16 6 36 6 Q56 6 56 26 Q56 44 36 44 Q16 44 16 26 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
-      {/* Helmet — bold orange shape */}
-      <path d="M14 22 Q14 3 36 3 Q58 3 58 22 Q58 30 54 32 L18 32 Q14 30 14 22 Z"
-            fill={ORANGE} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
-      {/* Helmet vents */}
-      <path d="M20 10 L20 22" stroke="#A04010" strokeWidth="4" strokeLinecap="round"/>
-      <path d="M27 8  L27 22" stroke="#A04010" strokeWidth="4" strokeLinecap="round"/>
-      <path d="M34 7  L34 22" stroke="#A04010" strokeWidth="4" strokeLinecap="round"/>
-      <path d="M41 8  L41 22" stroke="#A04010" strokeWidth="4" strokeLinecap="round"/>
-      <path d="M48 10 L48 22" stroke="#A04010" strokeWidth="4" strokeLinecap="round"/>
-      {/* Strap */}
-      <path d="M16 28 Q15 35 22 38" stroke={OUTLINE} strokeWidth="2" fill="none" strokeLinecap="round"/>
-      {/* Ear */}
-      <path d="M17 28 Q10 24 11 34 Q12 41 19 39 Q22 36 20 28 Z" fill={SKIN} stroke={OUTLINE} strokeWidth="2.5"/>
-      {/* Sunglasses — bold editorial shape */}
-      <path d="M34 26 Q34 18 44 18 Q54 18 54 26 Q54 32 44 32 Q34 32 34 26 Z"
-            fill="#0a1f3a" stroke={OUTLINE} strokeWidth="2.5"/>
-      <line x1="34" y1="25" x2="28" y2="26" stroke={OUTLINE} strokeWidth="2.5"/>
+      {/* === REAR WHEEL === */}
+      <circle cx="30" cy="92" r="22" stroke={OUTLINE} strokeWidth="2" fill="none"/>
+      <circle cx="30" cy="92" r="20" stroke="#666" strokeWidth="0.8" fill="none" opacity="0.5"/>
+      {/* Spokes */}
+      <line x1="30" y1="70" x2="30" y2="114" stroke="#888" strokeWidth="1.2"/>
+      <line x1="8"  y1="92" x2="52" y2="92"  stroke="#888" strokeWidth="1.2"/>
+      <line x1="14" y1="76" x2="46" y2="108" stroke="#888" strokeWidth="1"/>
+      <line x1="46" y1="76" x2="14" y2="108" stroke="#888" strokeWidth="1"/>
+      <line x1="10" y1="84" x2="50" y2="100" stroke="#888" strokeWidth="0.8"/>
+      <line x1="50" y1="84" x2="10" y2="100" stroke="#888" strokeWidth="0.8"/>
+      {/* Hub */}
+      <circle cx="30" cy="92" r="5" fill={OUTLINE}/>
+      <circle cx="30" cy="92" r="2.5" fill="#888"/>
+
+      {/* === FRONT WHEEL === */}
+      <circle cx="124" cy="84" r="22" stroke={OUTLINE} strokeWidth="2" fill="none"/>
+      <circle cx="124" cy="84" r="20" stroke="#666" strokeWidth="0.8" fill="none" opacity="0.5"/>
+      <line x1="124" y1="62" x2="124" y2="106" stroke="#888" strokeWidth="1.2"/>
+      <line x1="102" y1="84" x2="146" y2="84"  stroke="#888" strokeWidth="1.2"/>
+      <line x1="108" y1="68" x2="140" y2="100" stroke="#888" strokeWidth="1"/>
+      <line x1="140" y1="68" x2="108" y2="100" stroke="#888" strokeWidth="1"/>
+      <line x1="104" y1="76" x2="144" y2="92"  stroke="#888" strokeWidth="0.8"/>
+      <line x1="144" y1="76" x2="104" y2="92"  stroke="#888" strokeWidth="0.8"/>
+      <circle cx="124" cy="84" r="5" fill={OUTLINE}/>
+      <circle cx="124" cy="84" r="2.5" fill="#888"/>
+
+      {/* === FRAME — thin fixie frame === */}
+      {/* Chainstay (rear axle to bottom bracket) */}
+      <line x1="30" y1="92" x2="68" y2="82" stroke={CB} strokeWidth="3" strokeLinecap="round"/>
+      {/* Seatstay (rear axle to seat tube) */}
+      <line x1="30" y1="92" x2="56" y2="56" stroke={CB} strokeWidth="2.5" strokeLinecap="round"/>
+      {/* Seat tube */}
+      <line x1="56" y1="56" x2="68" y2="82" stroke={CB} strokeWidth="3" strokeLinecap="round"/>
+      {/* Top tube (seat to head tube) */}
+      <line x1="56" y1="56" x2="98" y2="48" stroke={CB} strokeWidth="3" strokeLinecap="round"/>
+      {/* Down tube (bottom bracket to head tube) */}
+      <line x1="68" y1="82" x2="98" y2="48" stroke={CB} strokeWidth="3" strokeLinecap="round"/>
+      {/* Fork (head tube to front axle) */}
+      <line x1="98" y1="48" x2="124" y2="84" stroke={CB} strokeWidth="2.5" strokeLinecap="round"/>
+      {/* Frame highlights */}
+      <line x1="56" y1="56" x2="98" y2="48" stroke="#4060C8" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
+
+      {/* === SADDLE === */}
+      <path d="M50 54 C54 51 60 51 64 54" stroke={OUTLINE} strokeWidth="5" strokeLinecap="round" fill="none"/>
+      <path d="M50 54 C54 51 60 51 64 54" stroke="#4A3020" strokeWidth="3" strokeLinecap="round" fill="none"/>
+
+      {/* === HANDLEBARS — drop bars === */}
+      <path d="M96 44 C104 40 110 38 116 40" stroke={OUTLINE} strokeWidth="4" strokeLinecap="round" fill="none"/>
+      {/* Drops */}
+      <path d="M96 44 C96 50 98 54 102 54" stroke={OUTLINE} strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+      <path d="M116 40 C116 46 118 50 122 50" stroke={OUTLINE} strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+
+      {/* === CHAIN RING === */}
+      <circle cx="68" cy="82" r="10" stroke={OUTLINE} strokeWidth="2" fill="none"/>
+      <circle cx="68" cy="82" r="6" stroke={OUTLINE} strokeWidth="1.5" fill="none" opacity="0.5"/>
+      <circle cx="68" cy="82" r="3" fill={OUTLINE}/>
+      {/* Chain suggestion */}
+      <path d="M68 92 C56 100 38 98 30 92" stroke={OUTLINE} strokeWidth="1.5" fill="none" opacity="0.4"/>
+
+      {/* === PEDALS === */}
+      {/* Left pedal (near) — pushing down */}
+      <rect x="56" y="96" width="12" height="4" rx="1" fill={OUTLINE} transform="rotate(-10 62 98)"/>
+      {/* Right pedal (far) — pulling up */}
+      <rect x="62" y="68" width="12" height="4" rx="1" fill={OUTLINE} transform="rotate(-10 68 70)"/>
+
+      {/* === BACK LEG — pushing down on pedal === */}
+      {/* Thigh */}
+      <path d="M52 60 C56 70 58 80 60 90"
+            stroke={OUTLINE} strokeWidth="10" strokeLinecap="round" fill="none"/>
+      <path d="M52 60 C56 70 58 80 60 90"
+            stroke={DKBL} strokeWidth="7" strokeLinecap="round" fill="none"/>
+      {/* Knee */}
+      <ellipse cx="60" cy="90" rx="6" ry="5" fill={DKBL} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Calf */}
+      <path d="M60 94 C62 100 62 104 60 108"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M60 94 C62 100 62 104 60 108"
+            stroke={DKBL} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      {/* Ankle + cycling shoe */}
+      <ellipse cx="60" cy="108" rx="5" ry="4" fill={SK} stroke={OUTLINE} strokeWidth="1.5"/>
+      <path d="M50 110 C48 114 50 116 56 116 C64 116 70 114 70 110 C70 108 66 107 60 109 Z"
+            fill={OUTLINE} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      {/* Shoe cleat line */}
+      <line x1="52" y1="113" x2="68" y2="113" stroke="#666" strokeWidth="1" strokeLinecap="round"/>
+
+      {/* === FRONT LEG — pulling up on pedal === */}
+      {/* Thigh angled up */}
+      <path d="M60 62 C68 54 74 50 80 50"
+            stroke={OUTLINE} strokeWidth="10" strokeLinecap="round" fill="none"/>
+      <path d="M60 62 C68 54 74 50 80 50"
+            stroke={DKBL} strokeWidth="7" strokeLinecap="round" fill="none"/>
+      {/* Knee */}
+      <ellipse cx="80" cy="50" rx="6" ry="5" fill={DKBL} stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Calf going down to pedal */}
+      <path d="M80 54 C80 60 76 66 72 70"
+            stroke={OUTLINE} strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M80 54 C80 60 76 66 72 70"
+            stroke={DKBL} strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+      <ellipse cx="72" cy="70" rx="5" ry="4" fill={SK} stroke={OUTLINE} strokeWidth="1.5"/>
+      <path d="M62 72 C60 76 62 78 68 78 C76 78 82 76 82 72 C82 69 78 68 72 70 Z"
+            fill={OUTLINE} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+      <line x1="64" y1="75" x2="80" y2="75" stroke="#666" strokeWidth="1" strokeLinecap="round"/>
+
+      {/* === BODY — cobalt cycling jersey, forward lean ~30° === */}
+      <path d="M52 58 C64 46 84 42 100 44 L106 66 C94 72 74 74 56 70 Z"
+            fill={CB} stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round"/>
+      {/* Orange side stripes on jersey */}
+      <path d="M52 58 C54 62 56 68 56 70" stroke={OR} strokeWidth="5" strokeLinecap="round" fill="none"/>
+      <path d="M100 44 C102 50 104 58 106 66" stroke={OR} strokeWidth="5" strokeLinecap="round" fill="none"/>
+      {/* Jersey texture/fold */}
+      <path d="M72 46 C74 56 74 66 72 70" stroke="#2038A0" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.4"/>
+      {/* Race number plate — cream rect on chest */}
+      <path d="M68 50 C68 46 72 45 76 45 L92 45 C96 45 98 47 98 50
+               L98 62 C98 65 95 66 92 66 L76 66 C72 66 68 64 68 62 Z"
+            fill={CR} stroke={OUTLINE} strokeWidth="1.5"/>
+      <text x="83" y="60" textAnchor="middle" fontSize="11" fontWeight="900" fill={OUTLINE} fontFamily="Georgia, serif">42</text>
+
+      {/* === LEFT ARM — forward to handlebars === */}
+      <path d="M56 62 C72 54 86 48 96 46"
+            stroke={OUTLINE} strokeWidth="9" strokeLinecap="round" fill="none"/>
+      <path d="M56 62 C72 54 86 48 96 46"
+            stroke={CB} strokeWidth="6.5" strokeLinecap="round" fill="none"/>
+      {/* Left hand on drops */}
+      <path d="M93 44 C91 42 91 36 93 33 C95 30 98 31 98 35
+               C98 31 101 29 104 31 C106 33 105 37 104 40
+               C106 36 109 36 111 39 C112 42 110 46 107 47
+               C109 48 110 52 108 54 C105 56 99 55 95 52
+               C93 50 93 47 93 44 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+
+      {/* === RIGHT ARM — forward to handlebars === */}
+      <path d="M68 58 C80 52 92 48 106 46"
+            stroke={OUTLINE} strokeWidth="9" strokeLinecap="round" fill="none"/>
+      <path d="M68 58 C80 52 92 48 106 46"
+            stroke={CB} strokeWidth="6.5" strokeLinecap="round" fill="none"/>
+      {/* Right hand on bars */}
+      <path d="M103 44 C101 42 101 36 103 33 C105 30 108 31 108 35
+               C108 31 111 29 114 31 C116 33 115 37 114 40
+               C116 36 119 36 121 39 C122 42 120 46 117 47
+               C119 48 120 52 118 54 C115 56 109 55 105 52
+               C103 50 103 47 103 44 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+
+      {/* === HEAD — profile facing right, forward lean === */}
+      <path d="M28 22 C28 12 34 8 44 7 C54 6 62 10 66 18
+               C70 24 70 30 68 36 C70 38 72 41 71 44
+               C70 47 68 50 65 52 C62 54 59 55 56 54
+               C58 56 58 59 56 61 C53 63 49 63 47 61
+               C45 60 44 58 44 56 C40 56 36 54 34 51
+               C30 47 28 43 29 38 C28 34 28 28 28 22 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round"/>
+      {/* Face shadow */}
+      <path d="M60 10 C66 16 70 26 68 36 C70 28 68 16 64 12 Z" fill={SK2} opacity="0.4"/>
+      {/* Cheekbone highlight */}
+      <ellipse cx="60" cy="36" rx="4" ry="3" fill={SK3} opacity="0.6"/>
+      {/* Jaw/neck muscle suggestion */}
+      <path d="M44 56 C46 58 52 60 56 58" stroke={SK2} strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.5"/>
+
+      {/* === NECK — muscles visible in cycling position === */}
+      <path d="M38 58 C38 63 44 66 48 66 L54 66 C58 66 62 63 62 58 Z" fill={SK}/>
+      {/* Neck muscle line */}
+      <path d="M42 58 C42 63 46 65 50 65" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+
+      {/* === ORANGE CYCLING HELMET === */}
+      <path d="M26 26 C26 14 34 7 44 6 C54 5 64 10 68 20
+               C72 26 70 34 66 36 L30 36 C27 34 26 30 26 26 Z"
+            fill={OR} stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round"/>
+      {/* Helmet vents — dark lines */}
+      <path d="M32 14 L32 28" stroke="#A04010" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M38 12 L38 28" stroke="#A04010" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M44 10 L44 28" stroke="#A04010" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M50 11 L50 28" stroke="#A04010" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M56 12 L56 28" stroke="#A04010" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M62 14 L62 28" stroke="#A04010" strokeWidth="2.5" strokeLinecap="round"/>
+      {/* Helmet highlight */}
+      <path d="M34 12 C42 8 52 8 62 14 C52 10 42 10 36 14 Z" fill="white" opacity="0.2"/>
+      {/* Chin strap */}
+      <path d="M28 32 C28 40 34 44 38 46" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <path d="M34 44 C36 46 40 46 42 44" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+
+      {/* === EAR === */}
+      <path d="M28 28 C25 26 23 28 23 33 C22 37 24 41 27 41 C29 41 31 39 30 35 C31 32 31 29 28 28 Z"
+            fill={SK} stroke={OUTLINE} strokeWidth="1.5" strokeLinejoin="round"/>
+
+      {/* === DARK CYCLING SUNGLASSES === */}
+      <path d="M44 34 C44 28 50 26 56 27 C62 28 68 30 68 36 C68 40 64 42 58 42 C52 42 44 40 44 34 Z"
+            fill="#0a1428" stroke={OUTLINE} strokeWidth="1.5"/>
+      {/* Glasses arm to ear */}
+      <line x1="44" y1="34" x2="30" y2="35" stroke={OUTLINE} strokeWidth="1.5" strokeLinecap="round"/>
       {/* Lens glint */}
-      <ellipse cx="40" cy="22" rx="3.5" ry="2" fill="rgba(255,255,255,0.2)" transform="rotate(-15 40 22)"/>
-      {/* Nose */}
-      <path d="M53 30 Q60 34 54 40" stroke={OUTLINE} strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* Handlebar moustache — editorial swoops */}
-      <path d="M38 40 Q44 35 48 38 Q52 36 50 43 Q48 40 44 42 Q41 43 38 40 Z" fill={OUTLINE}/>
-      <path d="M38 40 Q34 37 30 40 Q28 43 32 44 Q35 44 38 40 Z" fill={OUTLINE}/>
-      {/* Cigarette */}
-      <rect x="48" y="37" width="15" height="4" rx="2" fill={CREAM} stroke={OUTLINE} strokeWidth="1.5"/>
-      <rect x="60" y="37" width="5"  height="4" rx="1.5" fill={ORANGE}/>
-      <circle cx="65" cy="38" r="3" fill="#e53e3e" opacity="0.6"/>
+      <ellipse cx="52" cy="30" rx="5" ry="2.5" fill="white" opacity="0.15" transform="rotate(-10 52 30)"/>
+      <ellipse cx="62" cy="32" rx="3" ry="1.5" fill="white" opacity="0.12" transform="rotate(-10 62 32)"/>
+
+      {/* === NOSE — profile === */}
+      <path d="M66 38 C68 40 70 43 69 46" stroke={OUTLINE} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <path d="M68 44 C69 46 67 48 65 47" stroke={SK2} strokeWidth="1" fill="none" strokeLinecap="round"/>
+
+      {/* === HANDLEBAR MOUSTACHE — curled at ends === */}
+      {/* Center base */}
+      <path d="M52 52 C56 50 60 50 64 52" stroke={HD} strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      {/* Left curl */}
+      <path d="M52 52 C48 50 44 52 42 56 C40 60 44 62 46 60 C44 60 42 58 44 56 C46 54 50 53 52 52 Z"
+            fill={HD} stroke={OUTLINE} strokeWidth="1"/>
+      {/* Right curl */}
+      <path d="M64 52 C68 50 72 52 74 56 C76 60 72 62 70 60 C72 60 74 58 72 56 C70 54 66 53 64 52 Z"
+            fill={HD} stroke={OUTLINE} strokeWidth="1"/>
+
+      {/* === CIGARETTE + SMOKE === */}
+      <rect x="62" y="49" width="14" height="4" rx="2" fill={CR} stroke={OUTLINE} strokeWidth="1"/>
+      <rect x="73" y="49" width="5" height="4" rx="1.5" fill={OR}/>
+      {/* Ember glow */}
+      <circle cx="77" cy="51" r="2.5" fill="#E53E3E" opacity="0.7"/>
       {/* Smoke wisps */}
-      <path d="M66 35 Q70 30 68 27" stroke="#bbb" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
-      <path d="M68 34 Q73 29 71 26" stroke="#bbb" strokeWidth="1.4" fill="none" strokeLinecap="round"/>
-
-      {/* Neck */}
-      <path d="M28 42 Q30 48 36 48 L46 48 Q50 48 52 42 Z" fill={SKIN}/>
-
-      {/* Body — cobalt jersey, organic */}
-      <path d="M8 50 Q28 46 54 50 L56 70 L6 70 Z"
-            fill={COBALT} stroke={OUTLINE} strokeWidth="3.5" strokeLinejoin="round"/>
-      {/* Jersey accents */}
-      <path d="M14 50 L12 70" stroke={ORANGE} strokeWidth="5" strokeLinecap="round"/>
-      <path d="M48 50 L50 70" stroke={ORANGE} strokeWidth="5" strokeLinecap="round"/>
-      {/* Race number plate */}
-      <path d="M20 54 Q20 50 24 50 L42 50 Q46 50 46 54 L46 64 Q46 68 42 68 L24 68 Q20 68 20 64 Z"
-            fill={CREAM} stroke={OUTLINE} strokeWidth="2"/>
-      <text x="33" y="64" textAnchor="middle" fontSize="10" fontWeight="900" fill={OUTLINE} fontFamily="Georgia, serif">42</text>
-
-      {/* Left arm — to handlebar */}
-      <path d="M8 58 Q4 55 6 46"  stroke={OUTLINE} strokeWidth="11" strokeLinecap="round"/>
-      <path d="M8 58 Q4 55 6 46"  stroke={COBALT}  strokeWidth="7"  strokeLinecap="round"/>
-      {/* Left hand — gripping */}
-      <path d="M2 44 Q-2 42 -2 36 Q-1 30 2 30 Q1 24 5 23 Q9 22 10 28
-               Q10 22 14 21 Q18 21 18 27 Q18 21 22 23 Q26 25 24 31
-               Q28 30 28 36 Q28 43 22 47 Q14 51 5 49 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
-
-      {/* Right arm — to handlebar */}
-      <path d="M54 58 Q70 53 78 48" stroke={OUTLINE} strokeWidth="11" strokeLinecap="round"/>
-      <path d="M54 58 Q70 53 78 48" stroke={COBALT}  strokeWidth="7"  strokeLinecap="round"/>
-      {/* Right hand */}
-      <path d="M74 46 Q70 44 70 38 Q71 32 74 32 Q73 26 77 25 Q81 24 82 30
-               Q82 24 86 23 Q90 23 90 29 Q90 23 94 24 Q98 27 96 33
-               Q100 32 100 38 Q100 45 94 49 Q86 53 77 51 Z"
-            fill={SKIN} stroke={OUTLINE} strokeWidth="2.5" strokeLinejoin="round"/>
-
-      {/* Cycling legs — pedaling */}
-      {/* Back leg — pushing up/back */}
-      <path d="M16 70 Q10 78 12 88"  stroke={OUTLINE} strokeWidth="12" strokeLinecap="round"/>
-      <path d="M16 70 Q10 78 12 88"  stroke="#1a3010"  strokeWidth="8"  strokeLinecap="round"/>
-      <path d="M5 86 Q7 79 12 78 Q19 78 21 86 Q21 93 14 95 Q7 93 5 86 Z"
-            fill="#1a3010" stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M12 93 Q14 100 10 106" stroke={OUTLINE} strokeWidth="9" strokeLinecap="round"/>
-      <path d="M12 93 Q14 100 10 106" stroke="#1a3010" strokeWidth="5" strokeLinecap="round"/>
-      <ellipse cx="10" cy="106" rx="5.5" ry="4" fill={SKIN} stroke={OUTLINE} strokeWidth="2"/>
-      <rect x="2" y="106" width="16" height="5" rx="2" fill={OUTLINE}/>
-
-      {/* Front leg — pushing down */}
-      <path d="M38 70 Q46 78 44 90"  stroke={OUTLINE} strokeWidth="12" strokeLinecap="round"/>
-      <path d="M38 70 Q46 78 44 90"  stroke="#1a3010"  strokeWidth="8"  strokeLinecap="round"/>
-      <path d="M36 88 Q38 81 44 80 Q51 80 53 88 Q53 95 46 97 Q39 95 36 88 Z"
-            fill="#1a3010" stroke={OUTLINE} strokeWidth="2.5"/>
-      <path d="M44 95 Q46 103 42 109" stroke={OUTLINE} strokeWidth="9" strokeLinecap="round"/>
-      <path d="M44 95 Q46 103 42 109" stroke="#1a3010" strokeWidth="5" strokeLinecap="round"/>
-      <ellipse cx="42" cy="109" rx="5.5" ry="4" fill={SKIN} stroke={OUTLINE} strokeWidth="2"/>
-      <rect x="34" y="109" width="16" height="5" rx="2" fill={OUTLINE}/>
-
-      {/* Rear wheel */}
-      <circle cx="18" cy="94"  r="13" stroke={OUTLINE} strokeWidth="3.5" fill="none"/>
-      <circle cx="18" cy="94"  r="4.5" fill={OUTLINE}/>
-      <line x1="18" y1="81" x2="18" y2="107" stroke="#888" strokeWidth="1.5"/>
-      <line x1="5"  y1="94" x2="31" y2="94"  stroke="#888" strokeWidth="1.5"/>
-      <line x1="9"  y1="84" x2="27" y2="104" stroke="#888" strokeWidth="1.2"/>
-      <line x1="27" y1="84" x2="9"  y2="104" stroke="#888" strokeWidth="1.2"/>
-
-      {/* Front wheel */}
-      <circle cx="94" cy="82"  r="15" stroke={OUTLINE} strokeWidth="3.5" fill="none"/>
-      <circle cx="94" cy="82"  r="4.5" fill={OUTLINE}/>
-      <line x1="94" y1="67" x2="94" y2="97"  stroke="#888" strokeWidth="1.5"/>
-      <line x1="79" y1="82" x2="109" y2="82" stroke="#888" strokeWidth="1.5"/>
-      <line x1="83" y1="72" x2="105" y2="92" stroke="#888" strokeWidth="1.2"/>
-      <line x1="105"y1="72" x2="83" y2="92"  stroke="#888" strokeWidth="1.2"/>
-
-      {/* Frame */}
-      <path d="M18 94 L32 60 L60 60 L94 82" stroke={OUTLINE} strokeWidth="3.5" fill="none" strokeLinejoin="round"/>
-      <path d="M32 60 L18 94" stroke="#aaa" strokeWidth="2.5"/>
-      {/* Handlebars */}
-      <path d="M60 60 L82 54"  stroke={OUTLINE} strokeWidth="4"   strokeLinecap="round"/>
-      <path d="M82 54 L86 48"  stroke={OUTLINE} strokeWidth="3.5" strokeLinecap="round"/>
-      <path d="M82 54 L86 60"  stroke={OUTLINE} strokeWidth="3.5" strokeLinecap="round"/>
-      {/* Saddle */}
-      <path d="M30 60 L48 60"  stroke={OUTLINE} strokeWidth="6"   strokeLinecap="round"/>
-      {/* Chain ring */}
-      <circle cx="32" cy="78" r="7"   stroke={OUTLINE} strokeWidth="2.5" fill="none"/>
-      <circle cx="32" cy="78" r="2.5" fill={OUTLINE}/>
+      <path d="M78 47 C80 43 79 39 82 35" stroke="#CCCCCC" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.8"/>
+      <path d="M80 46 C83 42 82 38 85 34" stroke="#CCCCCC" strokeWidth="1.4" fill="none" strokeLinecap="round" opacity="0.6"/>
+      <path d="M79 44 C81 41 80 37 83 33" stroke="#DDDDDD" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.4"/>
     </svg>
   )
 }

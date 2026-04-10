@@ -59,7 +59,7 @@ function CharacterCard({ char, selected, onSelect }) {
       <div style={{
         background: selected ? char.cardBg : '#fffdf5',
         width: '100%', display: 'flex', alignItems: 'flex-end',
-        justifyContent: 'center', paddingTop: 6, minHeight: 130, overflow: 'hidden',
+        justifyContent: 'center', paddingTop: 6, minHeight: 158, overflow: 'hidden',
       }}>
         <Avatar />
       </div>
