@@ -35,6 +35,19 @@
   max-height: none;
 }
 
+/* Character walking/biking animation in POV panel */
+@keyframes char-walk {
+  0%   { transform: translateY(0px)  rotate(-2deg); }
+  50%  { transform: translateY(-5px) rotate(0deg);  }
+  100% { transform: translateY(0px)  rotate(2deg);  }
+}
+@keyframes char-bike {
+  0%   { transform: rotate(-3deg) translateX(-1px); }
+  100% { transform: rotate(3deg)  translateX(1px);  }
+}
+.char-walker { animation: char-walk 0.42s ease-in-out infinite alternate; }
+.char-biker  { animation: char-bike 0.26s ease-in-out infinite alternate; }
+
 /* Wiggle animation for the live badge */
 @keyframes wiggle {
   0%   { transform: translateX(-50%) rotate(0deg); }
