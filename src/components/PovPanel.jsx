@@ -1,33 +1,19 @@
 import { useState, useEffect, useMemo } from 'react'
-import { createElement } from 'react'
-import { renderToStaticMarkup } from 'react-dom/server'
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
-import { CHARACTERS, LuisAvatar, AnneAvatar, BeateAvatar, BenediktAvatar } from '../data/characters.jsx'
+import { CHARACTERS, CHARACTER_IMAGES } from '../data/characters.jsx'
 import { ROUTE_CONFIG } from '../data/mapData'
 
-// Pre-render each avatar SVG to an HTML string once at module load
-const AVATAR_SVG = {
-  luis:     renderToStaticMarkup(createElement(LuisAvatar)),
-  anne:     renderToStaticMarkup(createElement(AnneAvatar)),
-  beate:    renderToStaticMarkup(createElement(BeateAvatar)),
-  benedikt: renderToStaticMarkup(createElement(BenediktAvatar)),
-}
-
-// Natural SVG heights — used to scale to a consistent display size
-const CHAR_NATURAL_H = { luis: 120, anne: 120, beate: 120, benedikt: 120 }
 const TARGET_H = 60 // px display height
 
 function makeIcon(charId, flipX) {
-  const scale     = (TARGET_H / (CHAR_NATURAL_H[charId] ?? 90)).toFixed(3)
   const animClass = charId === 'benedikt' ? 'char-biker' : 'char-walker'
+  const src = CHARACTER_IMAGES[charId]
   return L.divIcon({
     html: `
       <div style="transform:scaleX(${flipX ? -1 : 1});display:inline-block">
         <div class="${animClass}" style="filter:drop-shadow(2px 3px 5px rgba(0,0,0,0.35))">
-          <div style="transform:scale(${scale});transform-origin:bottom center;line-height:0">
-            ${AVATAR_SVG[charId]}
-          </div>
+          <img src="${src}" style="height:${TARGET_H}px;width:auto;display:block;" />
         </div>
       </div>`,
     className: '',
