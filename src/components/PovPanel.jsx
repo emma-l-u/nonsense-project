@@ -3,19 +3,19 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
-import { CHARACTERS, KarlAvatar, ErnaAvatar, BeatriceAvatar, BenediktAvatar } from '../data/characters.jsx'
+import { CHARACTERS, LuisAvatar, AnneAvatar, BeateAvatar, BenediktAvatar } from '../data/characters.jsx'
 import { ROUTE_CONFIG } from '../data/mapData'
 
 // Pre-render each avatar SVG to an HTML string once at module load
 const AVATAR_SVG = {
-  karl:     renderToStaticMarkup(createElement(KarlAvatar)),
-  erna:     renderToStaticMarkup(createElement(ErnaAvatar)),
-  beatrice: renderToStaticMarkup(createElement(BeatriceAvatar)),
+  luis:     renderToStaticMarkup(createElement(LuisAvatar)),
+  anne:     renderToStaticMarkup(createElement(AnneAvatar)),
+  beate:    renderToStaticMarkup(createElement(BeateAvatar)),
   benedikt: renderToStaticMarkup(createElement(BenediktAvatar)),
 }
 
 // Natural SVG heights — used to scale to a consistent display size
-const CHAR_NATURAL_H = { karl: 192, erna: 188, beatrice: 192, benedikt: 132 }
+const CHAR_NATURAL_H = { luis: 192, anne: 192, beate: 192, benedikt: 192 }
 const TARGET_H = 60 // px display height
 
 function makeIcon(charId, flipX) {

@@ -11,7 +11,7 @@ const NOISE_GROUP = ['traffic-noise', 'rail-noise', 'construction', 'hospitality
 
 export function useMapState() {
   // Character selection drives both mode + routeType
-  const [selectedCharacter, setSelectedCharacterState] = useState('beatrice')
+  const [selectedCharacter, setSelectedCharacterState] = useState('beate')
   const [mode, setMode] = useState('walk')
   const [routeType, setRouteType] = useState('fastest')
   const [layerVisibility, setLayerVisibility] = useState(LAYER_DEFAULTS)
