@@ -1,12 +1,12 @@
 // Data sourced from weimar.wandelkarten.de — sustainable & community places in Weimar
 
 export const WANDEL_CATS = {
-  food:        { label: 'Food & Market',     emoji: '😋', color: '#6ECC8A' },
-  community:   { label: 'Community & Free',  emoji: '🤝', color: '#B48EF2' },
-  repair:      { label: 'Repair & Services', emoji: '🔧', color: '#7C2030' },
-  culture:     { label: 'Library & Books',   emoji: '📚', color: '#52B8F0' },
-  supermarket: { label: 'Supermarkets',      emoji: '🛒', color: '#F59E0B' },
-  museum:      { label: 'Museums',           emoji: '🏛️', color: '#8B5CF6' },
+  food:        { label: 'Food & Market',     emoji: '😋', color: '#FF4632' }, // orange-red — high contrast on yellow/pink panel
+  community:   { label: 'Community & Free',  emoji: '🤝', color: '#4100F5' }, // deep purple — excellent contrast
+  repair:      { label: 'Repair & Services', emoji: '🔧', color: '#191414' }, // near-black — excellent contrast, suits tools
+  culture:     { label: 'Library & Books',   emoji: '📚', color: '#98F0E1' }, // mint — low panel contrast but colorful emoji carries it
+  supermarket: { label: 'Supermarkets',      emoji: '🛒', color: '#CDF564' }, // lime — low panel contrast but dark border defines it
+  museum:      { label: 'Museums',           emoji: '🏛️', color: '#F037A5' }, // hot pink — strong, distinctive
 }
 
 // Filtered to valid Weimar coordinates only (lng roughly 11.27–11.42)
