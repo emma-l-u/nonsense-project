@@ -26,12 +26,14 @@
 
 /* Ensure map fills its container */
 .leaflet-container {
-  background: #FFF3D4;
+  background: #FFE566;
 }
 
-/* Warm tile filter — matches yellow-to-pink UI gradient (see public/map-style.json) */
+/* Stamen Toner tiles × warm yellow background = black streets on warm canvas.
+   White areas of the Toner tiles let the yellow background show through;
+   black streets multiply to stay black. (see public/map-style.json) */
 .leaflet-tile-pane {
-  filter: sepia(0.22) hue-rotate(348deg) saturate(0.82) brightness(1.06);
+  mix-blend-mode: multiply;
 }
 
 /* Tailwind's base reset breaks Leaflet tile images — undo it */
