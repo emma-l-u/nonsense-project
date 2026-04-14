@@ -252,7 +252,7 @@ function getWandelIcon(cat, size) {
       width:${size}px;height:${size}px;
       background:${color};
       border-radius:50%;
-      box-shadow:0 1px 4px rgba(0,0,0,0.22);
+      box-shadow:0 0 ${Math.round(size * 0.55)}px ${color}bb, 0 0 ${Math.round(size * 1.1)}px ${color}55;
       display:flex;align-items:center;justify-content:center;
       font-size:${fontSize}px;line-height:1;
     ">${emoji}</div>`,
