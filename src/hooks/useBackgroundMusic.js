@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 // YouTube video ID extracted from the provided URL
-const VIDEO_ID    = 'OkN13jPSprk'
+const VIDEO_ID    = 'knCGHypL9FI'
 const VOL_FULL    = 55   // volume (0-100) when no soundscape is playing
 const VOL_BLEND   = 14   // volume when soundscape is active — music recedes
 const FADE_STEP   = 1.5  // volume units per tick
