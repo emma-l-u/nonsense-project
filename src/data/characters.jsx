@@ -12,10 +12,11 @@ export const CHARACTER_IMAGES = {
 }
 
 // Avatar components — used in character cards (RoutePlanner)
-export function LuisAvatar()     { return <img src={luisImg}     alt="Little Luis"    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} /> }
-export function AnneAvatar()     { return <img src={anneImg}     alt="Aunt Anne"      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} /> }
-export function BeateAvatar()    { return <img src={beateImg}    alt="Busy Beate"     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} /> }
-export function BenediktAvatar() { return <img src={benediktImg} alt="Biker Benedikt" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} /> }
+const avatarStyle = { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
+export function LuisAvatar()     { return <img src={luisImg}     alt="Little Luis"    loading="lazy" style={avatarStyle} /> }
+export function AnneAvatar()     { return <img src={anneImg}     alt="Aunt Anne"      loading="lazy" style={avatarStyle} /> }
+export function BeateAvatar()    { return <img src={beateImg}    alt="Busy Beate"     loading="lazy" style={avatarStyle} /> }
+export function BenediktAvatar() { return <img src={benediktImg} alt="Biker Benedikt" loading="lazy" style={avatarStyle} /> }
 
 export const CHARACTERS = {
   luis:     { id: 'luis',     name: 'Little Luis',    tagline: 'avoid busy roads and fast cars',         routeType: 'safest',  mode: 'walk', color: '#2563eb', cardBg: '#dbeafe', Avatar: LuisAvatar,     voice: (dist, time) => `Luis found a safe path! No scary roads. ${dist} km · ${time} min` },

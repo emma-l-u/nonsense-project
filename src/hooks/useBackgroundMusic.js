@@ -11,8 +11,9 @@ function loadYTScript(onReady) {
   window.onYouTubeIframeAPIReady = () => { if (prev) prev(); onReady() }
   if (!document.getElementById('yt-iframe-api')) {
     const s = document.createElement('script')
-    s.id  = 'yt-iframe-api'
-    s.src = 'https://www.youtube.com/iframe_api'
+    s.id    = 'yt-iframe-api'
+    s.src   = 'https://www.youtube.com/iframe_api'
+    s.defer = true
     document.head.appendChild(s)
   }
 }

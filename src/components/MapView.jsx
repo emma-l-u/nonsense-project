@@ -301,20 +301,23 @@ function TrafficFlow({ roads, simHour }) {
   const simHourRef = useRef(simHour)
   useEffect(() => { simHourRef.current = simHour }, [simHour])
 
+  // Only run the animation loop when the simulation is active.
+  // 180 ms tick (≈ 5 fps) is plenty smooth for road-flow and 3× cheaper than 55 ms.
   useEffect(() => {
+    if (simHour === null) return
     const id = setInterval(() => {
       const h = simHourRef.current % 24
       const isRush  = (h >= 7 && h < 9) || (h >= 16 && h < 19)
       const isNight = h >= 22 || h < 6
       const speed = isRush ? 3 : isNight ? 0.6 : 1.4
       setPhase(p => p + speed)
-    }, 55)
+    }, 180)
     return () => clearInterval(id)
-  }, [])
+  }, [simHour === null])
 
-  if (!roads?.length) return null
+  if (!roads?.length || simHour === null) return null
 
-  const h = (simHour ?? 12) % 24
+  const h = simHour % 24
   const isRush  = (h >= 7 && h < 9) || (h >= 16 && h < 19)
   const isNight = h >= 22 || h < 6
   const intensity = isNight ? 0.4 : isRush ? 1.0 : 0.7
