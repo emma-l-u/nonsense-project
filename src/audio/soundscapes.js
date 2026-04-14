@@ -228,6 +228,48 @@ class BeateSoundscape extends Soundscape {
 
     this._fadeIn()
     this._scheduleCar()
+    this._scheduleHeels()
+  }
+
+  _scheduleHeels() {
+    // Brisk walking pace ~112 steps/min = ~535 ms between clicks
+    // Alternating left/right foot with slight pan
+    this._heelFoot = 0
+    this._heelStep()
+  }
+
+  _heelStep() {
+    this._later(() => {
+      const { ctx, master } = this
+      const foot = this._heelFoot++ % 2  // 0 = left, 1 = right
+
+      // Sharp click: high-passed noise burst (the tap on pavement)
+      const click = makeNoiseSource(ctx, 0.03)
+      const clickEnv = makeGain(ctx, 0)
+      clickEnv.gain.setValueAtTime(0, ctx.currentTime)
+      clickEnv.gain.linearRampToValueAtTime(0.32, ctx.currentTime + 0.002)
+      clickEnv.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.028)
+      chain(click, makeFilter(ctx, 'highpass', 3200, 1.8), clickEnv, master)
+      click.start()
+      click.stop(ctx.currentTime + 0.035)
+
+      // Resonant body thud: short sine at ~900 Hz (the "clack" resonance of hard sole)
+      const thud = ctx.createOscillator()
+      thud.type = 'sine'
+      thud.frequency.setValueAtTime(900, ctx.currentTime)
+      thud.frequency.exponentialRampToValueAtTime(420, ctx.currentTime + 0.04)
+      const thudEnv = makeGain(ctx, 0)
+      thudEnv.gain.setValueAtTime(0, ctx.currentTime)
+      thudEnv.gain.linearRampToValueAtTime(0.14, ctx.currentTime + 0.003)
+      thudEnv.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.045)
+      const pan = ctx.createStereoPanner()
+      pan.pan.value = foot === 0 ? -0.3 : 0.3
+      chain(thud, thudEnv, pan, master)
+      thud.start()
+      thud.stop(ctx.currentTime + 0.05)
+
+      this._heelStep()
+    }, 510 + Math.random() * 55)  // slight human variation
   }
 
   _scheduleCar() {
