@@ -56,12 +56,11 @@ export default function ControlHeader() {
   return (
     <header className="absolute top-4 left-1/2 -translate-x-1/2 z-[2000] pointer-events-none flex items-center gap-3"
       style={{
-        background: 'rgba(255,255,255,0.88)',
+        background: '#FFE566',
         borderRadius: 999,
         padding: '7px 20px',
-        boxShadow: '0 2px 20px rgba(124,58,237,0.15), 0 1px 4px rgba(0,0,0,0.06)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(124,58,237,0.12)',
+        boxShadow: '0 0 18px rgba(255,229,102,0.7), 0 0 6px rgba(255,229,102,0.5)',
+        border: '1.5px solid rgba(255,229,102,0.9)',
       }}>
       <WalkIcon />
       <DogIcon />

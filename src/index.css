@@ -7,16 +7,16 @@
   color: rgba(255, 255, 255, 0.45);
 }
 
-/* Light theme for Leaflet popups */
+/* Dark theme for Leaflet popups */
 .leaflet-popup-content-wrapper {
-  background: #ffffff;
-  border: 1px solid #d0ccc8;
-  color: #2a2420;
+  background: #1e1e1e;
+  border: 1px solid #3a3a3a;
+  color: #f0ede8;
   border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 .leaflet-popup-tip {
-  background: #ffffff;
+  background: #1e1e1e;
 }
 .leaflet-popup-content {
   margin: 10px 14px;
@@ -26,7 +26,7 @@
 
 /* Ensure map fills its container */
 .leaflet-container {
-  background: #f5f0eb;
+  background: #1a1a1a;
 }
 
 /* Tailwind's base reset breaks Leaflet tile images — undo it */
