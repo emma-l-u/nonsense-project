@@ -26,14 +26,7 @@
 
 /* Ensure map fills its container */
 .leaflet-container {
-  background: #FFE566;
-}
-
-/* Stamen Toner tiles × warm yellow background = black streets on warm canvas.
-   White areas of the Toner tiles let the yellow background show through;
-   black streets multiply to stay black. (see public/map-style.json) */
-.leaflet-tile-pane {
-  mix-blend-mode: multiply;
+  background: #f5f0eb;
 }
 
 /* Tailwind's base reset breaks Leaflet tile images — undo it */

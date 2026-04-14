@@ -1,11 +1,3 @@
 {
-  "description": "Stamen Toner tiles (black streets on white) multiplied over warm yellow background. White areas let the warm background show through; black streets stay black.",
-  "uiGradient": {
-    "from": "#FFE566",
-    "to":   "#FFACE4"
-  },
-  "tileProvider": "Stamen Toner via Stadia Maps",
-  "tileUrl": "https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png",
-  "blendMode": "multiply",
-  "mapBackground": "#FFE566"
+  "description": "Standard OpenStreetMap tiles, no color adjustments"
 }
