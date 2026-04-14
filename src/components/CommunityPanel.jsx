@@ -63,7 +63,7 @@ export default function CommunityPanel({
                   className="cursor-pointer" style={{ accentColor: cat.color }}/>
                 <span style={{
                   width: 20, height: 20, borderRadius: '50%',
-                  background: cat.color, border: '1.5px solid #1a1209',
+                  background: cat.color,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 11, flexShrink: 0,
                 }}>{cat.emoji}</span>

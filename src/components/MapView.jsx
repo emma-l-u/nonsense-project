@@ -242,7 +242,6 @@ function getWandelIcon(cat) {
     html: `<div style="
       width:30px;height:30px;
       background:${color};
-      border:1px solid rgba(0,0,0,0.35);
       border-radius:50%;
       box-shadow:0 1px 4px rgba(0,0,0,0.22);
       display:flex;align-items:center;justify-content:center;
