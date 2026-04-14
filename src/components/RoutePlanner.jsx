@@ -1,5 +1,4 @@
 import { CHARACTERS, CHARACTER_ORDER } from '../data/characters.jsx'
-import { WANDEL_CATS } from '../data/wandelkarten'
 
 const NOISE_LAYERS = [
   { key: 'traffic-noise', label: 'car traffic',            color: '#dc2626' },
@@ -93,7 +92,6 @@ export default function RoutePlanner({
   noiseActive, toggleNoiseGroup,
   layerVisibility, toggleLayer,
   liveOn, toggleLive,
-  showWandel, toggleWandel, wandelCats, toggleWandelCat,
 }) {
   const char = CHARACTERS[selectedCharacter]
 
@@ -227,50 +225,6 @@ export default function RoutePlanner({
           {liveOn ? '⏹ Stop simulation' : '▶ Traffic simulation'}
         </button>
 
-        {/* Wandelkarten everyday places */}
-        <button
-          onClick={toggleWandel}
-          style={{
-            background: showWandel ? 'rgba(255,255,255,0.75)' : INPUT_BG,
-            border: `1.5px solid ${showWandel ? TEXT : BORDER}`,
-            color: TEXT, display: 'block', width: '100%', padding: '7px 12px',
-            marginBottom: showWandel ? 0 : 0, borderRadius: showWandel ? '8px 8px 0 0' : 8,
-            cursor: 'pointer', textAlign: 'left',
-            fontSize: 11, fontFamily: FONT, fontWeight: showWandel ? 700 : 500,
-          }}
-        >
-          📍 Everyday places {showWandel ? '▴' : '▾'}
-        </button>
-
-        {showWandel && (
-          <div style={{
-            background: 'rgba(255,255,255,0.75)',
-            border: `1.5px solid ${TEXT}`,
-            borderTop: 'none',
-            borderRadius: '0 0 8px 8px',
-            padding: '6px 12px 8px',
-          }}>
-            <p style={{ fontSize: 9, fontFamily: FONT, color: MUTED, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              Source: weimar.wandelkarten.de
-            </p>
-            {Object.entries(WANDEL_CATS).map(([key, cat]) => (
-              <label key={key} className="flex items-center gap-2 cursor-pointer py-0.5">
-                <input type="checkbox" checked={wandelCats[key]}
-                  onChange={() => toggleWandelCat(key)}
-                  className="cursor-pointer" style={{ accentColor: cat.color }}/>
-                <span style={{
-                  width: 20, height: 20, borderRadius: '50%',
-                  background: cat.color, border: '1.5px solid #1a1209',
-                  display:'flex', alignItems:'center', justifyContent:'center',
-                  fontSize: 11, flexShrink: 0,
-                }}>{cat.emoji}</span>
-                <span style={{ fontSize: 10, fontFamily: FONT, fontWeight: 600, color: wandelCats[key] ? TEXT : MUTED }}>
-                  {cat.label}
-                </span>
-              </label>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   )

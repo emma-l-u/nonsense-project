@@ -47,8 +47,6 @@ export default function App() {
           noiseActive={s.noiseActive} toggleNoiseGroup={s.toggleNoiseGroup}
           layerVisibility={s.layerVisibility} toggleLayer={s.toggleLayer}
           liveOn={s.liveOn} toggleLive={s.toggleLive}
-          showWandel={s.showWandel} toggleWandel={s.toggleWandel}
-          wandelCats={s.wandelCats} toggleWandelCat={s.toggleWandelCat}
         />
 
         <CommunityPanel
@@ -58,6 +56,8 @@ export default function App() {
           pendingPin={s.pendingPin}
           onAddPin={s.handleAddPin}
           onCancelPin={s.handleCancelPin}
+          showWandel={s.showWandel} toggleWandel={s.toggleWandel}
+          wandelCats={s.wandelCats} toggleWandelCat={s.toggleWandelCat}
         />
 
         <div className="live-badge absolute top-14 left-1/2 rounded-full px-4 py-1 text-[11px] font-semibold z-[2000] pointer-events-none"

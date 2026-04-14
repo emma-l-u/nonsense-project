@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { WANDEL_CATS } from '../data/wandelkarten'
 
 const PANEL_BG = 'linear-gradient(150deg, #FFE566 0%, #FFACE4 100%)'
 const FONT     = "'Nunito', sans-serif"
@@ -9,6 +10,7 @@ const INPUT_BG = 'rgba(255,255,255,0.6)'
 
 export default function CommunityPanel({
   communityPins, pinMode, setPinMode, pendingPin, onAddPin, onCancelPin,
+  showWandel, toggleWandel, wandelCats, toggleWandelCat,
 }) {
   const [pinDesc, setPinDesc] = useState('')
 
@@ -30,6 +32,48 @@ export default function CommunityPanel({
         <p style={{ fontFamily: FONT, fontSize: 11, color: MUTED, marginBottom: 14 }}>
           Share what you love — or what needs fixing.
         </p>
+
+        {/* ── Everyday places ── */}
+        <button
+          onClick={toggleWandel}
+          style={{
+            background: showWandel ? 'rgba(255,255,255,0.75)' : INPUT_BG,
+            border: `1.5px solid ${showWandel ? TEXT : BORDER}`,
+            color: TEXT, display: 'block', width: '100%', padding: '7px 12px',
+            marginBottom: showWandel ? 0 : 14, borderRadius: showWandel ? '8px 8px 0 0' : 8,
+            cursor: 'pointer', textAlign: 'left',
+            fontSize: 11, fontFamily: FONT, fontWeight: showWandel ? 700 : 500,
+          }}
+        >
+          📍 Everyday places {showWandel ? '▴' : '▾'}
+        </button>
+        {showWandel && (
+          <div style={{
+            background: 'rgba(255,255,255,0.75)',
+            border: `1.5px solid ${TEXT}`,
+            borderTop: 'none',
+            borderRadius: '0 0 8px 8px',
+            padding: '6px 12px 8px',
+            marginBottom: 14,
+          }}>
+            {Object.entries(WANDEL_CATS).map(([key, cat]) => (
+              <label key={key} className="flex items-center gap-2 cursor-pointer py-0.5">
+                <input type="checkbox" checked={wandelCats[key]}
+                  onChange={() => toggleWandelCat(key)}
+                  className="cursor-pointer" style={{ accentColor: cat.color }}/>
+                <span style={{
+                  width: 20, height: 20, borderRadius: '50%',
+                  background: cat.color, border: '1.5px solid #1a1209',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 11, flexShrink: 0,
+                }}>{cat.emoji}</span>
+                <span style={{ fontSize: 10, fontFamily: FONT, fontWeight: 600, color: wandelCats[key] ? TEXT : MUTED }}>
+                  {cat.label}
+                </span>
+              </label>
+            ))}
+          </div>
+        )}
 
         {pendingPin ? (
           /* ── Description form ── */

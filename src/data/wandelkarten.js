@@ -1,10 +1,12 @@
 // Data sourced from weimar.wandelkarten.de — sustainable & community places in Weimar
 
 export const WANDEL_CATS = {
-  food:      { label: 'Food & Market',     emoji: '😋', color: '#6ECC8A' },
-  community: { label: 'Community & Free',  emoji: '🤝', color: '#B48EF2' },
-  repair:    { label: 'Repair & Services', emoji: '🔧', color: '#7C2030' },
-  culture:   { label: 'Library & Books',   emoji: '',   color: '#52B8F0' },
+  food:        { label: 'Food & Market',     emoji: '😋', color: '#6ECC8A' },
+  community:   { label: 'Community & Free',  emoji: '🤝', color: '#B48EF2' },
+  repair:      { label: 'Repair & Services', emoji: '🔧', color: '#7C2030' },
+  culture:     { label: 'Library & Books',   emoji: '📚', color: '#52B8F0' },
+  supermarket: { label: 'Supermarkets',      emoji: '🛒', color: '#F59E0B' },
+  museum:      { label: 'Museums',           emoji: '🏛️', color: '#8B5CF6' },
 }
 
 // Filtered to valid Weimar coordinates only (lng roughly 11.27–11.42)
@@ -70,4 +72,24 @@ export const WANDEL_POIS = [
   { id: 'b3',  cat: 'culture', name: 'Stadtbibliothek Schöndorf',   addr: 'Max-Reichpietsch-Str. 14',     lat: 51.0136671, lng: 11.3360037, info: 'Public library branch' },
   { id: 'b4',  cat: 'culture', name: 'Büchertauschregal nahkauf',   addr: 'Bodelschwinghstraße 82',       lat: 50.9718196, lng: 11.3442608, info: 'Free book exchange shelf' },
   { id: 'b5',  cat: 'culture', name: 'Büchertauschregal',           addr: 'Paul-Schneider-Straße',        lat: 50.9790943, lng: 11.3069915, info: 'Free book exchange shelf' },
+
+  // ── Supermarkets ───────────────────────────────────────────────────────────
+  { id: 's1',  cat: 'supermarket', name: 'REWE',    addr: 'Geleitstraße 2',        lat: 50.9828, lng: 11.3354, info: 'Supermarket' },
+  { id: 's2',  cat: 'supermarket', name: 'REWE',    addr: 'Rießnerstraße 10',      lat: 50.9735, lng: 11.3450, info: 'Supermarket' },
+  { id: 's3',  cat: 'supermarket', name: 'Edeka',   addr: 'Erfurter Straße 25',    lat: 50.9800, lng: 11.3195, info: 'Supermarket' },
+  { id: 's4',  cat: 'supermarket', name: 'Kaufland',addr: 'Schwanseestraße 43',    lat: 50.9762, lng: 11.3458, info: 'Large supermarket' },
+  { id: 's5',  cat: 'supermarket', name: 'Aldi',    addr: 'Erfurter Straße 27',    lat: 50.9798, lng: 11.3188, info: 'Discount supermarket' },
+  { id: 's6',  cat: 'supermarket', name: 'Lidl',    addr: 'Am Viadukt 2',          lat: 50.9840, lng: 11.3378, info: 'Discount supermarket' },
+  { id: 's7',  cat: 'supermarket', name: 'Netto',   addr: 'Friedensstraße 10',     lat: 50.9816, lng: 11.3220, info: 'Discount supermarket' },
+  { id: 's8',  cat: 'supermarket', name: 'Penny',   addr: 'Hermann-Brill-Str. 2',  lat: 50.9754, lng: 11.3168, info: 'Discount supermarket' },
+
+  // ── Museums ────────────────────────────────────────────────────────────────
+  { id: 'm1',  cat: 'museum', name: 'Goethe-Nationalmuseum',   addr: 'Frauenplan 1',              lat: 50.9773, lng: 11.3280, info: 'Home & life of Goethe — UNESCO World Heritage' },
+  { id: 'm2',  cat: 'museum', name: 'Schillermuseum',           addr: 'Schillerstraße 12',         lat: 50.9831, lng: 11.3261, info: 'Home of Friedrich Schiller — UNESCO World Heritage' },
+  { id: 'm3',  cat: 'museum', name: 'Bauhaus-Museum',           addr: 'Stéphane-Hessel-Platz 1',   lat: 50.9773, lng: 11.3293, info: 'Original Bauhaus collection & history' },
+  { id: 'm4',  cat: 'museum', name: 'Neues Museum Weimar',      addr: 'Jorge-Semprún-Platz 5',     lat: 50.9790, lng: 11.3308, info: 'Modern & contemporary art' },
+  { id: 'm5',  cat: 'museum', name: 'Stadtmuseum Weimar',       addr: 'Karl-Liebknecht-Str. 5',    lat: 50.9834, lng: 11.3262, info: 'City history of Weimar' },
+  { id: 'm6',  cat: 'museum', name: 'Liszthaus',                addr: 'Marienstraße 17',            lat: 50.9757, lng: 11.3291, info: 'Franz Liszt\'s residence' },
+  { id: 'm7',  cat: 'museum', name: 'Nietzsche-Archiv',         addr: 'Humboldtstraße 36',          lat: 50.9755, lng: 11.3277, info: 'Friedrich Nietzsche archive & exhibition' },
+  { id: 'm8',  cat: 'museum', name: 'Stadtschloss Weimar',      addr: 'Burgplatz 4',                lat: 50.9793, lng: 11.3303, info: 'Ducal palace with art collection' },
 ]
