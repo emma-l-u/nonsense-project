@@ -1,5 +1,6 @@
 import { useMapState } from './hooks/useMapState'
 import { useSoundscape } from './hooks/useSoundscape'
+import { useBackgroundMusic } from './hooks/useBackgroundMusic'
 import ControlHeader from './components/ControlHeader'
 import MapView from './components/MapView'
 import RoutePlanner from './components/RoutePlanner'
@@ -10,6 +11,7 @@ import CommunityPanel from './components/CommunityPanel'
 export default function App() {
   const s = useMapState()
   useSoundscape(s.route, s.selectedCharacter)
+  useBackgroundMusic(!!s.route)
 
   return (
     <div className="flex flex-col h-screen text-gray-700 overflow-hidden" style={{ background: '#ffffff' }}>
