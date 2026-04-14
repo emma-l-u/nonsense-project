@@ -412,30 +412,25 @@ export default function MapView({
       {['traffic-noise','rail-noise','construction','school','hospitality'].map(key =>
         layerVisibility[key] && <NoiseLayer key={key} data={noiseData[key]} />
       )}
-      {/* Green zones — always on, soft ambient fill */}
+      {/* Green zones — always on, soft ambient fill, not interactive */}
       {osmParks.map((park, i) => (
         <Polygon key={i} positions={park.positions}
           pathOptions={{
             fillColor: park.kind === 'forest' ? '#166534' : '#4ade80',
             fillOpacity: park.kind === 'forest' ? 0.22 : 0.25,
             weight: 0,
-          }}>
-          <Popup><b>🌳 {park.name}</b></Popup>
-        </Polygon>
+            interactive: false,
+          }} />
       ))}
 
-      {/* Pedestrian zones — always on, subtle yellow wash */}
+      {/* Pedestrian zones — always on, subtle yellow wash, not interactive */}
       {osmPedestrian.map((zone, i) =>
         zone.isClosed ? (
           <Polygon key={i} positions={zone.positions}
-            pathOptions={{ fillColor: 'url(#ped-hatch)', fillOpacity: 1, color: '#ca8a04', weight: 1, opacity: 0.5 }}>
-            <Popup><b>🚶 {zone.name}</b></Popup>
-          </Polygon>
+            pathOptions={{ fillColor: 'url(#ped-hatch)', fillOpacity: 1, color: '#ca8a04', weight: 1, opacity: 0.5, interactive: false }} />
         ) : (
           <Polyline key={i} positions={zone.positions}
-            pathOptions={{ color: '#ca8a04', weight: 2.5, opacity: 0.5, dashArray: '1 5', lineCap: 'round' }}>
-            <Popup><b>🚶 {zone.name}</b></Popup>
-          </Polyline>
+            pathOptions={{ color: '#ca8a04', weight: 2.5, opacity: 0.5, dashArray: '1 5', lineCap: 'round', interactive: false }} />
         )
       )}
 
