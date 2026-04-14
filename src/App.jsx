@@ -62,7 +62,7 @@ export default function App() {
 
         <div className="live-badge absolute top-14 left-1/2 rounded-full px-4 py-1 text-[11px] font-semibold z-[2000] pointer-events-none"
           style={s.liveOn
-            ? { background: 'rgba(180,180,180,0.55)', color: 'rgba(80,80,80,0.7)', boxShadow: 'none' }
+            ? { background: '#ef4444', color: '#fff', boxShadow: '0 0 12px rgba(239,68,68,0.7)' }
             : { background: 'linear-gradient(135deg, #7c3aed, #db2777)', color: 'white', boxShadow: '0 2px 12px rgba(124,58,237,0.4)' }
           }>
           ● LIVE — traffic simulation

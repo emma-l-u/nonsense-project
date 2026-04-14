@@ -317,13 +317,13 @@ function TrafficFlow({ roads, simHour }) {
         {/* Outer glow halo */}
         <Polyline positions={path} pathOptions={{
           color: '#ef4444', weight: 10 + lineCount * intensity * 2,
-          opacity: 0.18 * intensity,
+          opacity: 0.45 * intensity,
           lineCap: 'round', lineJoin: 'round',
         }} />
         {/* Inner glow */}
         <Polyline positions={path} pathOptions={{
           color: '#f87171', weight: 4 + intensity * 2,
-          opacity: 0.35 * intensity,
+          opacity: 0.7 * intensity,
           lineCap: 'round', lineJoin: 'round',
         }} />
         {/* Flowing dash lines */}
@@ -331,7 +331,7 @@ function TrafficFlow({ roads, simHour }) {
           <Polyline key={li} positions={path} pathOptions={{
             color: li % 2 === 0 ? '#ef4444' : '#f87171',
             weight: 1 + intensity * 0.8,
-            opacity: 0.7 + intensity * 0.25,
+            opacity: 0.9,
             dashArray: `${10 + li * 4} ${6 + li * 2}`,
             dashOffset: String(phase + li * 18),
             lineCap: 'round',
