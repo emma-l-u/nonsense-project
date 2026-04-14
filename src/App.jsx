@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { useMapState } from './hooks/useMapState'
 import ControlHeader from './components/ControlHeader'
 import MapView from './components/MapView'
@@ -6,16 +5,9 @@ import RoutePlanner from './components/RoutePlanner'
 import InfoBar from './components/InfoBar'
 import TimeSlider from './components/TimeSlider'
 import CommunityPanel from './components/CommunityPanel'
-import PovPanel from './components/PovPanel'
 
 export default function App() {
   const s = useMapState()
-  const [showPov, setShowPov] = useState(false)
-
-  // Auto-show POV panel whenever a new route is calculated
-  useEffect(() => {
-    if (s.route) setShowPov(true)
-  }, [s.route])
 
   return (
     <div className="flex flex-col h-screen text-gray-700 overflow-hidden" style={{ background: '#ffffff' }}>
@@ -67,16 +59,6 @@ export default function App() {
           onAddPin={s.handleAddPin}
           onCancelPin={s.handleCancelPin}
         />
-
-        {showPov && (
-          <PovPanel
-            route={s.route}
-            routeType={s.routeType}
-            selectedCharacter={s.selectedCharacter}
-            routeInfo={s.routeInfo}
-            onClose={() => setShowPov(false)}
-          />
-        )}
 
         <div className="live-badge absolute top-14 left-1/2 rounded-full px-4 py-1 text-[11px] font-semibold z-[2000] pointer-events-none"
           style={s.liveOn

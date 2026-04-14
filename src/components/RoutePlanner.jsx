@@ -155,7 +155,7 @@ export default function RoutePlanner({
 
       {/* ── Route result ── */}
       {routeInfo && (
-        <div className="px-3.5 py-2.5" style={{ borderBottom: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.4)' }}>
+        <div className="px-3.5 py-2.5" style={{ borderBottom: `1px solid ${BORDER}` }}>
           <p style={{ fontSize: 12, fontWeight: 700, color: TEXT, fontFamily: FONT, lineHeight: 1.4 }}>
             {char.voice(routeInfo.dist.toFixed(1), Math.round(routeInfo.time))}
           </p>

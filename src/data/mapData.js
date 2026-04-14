@@ -83,12 +83,12 @@ export const LAYER_DEFAULTS = {
 // ── Route configuration ───────────────────────────────────────────────────────
 export const ROUTE_CONFIG = {
   fastest: { color: '#22c55e', label: 'Fastest route',               speedFactor: 1.0, noiseScore: 'High',     comfortScore: 'Low'       },
-  safest:  { color: '#3b82f6', label: 'Safest route (low traffic)',   speedFactor: 1.3, noiseScore: 'Low',      comfortScore: 'High'      },
-  nicest:  { color: '#84cc16', label: 'Nicest route (green & quiet)', speedFactor: 1.5, noiseScore: 'Very low', comfortScore: 'Very high' },
-  bike:    { color: '#f59e0b', label: 'Best bike route',              speedFactor: 1.2, noiseScore: 'Medium',   comfortScore: 'High'      },
+  safest:  { color: '#3b82f6', label: 'Safest route (low traffic)',   speedFactor: 1.0, noiseScore: 'Low',      comfortScore: 'High'      },
+  nicest:  { color: '#84cc16', label: 'Nicest route (green & quiet)', speedFactor: 1.0, noiseScore: 'Very low', comfortScore: 'Very high' },
+  bike:    { color: '#f59e0b', label: 'Best bike route',              speedFactor: 1.0, noiseScore: 'Medium',   comfortScore: 'High'      },
 }
 
-// ── OSRM routing — public demo server (supports driving, foot, bike) ─────────
+// ── OSRM routing — used only for background road/bike lane display ────────────
 const OSRM_BASE = 'https://router.project-osrm.org/route/v1'
 
 function osrmBase(profile) {
@@ -118,33 +118,76 @@ export async function fetchOsrmPath(fromLngLat, toLngLat, profile = 'driving') {
   return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng])
 }
 
-// Waypoints added per route type to produce genuinely different routes
-// (coordinates are lng,lat — OSRM order)
-const ROUTE_WAYPOINTS = {
-  nicest: '11.3330,50.9740',  // via Park an der Ilm
-  safest: '11.3285,50.9808',  // via quieter residential streets near Schillerplatz
+// ── Valhalla routing — for the route planner ─────────────────────────────────
+// Valhalla uses road-type preferences (use_roads) to genuinely avoid or prefer
+// traffic streets, rather than forcing detours through fixed waypoints.
+const VALHALLA_BASE = 'https://valhalla1.openstreetmap.de'
+
+// Decode Valhalla's polyline6 encoded shape (6 decimal places, not standard 5)
+function decodePolyline6(str) {
+  let lat = 0, lng = 0, i = 0
+  const coords = []
+  while (i < str.length) {
+    let b, shift = 0, result = 0
+    do { b = str.charCodeAt(i++) - 63; result |= (b & 0x1f) << shift; shift += 5 } while (b >= 0x20)
+    lat += result & 1 ? ~(result >> 1) : result >> 1
+    shift = 0; result = 0
+    do { b = str.charCodeAt(i++) - 63; result |= (b & 0x1f) << shift; shift += 5 } while (b >= 0x20)
+    lng += result & 1 ? ~(result >> 1) : result >> 1
+    coords.push({ lat: lat / 1e6, lng: lng / 1e6 })
+  }
+  return coords
+}
+
+// Costing options per route type:
+// use_roads 0.0 = strongly avoid roads, prefer footpaths & quiet streets
+// use_roads 1.0 = freely use main roads (fastest)
+// walking_speed sets the actual pace in km/h
+const VALHALLA_OPTIONS = {
+  fastest: {
+    costing: 'pedestrian',
+    costing_options: { pedestrian: { use_roads: 1.0, walking_speed: 6.0 } },
+  },
+  safest: {
+    costing: 'pedestrian',
+    costing_options: { pedestrian: { use_roads: 0.05, walking_speed: 4.5 } },
+  },
+  nicest: {
+    costing: 'pedestrian',
+    costing_options: { pedestrian: { use_roads: 0.0, walking_speed: 3.5 } },
+  },
+  bike: {
+    costing: 'bicycle',
+    costing_options: { bicycle: { use_roads: 0.5, bicycle_type: 'City' } },
+  },
 }
 
 // Fetch an A→B route for the route planner
-export async function fetchOsrmRoute(a, b, mode = 'foot', routeType = 'fastest') {
-  const base = osrmBase(mode)
-  const wp = (mode !== 'bike' && ROUTE_WAYPOINTS[routeType])
-    ? `${a.lng},${a.lat};${ROUTE_WAYPOINTS[routeType]};${b.lng},${b.lat}`
-    : `${a.lng},${a.lat};${b.lng},${b.lat}`
-
-  let data = await osrmFetch(`${base}/${wp}?overview=full&geometries=geojson`).catch(() => null)
-
-  // If waypoint route fails, fall back to direct route
-  if (!data && ROUTE_WAYPOINTS[routeType]) {
-    data = await osrmFetch(`${base}/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`).catch(() => null)
+export async function fetchOsrmRoute(a, b, _mode, routeType = 'fastest') {
+  const opts = VALHALLA_OPTIONS[routeType] ?? VALHALLA_OPTIONS.fastest
+  const body = {
+    locations: [{ lon: a.lng, lat: a.lat }, { lon: b.lng, lat: b.lat }],
+    ...opts,
+    units: 'km',
+    directions_type: 'none',
   }
-  if (!data) return null
-
-  const route = data.routes[0]
-  return {
-    path: route.geometry.coordinates.map(([lng, lat]) => ({ lat, lng })),
-    dist: route.distance / 1000,
-    duration: route.duration / 60,
+  try {
+    const res = await fetch(`${VALHALLA_BASE}/route`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    if (!data.trip?.legs?.length) return null
+    const leg = data.trip.legs[0]
+    return {
+      path: decodePolyline6(leg.shape),
+      dist: data.trip.summary.length,
+      duration: data.trip.summary.time / 60,
+    }
+  } catch {
+    return null
   }
 }
 

@@ -73,7 +73,7 @@ export default function ControlHeader() {
           color: '#1a1209',
         }}
       >
-        Walkable Weimar
+        WHYmar?
       </h1>
       <DinoIcon />
       <CloverIcon />
