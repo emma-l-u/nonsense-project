@@ -61,8 +61,14 @@ function CharacterCard({ char, selected, onSelect }) {
         width: '100%', aspectRatio: '1 / 1',
         display: 'flex', alignItems: 'center',
         justifyContent: 'center', overflow: 'hidden',
+        position: 'relative',
       }}>
         <Avatar />
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: '30%',
+          background: `linear-gradient(to bottom, transparent, ${selected ? char.color : TEXT})`,
+          pointerEvents: 'none',
+        }} />
       </div>
       <div style={{ background: selected ? char.color : TEXT, width: '100%', padding: '4px 6px', fontFamily: FONT }}>
         <p className="text-[9px] font-black leading-tight uppercase tracking-wide"
