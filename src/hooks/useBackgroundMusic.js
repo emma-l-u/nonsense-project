@@ -1,11 +1,8 @@
 import { useEffect, useRef } from 'react'
 
 // YouTube video ID extracted from the provided URL
-const VIDEO_ID    = 'knCGHypL9FI'
-const VOL_FULL    = 55   // volume (0-100) when no soundscape is playing
-const VOL_BLEND   = 14   // volume when soundscape is active — music recedes
-const FADE_STEP   = 1.5  // volume units per tick
-const FADE_TICK   = 50   // ms per tick → full fade ≈ 2.7 s
+const VIDEO_ID = 'knCGHypL9FI'
+const VOL      = 45   // constant volume — soundscapes layer on top, music never fades
 
 // ── YouTube IFrame API loader (idempotent) ────────────────────────────────────
 function loadYTScript(onReady) {
@@ -20,11 +17,9 @@ function loadYTScript(onReady) {
   }
 }
 
-export function useBackgroundMusic(soundscapeActive) {
+export function useBackgroundMusic() {
   const playerRef   = useRef(null)
   const unlockedRef = useRef(false)  // true after first user interaction
-  const fadeRef     = useRef(null)   // setInterval id for smooth fades
-  const targetRef   = useRef(VOL_FULL)
 
   // ── Initialise player once ─────────────────────────────────────────────────
   useEffect(() => {
@@ -58,7 +53,7 @@ export function useBackgroundMusic(soundscapeActive) {
       if (unlockedRef.current || !playerRef.current?.unMute) return
       unlockedRef.current = true
       playerRef.current.unMute()
-      playerRef.current.setVolume(targetRef.current)
+      playerRef.current.setVolume(VOL)
     }
     document.addEventListener('click',      unlock, { once: true })
     document.addEventListener('touchstart', unlock, { once: true })
@@ -69,24 +64,4 @@ export function useBackgroundMusic(soundscapeActive) {
     }
   }, [])
 
-  // ── Smooth volume fade when soundscape activates / deactivates ─────────────
-  useEffect(() => {
-    targetRef.current = soundscapeActive ? VOL_BLEND : VOL_FULL
-
-    if (fadeRef.current) clearInterval(fadeRef.current)
-
-    fadeRef.current = setInterval(() => {
-      const p = playerRef.current
-      if (!p?.getVolume || !unlockedRef.current) return
-      const cur    = p.getVolume()
-      const target = targetRef.current
-      if (cur === target) { clearInterval(fadeRef.current); return }
-      const next = cur < target
-        ? Math.min(target, cur + FADE_STEP)
-        : Math.max(target, cur - FADE_STEP)
-      p.setVolume(next)
-    }, FADE_TICK)
-
-    return () => clearInterval(fadeRef.current)
-  }, [soundscapeActive])
 }

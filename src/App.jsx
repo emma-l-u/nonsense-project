@@ -11,7 +11,7 @@ import CommunityPanel from './components/CommunityPanel'
 export default function App() {
   const s = useMapState()
   useSoundscape(s.route, s.selectedCharacter)
-  useBackgroundMusic(!!s.route)
+  useBackgroundMusic()
 
   return (
     <div className="flex flex-col h-screen text-gray-700 overflow-hidden" style={{ background: '#ffffff' }}>
