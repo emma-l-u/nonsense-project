@@ -7,16 +7,16 @@
   color: rgba(255, 255, 255, 0.45);
 }
 
-/* Dark theme for Leaflet popups */
+/* Dark warm theme for Leaflet popups */
 .leaflet-popup-content-wrapper {
-  background: #1e1e1e;
-  border: 1px solid #3a3a3a;
+  background: #2e2418;
+  border: 1px solid #4a3d2a;
   color: #f0ede8;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 .leaflet-popup-tip {
-  background: #1e1e1e;
+  background: #2e2418;
 }
 .leaflet-popup-content {
   margin: 10px 14px;
@@ -26,7 +26,13 @@
 
 /* Ensure map fills its container */
 .leaflet-container {
-  background: #1a1a1a;
+  background: #2a2318;
+}
+
+/* Warm the dark CartoDB tiles — sepia shift makes the grey feel earthy/warm,
+   buildings stay near-black, streets read as warm charcoal */
+.leaflet-tile-pane {
+  filter: sepia(0.35) hue-rotate(10deg) brightness(0.92) saturate(0.75);
 }
 
 /* Tailwind's base reset breaks Leaflet tile images — undo it */

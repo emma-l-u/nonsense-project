@@ -45,24 +45,22 @@ export const noiseData = {
   ],
 }
 
-// ── Road segments — straight-line paths, no OSRM fetch needed ────────────────
-// path format: [[lat, lng], ...] — straight lines are fine since TrafficFlow
-// animates a wobble over them anyway.
+// ── Road segments — fetched from OSRM (cached in localStorage after first load)
 export const ROAD_SEGMENTS = [
-  { path: [[50.9740, 11.3070], [50.9797, 11.3294]], color: '#dc2626', w: 5, label: 'B7 Erfurter Str'       },
-  { path: [[50.9797, 11.3294], [50.9834, 11.3353]], color: '#dc2626', w: 4, label: 'Schillerstr → Bahnhof' },
-  { path: [[50.9797, 11.3294], [50.9783, 11.3450]], color: '#dc2626', w: 4, label: 'Berkaer Str'           },
-  { path: [[50.9834, 11.3353], [50.9830, 11.3470]], color: '#b91c1c', w: 5, label: 'Buchenwald Allee'      },
-  { path: [[50.9720, 11.3100], [50.9760, 11.3450]], color: '#b91c1c', w: 5, label: 'Southern bypass'       },
-  { path: [[50.9797, 11.3294], [50.9810, 11.3100]], color: '#dc2626', w: 3, label: 'Friedensstr'           },
+  { from: [11.3070, 50.9740], to: [11.3294, 50.9797], color: '#dc2626', w: 5, label: 'B7 Erfurter Str',       profile: 'driving' },
+  { from: [11.3294, 50.9797], to: [11.3353, 50.9834], color: '#dc2626', w: 4, label: 'Schillerstr → Bahnhof', profile: 'driving' },
+  { from: [11.3294, 50.9797], to: [11.3450, 50.9783], color: '#dc2626', w: 4, label: 'Berkaer Str',           profile: 'driving' },
+  { from: [11.3353, 50.9834], to: [11.3470, 50.9830], color: '#b91c1c', w: 5, label: 'Buchenwald Allee',      profile: 'driving' },
+  { from: [11.3100, 50.9720], to: [11.3450, 50.9760], color: '#b91c1c', w: 5, label: 'Southern bypass',       profile: 'driving' },
+  { from: [11.3294, 50.9797], to: [11.3100, 50.9810], color: '#dc2626', w: 3, label: 'Friedensstr',           profile: 'driving' },
 ]
 
-// ── Bike lane segments — straight-line paths, no OSRM fetch needed ───────────
+// ── Bike lane segments — fetched from OSRM (cached in localStorage after first load)
 export const BIKE_SEGMENTS = [
-  { path: [[50.9740, 11.3070], [50.9797, 11.3294]], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Erfurter Str'    },
-  { path: [[50.9797, 11.3294], [50.9720, 11.3360]], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Park an der Ilm' },
-  { path: [[50.9797, 11.3294], [50.9830, 11.3250]], color: '#d97706', w: 2, dash: '6,4', label: 'Bike: Toward Bahnhof'  },
-  { path: [[50.9797, 11.3294], [50.9810, 11.3400]], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Berkaer Str'     },
+  { from: [11.3070, 50.9740], to: [11.3294, 50.9797], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Erfurter Str'    },
+  { from: [11.3294, 50.9797], to: [11.3360, 50.9720], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Park an der Ilm' },
+  { from: [11.3294, 50.9797], to: [11.3250, 50.9830], color: '#d97706', w: 2, dash: '6,4', label: 'Bike: Toward Bahnhof'  },
+  { from: [11.3294, 50.9797], to: [11.3400, 50.9810], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Berkaer Str'     },
 ]
 
 // ── Live car routes ───────────────────────────────────────────────────────────

@@ -2,9 +2,25 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   LAYER_DEFAULTS, ROUTE_CONFIG,
   ROAD_SEGMENTS, BIKE_SEGMENTS,
-  fetchOsrmRoute, geocodeAddress,
+  fetchOsrmPath, fetchOsrmRoute, geocodeAddress,
   fetchOsmParks, fetchOsmPedestrian,
 } from '../data/mapData'
+
+const ROAD_CACHE_TTL = 7 * 24 * 60 * 60 * 1000
+
+function loadCache(key) {
+  try {
+    const raw = localStorage.getItem(key)
+    if (!raw) return null
+    const { ts, data } = JSON.parse(raw)
+    if (Date.now() - ts > ROAD_CACHE_TTL) return null
+    return data
+  } catch { return null }
+}
+
+function saveCache(key, data) {
+  try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })) } catch {}
+}
 import { CHARACTERS } from '../data/characters.jsx'
 
 const NOISE_GROUP = ['traffic-noise', 'rail-noise', 'construction', 'hospitality']
@@ -78,11 +94,35 @@ export function useMapState() {
 
   // ── Load geometry at startup ───────────────────────────────────────────────
   useEffect(() => {
-    // Roads and bike lanes use pre-baked straight-line paths — instant, no fetch
-    setFetchedRoads(ROAD_SEGMENTS)
-    setFetchedBikeLanes(BIKE_SEGMENTS)
+    // Roads — serve from cache instantly, fetch from OSRM only on first/expired load
+    const cachedRoads = loadCache('osrm_roads_v3')
+    if (cachedRoads) {
+      setFetchedRoads(cachedRoads)
+    } else {
+      Promise.all(ROAD_SEGMENTS.map(seg =>
+        fetchOsrmPath(seg.from, seg.to, seg.profile)
+          .then(path => ({ ...seg, path: path ?? [[seg.from[1], seg.from[0]], [seg.to[1], seg.to[0]]] }))
+          .catch(() => ({ ...seg, path: [[seg.from[1], seg.from[0]], [seg.to[1], seg.to[0]]] }))
+      )).then(r => { setFetchedRoads(r); saveCache('osrm_roads_v3', r) })
+    }
 
-    // OSM park and pedestrian polygons — cached in localStorage for 7 days
+    // Bike lanes — same cache strategy
+    const cachedBikes = loadCache('osrm_bikes_v3')
+    if (cachedBikes) {
+      setFetchedBikeLanes(cachedBikes)
+    } else {
+      Promise.all(BIKE_SEGMENTS.map(seg =>
+        fetchOsrmPath(seg.from, seg.to, 'bike')
+          .then(p => p ? { ...seg, path: p } : null)
+          .catch(() => null)
+      )).then(r => {
+        const filtered = r.filter(Boolean)
+        setFetchedBikeLanes(filtered)
+        saveCache('osrm_bikes_v3', filtered)
+      })
+    }
+
+    // OSM park and pedestrian polygons — already cached in mapData.js
     fetchOsmParks().then(setOsmParks)
     fetchOsmPedestrian().then(setOsmPedestrian)
   }, [])
