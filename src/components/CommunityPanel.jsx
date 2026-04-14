@@ -25,7 +25,7 @@ export default function CommunityPanel({
     >
       <div className="p-4">
         <h3 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 16, color: TEXT, marginBottom: 4, letterSpacing: '-0.01em' }}>
-          Your Weimar
+          MYmar
         </h3>
         <p style={{ fontFamily: FONT, fontSize: 11, color: MUTED, marginBottom: 14 }}>
           Share what you love — or what needs fixing.
