@@ -45,22 +45,24 @@ export const noiseData = {
   ],
 }
 
-// ── Road segments fetched from OSRM ──────────────────────────────────────────
+// ── Road segments — straight-line paths, no OSRM fetch needed ────────────────
+// path format: [[lat, lng], ...] — straight lines are fine since TrafficFlow
+// animates a wobble over them anyway.
 export const ROAD_SEGMENTS = [
-  { from: [11.3070, 50.9740], to: [11.3294, 50.9797], color: '#dc2626', w: 5, label: 'B7 Erfurter Str',       profile: 'driving' },
-  { from: [11.3294, 50.9797], to: [11.3353, 50.9834], color: '#dc2626', w: 4, label: 'Schillerstr → Bahnhof', profile: 'driving' },
-  { from: [11.3294, 50.9797], to: [11.3450, 50.9783], color: '#dc2626', w: 4, label: 'Berkaer Str',           profile: 'driving' },
-  { from: [11.3353, 50.9834], to: [11.3470, 50.9830], color: '#b91c1c', w: 5, label: 'Buchenwald Allee',      profile: 'driving' },
-  { from: [11.3100, 50.9720], to: [11.3450, 50.9760], color: '#b91c1c', w: 5, label: 'Southern bypass',       profile: 'driving' },
-  { from: [11.3294, 50.9797], to: [11.3100, 50.9810], color: '#dc2626', w: 3, label: 'Friedensstr',           profile: 'driving' },
+  { path: [[50.9740, 11.3070], [50.9797, 11.3294]], color: '#dc2626', w: 5, label: 'B7 Erfurter Str'       },
+  { path: [[50.9797, 11.3294], [50.9834, 11.3353]], color: '#dc2626', w: 4, label: 'Schillerstr → Bahnhof' },
+  { path: [[50.9797, 11.3294], [50.9783, 11.3450]], color: '#dc2626', w: 4, label: 'Berkaer Str'           },
+  { path: [[50.9834, 11.3353], [50.9830, 11.3470]], color: '#b91c1c', w: 5, label: 'Buchenwald Allee'      },
+  { path: [[50.9720, 11.3100], [50.9760, 11.3450]], color: '#b91c1c', w: 5, label: 'Southern bypass'       },
+  { path: [[50.9797, 11.3294], [50.9810, 11.3100]], color: '#dc2626', w: 3, label: 'Friedensstr'           },
 ]
 
-// ── Bike lane segments fetched from OSRM ─────────────────────────────────────
+// ── Bike lane segments — straight-line paths, no OSRM fetch needed ───────────
 export const BIKE_SEGMENTS = [
-  { from: [11.3070, 50.9740], to: [11.3294, 50.9797], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Erfurter Str'    },
-  { from: [11.3294, 50.9797], to: [11.3360, 50.9720], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Park an der Ilm' },
-  { from: [11.3294, 50.9797], to: [11.3250, 50.9830], color: '#d97706', w: 2, dash: '6,4', label: 'Bike: Toward Bahnhof'  },
-  { from: [11.3294, 50.9797], to: [11.3400, 50.9810], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Berkaer Str'     },
+  { path: [[50.9740, 11.3070], [50.9797, 11.3294]], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Erfurter Str'    },
+  { path: [[50.9797, 11.3294], [50.9720, 11.3360]], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Park an der Ilm' },
+  { path: [[50.9797, 11.3294], [50.9830, 11.3250]], color: '#d97706', w: 2, dash: '6,4', label: 'Bike: Toward Bahnhof'  },
+  { path: [[50.9797, 11.3294], [50.9810, 11.3400]], color: '#f59e0b', w: 2, dash: '6,4', label: 'Bike: Berkaer Str'     },
 ]
 
 // ── Live car routes ───────────────────────────────────────────────────────────
@@ -205,8 +207,26 @@ export async function geocodeAddress(query) {
 // ── OpenStreetMap Overpass API — real park & pedestrian polygons ───────────────
 const OVERPASS = 'https://overpass-api.de/api/interpreter'
 const BBOX = '50.955,11.300,51.000,11.375' // Weimar area bounding box
+const CACHE_TTL = 7 * 24 * 60 * 60 * 1000 // 7 days in ms
+
+function getCached(key) {
+  try {
+    const raw = localStorage.getItem(key)
+    if (!raw) return null
+    const { ts, data } = JSON.parse(raw)
+    if (Date.now() - ts > CACHE_TTL) return null
+    return data
+  } catch { return null }
+}
+
+function setCached(key, data) {
+  try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })) } catch {}
+}
 
 export async function fetchOsmParks() {
+  const cached = getCached('osm_parks_v1')
+  if (cached) return cached
+
   const q = `[out:json][timeout:30];(
     way["leisure"="park"](${BBOX});
     way["leisure"="garden"](${BBOX});
@@ -216,23 +236,28 @@ export async function fetchOsmParks() {
   try {
     const res = await fetch(`${OVERPASS}?data=${encodeURIComponent(q)}`)
     const data = await res.json()
-    return data.elements
+    const result = data.elements
       .filter(el =>
         el.type === 'way' &&
         el.geometry?.length > 2 &&
-        el.nodes?.[0] === el.nodes?.[el.nodes.length - 1] // must be a closed polygon
+        el.nodes?.[0] === el.nodes?.[el.nodes.length - 1]
       )
       .map(el => ({
         positions: el.geometry.map(p => [p.lat, p.lon]),
         name: el.tags?.name || el.tags?.leisure || el.tags?.landuse || 'Green space',
         kind: (el.tags?.landuse === 'forest' || el.tags?.natural === 'wood') ? 'forest' : 'park',
       }))
+    setCached('osm_parks_v1', result)
+    return result
   } catch {
     return []
   }
 }
 
 export async function fetchOsmPedestrian() {
+  const cached = getCached('osm_pedestrian_v1')
+  if (cached) return cached
+
   const q = `[out:json][timeout:30];(
     way["highway"="pedestrian"](${BBOX});
     way["place"="square"](${BBOX});
@@ -241,13 +266,15 @@ export async function fetchOsmPedestrian() {
   try {
     const res = await fetch(`${OVERPASS}?data=${encodeURIComponent(q)}`)
     const data = await res.json()
-    return data.elements
+    const result = data.elements
       .filter(el => el.type === 'way' && el.geometry?.length > 1)
       .map(el => ({
         positions: el.geometry.map(p => [p.lat, p.lon]),
         name: el.tags?.name || 'Pedestrian zone',
         isClosed: el.nodes?.[0] === el.nodes?.[el.nodes.length - 1],
       }))
+    setCached('osm_pedestrian_v1', result)
+    return result
   } catch {
     return []
   }
