@@ -7,6 +7,7 @@ import {
 import L from 'leaflet'
 import { noiseData, WEIMAR, ROUTE_CONFIG } from '../data/mapData'
 import { WANDEL_CATS, WANDEL_POIS } from '../data/wandelkarten'
+import gooseCursorImg from '../assets/swag-goose-custom-cursor.png'
 
 // ── SVG hatch patterns ────────────────────────────────────────────────────────
 function SvgPatterns() {
@@ -30,11 +31,9 @@ function SvgPatterns() {
   return null
 }
 
-// ── Animated flag cursor ──────────────────────────────────────────────────────
-function FlagCursor({ active }) {
+// ── Goose cursor — left half = cursor goose (A), right half = standing goose (B)
+function GooseCursor({ active, placingB }) {
   const [pos, setPos] = useState({ x: -999, y: -999 })
-  const phaseRef = useRef(0)
-  const [phase, setPhase] = useState(0)
 
   useEffect(() => {
     if (!active) return
@@ -43,30 +42,7 @@ function FlagCursor({ active }) {
     return () => window.removeEventListener('mousemove', onMove)
   }, [active])
 
-  useEffect(() => {
-    if (!active) return
-    let frame
-    const animate = () => {
-      phaseRef.current += 0.09
-      setPhase(phaseRef.current)
-      frame = requestAnimationFrame(animate)
-    }
-    frame = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(frame)
-  }, [active])
-
   if (!active) return null
-
-  // Wave the flag fabric: top and bottom edges undulate via offset sine waves
-  const w1 = Math.sin(phase) * 5          // mid-flag bulge
-  const w2 = Math.sin(phase + 1.0) * 3.5  // free-edge offset
-  const flagPath = `
-    M 6 4
-    Q 22 ${4  + w1} 38 ${4  + w2}
-    L 38 ${28 + w2}
-    Q 22 ${28 + w1} 6 28
-    Z
-  `
 
   return createPortal(
     <div style={{
@@ -75,13 +51,17 @@ function FlagCursor({ active }) {
       top: pos.y,
       pointerEvents: 'none',
       zIndex: 99999,
-      transform: 'translate(-5px, -70px)',
-    }}>
-      <svg viewBox="0 0 46 90" width="36" height="72" fill="none">
-        <line x1="6" y1="2" x2="6" y2="88" stroke="#2a2420" strokeWidth="3" strokeLinecap="round"/>
-        <path d={flagPath} fill="#2a2420"/>
-      </svg>
-    </div>,
+      // A: hotspot at tip of cursor arrow (top-left)
+      // B: hotspot at feet of standing goose (bottom-centre)
+      transform: placingB ? 'translate(-40px, -88px)' : 'translate(-4px, -4px)',
+      width: 88,
+      height: 88,
+      backgroundImage: `url(${gooseCursorImg})`,
+      backgroundSize: 'auto 88px',
+      backgroundRepeat: 'no-repeat',
+      // Left half of image for A, right half for B
+      backgroundPosition: placingB ? 'right center' : 'left center',
+    }},
     document.body
   )
 }
@@ -406,7 +386,7 @@ export default function MapView({
       <ZoomControl position="bottomright" />
       <SvgPatterns />
       <MapInteraction onMapClick={onMapClick} isPlacing={isPlacing} pinMode={pinMode} />
-      <FlagCursor active={isPlacing && !pinMode} />
+      <GooseCursor active={isPlacing && !pinMode} placingB={!!ptA} />
       {route && <RouteFitter route={route} />}
 
       {/* Route A/B pins */}
