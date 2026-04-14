@@ -26,7 +26,12 @@
 
 /* Ensure map fills its container */
 .leaflet-container {
-  background: #ffffff;
+  background: #FFF3D4;
+}
+
+/* Warm tile filter — matches yellow-to-pink UI gradient (see public/map-style.json) */
+.leaflet-tile-pane {
+  filter: sepia(0.22) hue-rotate(348deg) saturate(0.82) brightness(1.06);
 }
 
 /* Tailwind's base reset breaks Leaflet tile images — undo it */

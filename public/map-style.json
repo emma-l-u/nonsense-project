@@ -1,0 +1,9 @@
+{
+  "description": "Warm tile filter — matches the yellow-to-pink UI panel gradient",
+  "uiGradient": {
+    "from": "#FFE566",
+    "to":   "#FFACE4"
+  },
+  "tileFilter": "sepia(0.22) hue-rotate(348deg) saturate(0.82) brightness(1.06)",
+  "mapBackground": "#FFF3D4"
+}
