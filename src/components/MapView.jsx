@@ -235,29 +235,42 @@ function AnimatedRoute({ route, routeType }) {
 
 // ── Wandelkarten everyday-places layer ───────────────────────────────────────
 const WANDEL_ICON_CACHE = {}
-function getWandelIcon(cat) {
-  if (WANDEL_ICON_CACHE[cat]) return WANDEL_ICON_CACHE[cat]
+function iconSizeForZoom(zoom) {
+  if (zoom <= 12) return 14
+  if (zoom === 13) return 18
+  if (zoom === 14) return 24
+  if (zoom === 15) return 30
+  return 36
+}
+function getWandelIcon(cat, size) {
+  const key = `${cat}_${size}`
+  if (WANDEL_ICON_CACHE[key]) return WANDEL_ICON_CACHE[key]
   const { color, emoji } = WANDEL_CATS[cat]
-  WANDEL_ICON_CACHE[cat] = L.divIcon({
+  const fontSize = Math.round(size * 0.52)
+  WANDEL_ICON_CACHE[key] = L.divIcon({
     html: `<div style="
-      width:30px;height:30px;
+      width:${size}px;height:${size}px;
       background:${color};
       border-radius:50%;
       box-shadow:0 1px 4px rgba(0,0,0,0.22);
       display:flex;align-items:center;justify-content:center;
-      font-size:14px;line-height:1;
+      font-size:${fontSize}px;line-height:1;
     ">${emoji}</div>`,
-    className: '', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -34],
+    className: '', iconSize: [size, size], iconAnchor: [size / 2, size], popupAnchor: [0, -(size + 4)],
   })
-  return WANDEL_ICON_CACHE[cat]
+  return WANDEL_ICON_CACHE[key]
 }
 
 function WandelkartenLayer({ wandelCats }) {
+  const map = useMap()
+  const [zoom, setZoom] = useState(map.getZoom())
+  useMapEvents({ zoom: () => setZoom(map.getZoom()) })
+  const size = iconSizeForZoom(zoom)
   const visible = WANDEL_POIS.filter(p => wandelCats[p.cat])
   return (
     <LayerGroup>
       {visible.map(p => (
-        <Marker key={p.id} position={[p.lat, p.lng]} icon={getWandelIcon(p.cat)}>
+        <Marker key={p.id} position={[p.lat, p.lng]} icon={getWandelIcon(p.cat, size)}>
           <Popup>
             <div style={{ fontFamily: "'Nunito',sans-serif", fontSize: 12, minWidth: 160 }}>
               <b style={{ fontSize: 13 }}>{WANDEL_CATS[p.cat].emoji} {p.name}</b>
