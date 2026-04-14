@@ -32,7 +32,7 @@
 /* Warm the dark CartoDB tiles — sepia shift makes the grey feel earthy/warm,
    buildings stay near-black, streets read as warm charcoal */
 .leaflet-tile-pane {
-  filter: sepia(0.28) hue-rotate(10deg) brightness(1.18) saturate(0.72);
+  filter: sepia(0.22) hue-rotate(10deg) brightness(1.38) saturate(0.68);
 }
 
 /* Tailwind's base reset breaks Leaflet tile images — undo it */
