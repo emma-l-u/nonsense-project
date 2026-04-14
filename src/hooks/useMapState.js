@@ -94,8 +94,11 @@ export function useMapState() {
 
   // ── Load geometry at startup ───────────────────────────────────────────────
   useEffect(() => {
-    // Roads — serve from cache instantly, fetch from OSRM only on first/expired load
-    const cachedRoads = loadCache('osrm_roads_v3')
+    // Roads — serve from cache instantly, fetch from OSRM only on first/expired load.
+    // Only cache results where every segment has a real multi-point path (not a
+    // 2-point straight-line fallback from a failed OSRM request).
+    const isRealPath = seg => seg.path?.length > 2
+    const cachedRoads = loadCache('osrm_roads_v4')
     if (cachedRoads) {
       setFetchedRoads(cachedRoads)
     } else {
@@ -103,11 +106,14 @@ export function useMapState() {
         fetchOsrmPath(seg.from, seg.to, seg.profile)
           .then(path => ({ ...seg, path: path ?? [[seg.from[1], seg.from[0]], [seg.to[1], seg.to[0]]] }))
           .catch(() => ({ ...seg, path: [[seg.from[1], seg.from[0]], [seg.to[1], seg.to[0]]] }))
-      )).then(r => { setFetchedRoads(r); saveCache('osrm_roads_v3', r) })
+      )).then(r => {
+        setFetchedRoads(r)
+        if (r.every(isRealPath)) saveCache('osrm_roads_v4', r)
+      })
     }
 
-    // Bike lanes — same cache strategy
-    const cachedBikes = loadCache('osrm_bikes_v3')
+    // Bike lanes — same strategy
+    const cachedBikes = loadCache('osrm_bikes_v4')
     if (cachedBikes) {
       setFetchedBikeLanes(cachedBikes)
     } else {
@@ -118,7 +124,7 @@ export function useMapState() {
       )).then(r => {
         const filtered = r.filter(Boolean)
         setFetchedBikeLanes(filtered)
-        saveCache('osrm_bikes_v3', filtered)
+        if (filtered.every(isRealPath)) saveCache('osrm_bikes_v4', filtered)
       })
     }
 

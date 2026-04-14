@@ -59,7 +59,7 @@ export default function ControlHeader() {
         background: '#FFE566',
         borderRadius: 999,
         padding: '7px 20px',
-        boxShadow: '0 0 18px rgba(255,229,102,0.7), 0 0 6px rgba(255,229,102,0.5)',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
         border: '1.5px solid rgba(255,229,102,0.9)',
       }}>
       <WalkIcon />
