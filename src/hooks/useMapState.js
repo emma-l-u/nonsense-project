@@ -244,7 +244,7 @@ export function useMapState() {
   const toggleLive = useCallback(() => setLiveOn(prev => !prev), [])
 
   // Wandelkarten places layer
-  const [showWandel, setShowWandel] = useState(false)
+  const [showWandel, setShowWandel] = useState(true)
   const [wandelCats, setWandelCats] = useState({ food: true, community: true, repair: true, culture: true, supermarket: true, museum: true })
   const toggleWandel = useCallback(() => setShowWandel(prev => !prev), [])
   const toggleWandelCat = useCallback((cat) =>
