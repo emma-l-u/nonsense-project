@@ -61,7 +61,7 @@ function GooseCursor({ active, placingB }) {
       backgroundRepeat: 'no-repeat',
       // Left half of image for A, right half for B
       backgroundPosition: placingB ? 'right center' : 'left center',
-    }},
+    }} />,
     document.body
   )
 }
