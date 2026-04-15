@@ -82,6 +82,9 @@ She didn't feel like a tourist. She felt like someone who walked into a city and
 - **Routing:** Valhalla — pedestrian & cycling profiles with use_roads costing
 - **Other APIs:** OSRM (road geometry), OpenStreetMap Overpass (parks & pedestrian zones), Nominatim (geocoding)
 - **Places data:** weimar.wandelkarten.de (hardcoded)
+- **Map tiles:** CartoDB Dark Matter via CARTO
+- **Background music:** YouTube IFrame Player API — embedded video playback, volume-controlled in-browser
+- **Soundscapes:** Web Audio API — procedurally synthesised per character, no audio files
 - **Models at runtime:** None
 - **Notable libraries:** React-Leaflet 4, Leaflet 1.9, react-icons 5
 
@@ -116,9 +119,11 @@ Where Claude genuinely added value was in reflective pauses — stepping back mi
 ## Credits & licenses
 
 - **Fonts:** Nunito — Google Fonts — OFL
-- **Map tiles:** © OpenStreetMap contributors — ODbL
+- **Map tiles:** © CARTO (CartoDB Dark Matter) — CC BY 3.0; map data © OpenStreetMap contributors — ODbL
 - **Routing engine:** Valhalla, OpenStreetMap DE instance — MIT
 - **Places data:** weimar.wandelkarten.de
+- **Background music:** embedded via YouTube IFrame Player API — © respective rights holders; playback subject to YouTube Terms of Service
+- **Soundscapes:** procedurally synthesised with the Web Audio API — no third-party audio
 - **Character portraits:** AI-generated
 - **Goose cursor:** swag-goose-custom-cursor.png (provided)
 - **This repo:** MIT
