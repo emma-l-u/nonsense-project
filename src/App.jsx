@@ -1,6 +1,7 @@
 import { useMapState } from './hooks/useMapState'
 import { useSoundscape } from './hooks/useSoundscape'
 import { useBackgroundMusic } from './hooks/useBackgroundMusic'
+import SoundControl from './components/SoundControl'
 import ControlHeader from './components/ControlHeader'
 import MapView from './components/MapView'
 import RoutePlanner from './components/RoutePlanner'
@@ -11,7 +12,7 @@ import CommunityPanel from './components/CommunityPanel'
 export default function App() {
   const s = useMapState()
   useSoundscape(s.route, s.selectedCharacter)
-  useBackgroundMusic()
+  const music = useBackgroundMusic()
 
   return (
     <div className="flex flex-col h-screen text-gray-700 overflow-hidden" style={{ background: '#ffffff' }}>
@@ -51,6 +52,11 @@ export default function App() {
           noiseActive={s.noiseActive} toggleNoiseGroup={s.toggleNoiseGroup}
           layerVisibility={s.layerVisibility} toggleLayer={s.toggleLayer}
           liveOn={s.liveOn} toggleLive={s.toggleLive}
+        />
+
+        <SoundControl
+          volume={music.volume} setVolume={music.setVolume}
+          muted={music.muted}   toggleMute={music.toggleMute}
         />
 
         <CommunityPanel
